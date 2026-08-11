@@ -59,8 +59,10 @@ class SortingPuzzleViewModel: ObservableObject {
                 imageName: theme.pieceBImageName
             )
         ]
+
+        ProgressStore.shared.recordSessionStart(.sorting)
     }
-    
+
     func nextRound() {
         if currentRound < 5 {
             currentRound += 1
@@ -139,13 +141,14 @@ class SortingPuzzleViewModel: ObservableObject {
                     updatedPiece.isPlaced = true
                     puzzlePieces[index] = updatedPiece
                     
-                    let generator = UINotificationFeedbackGenerator()
-                    generator.notificationOccurred(.success)
-                    
+                    Haptic.shared.correct()
+                    ProgressStore.shared.recordCorrect(.sorting)
+
                     let completionStatus = sortingUseCase.isPuzzleComplete(pieces: puzzlePieces)
                     isComplete = completionStatus
-                    
+
                     if completionStatus {
+                        ProgressStore.shared.recordRoundCompleted(.sorting)
                         if currentRound == 5 {
                             AudioPlayerManager.shared.playPuzzleCompleteSound()
                         } else {
@@ -157,9 +160,9 @@ class SortingPuzzleViewModel: ObservableObject {
                     AudioPlayerManager.shared.playIncorrectActionSound()
                     let originalPosition = getOriginalPosition(for: piece.id)
                     puzzlePieces[index] = sortingUseCase.updatePiecePosition(piece: piece, to: originalPosition)
-                    
-                    let generator = UINotificationFeedbackGenerator()
-                    generator.notificationOccurred(.error)
+
+                    Haptic.shared.error()
+                    ProgressStore.shared.recordIncorrect(.sorting)
                 }
             } else {
                 let originalPosition = getOriginalPosition(for: piece.id)

@@ -25,6 +25,7 @@ class TracingPuzzleViewModel: ObservableObject {
     init(tracingUseCase: TracingPuzzleUseCase) {
         self.tracingUseCase = tracingUseCase
         self.levels = tracingUseCase.setupLevels()
+        ProgressStore.shared.recordSessionStart(.tracing)
     }
     
     func resetLevel() {
@@ -46,6 +47,8 @@ class TracingPuzzleViewModel: ObservableObject {
         tracingUseCase.completeLevel(currentLevel)
         completedLevels.insert(currentLevel)
         shouldShowReset = true
+        ProgressStore.shared.recordCorrect(.tracing)
+        ProgressStore.shared.recordRoundCompleted(.tracing)
         
         if currentLevel == finalRound {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in

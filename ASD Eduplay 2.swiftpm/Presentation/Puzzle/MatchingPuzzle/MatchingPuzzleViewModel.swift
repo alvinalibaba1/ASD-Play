@@ -19,6 +19,7 @@ final class MatchingPuzzleViewModel: ObservableObject {
     init(matchingUseCase: MatchingPuzzleUseCase) {
         self.matchingUseCase = matchingUseCase
         createNewPuzzle()
+        ProgressStore.shared.recordSessionStart(.matching)
     }
     
     func handlePuzzleDrop(piece: MatchingPuzzle, dropLocation: CGPoint, targetFrame: CGRect) {
@@ -39,12 +40,14 @@ final class MatchingPuzzleViewModel: ObservableObject {
                     Haptic.shared.success()
                     matchCompleted = true
                     completedRounds += 1
+                    ProgressStore.shared.recordCorrect(.matching)
                     checkRoundCompletion()
                     AudioPlayerManager.shared.playAudio(named: AudioConstants.correctAction, withExtension: AudioConstants.audioExtension)
                 }
             } else {
                 AudioPlayerManager.shared.playAudio(named: AudioConstants.incorrectAction, withExtension: AudioConstants.audioExtension)
                     Haptic.shared.error()
+                    ProgressStore.shared.recordIncorrect(.matching)
             }
         }
         
@@ -56,7 +59,8 @@ final class MatchingPuzzleViewModel: ObservableObject {
     }
     
     private func checkRoundCompletion() {
-           if completedRounds >= maxRounds {               
+           ProgressStore.shared.recordRoundCompleted(.matching)
+           if completedRounds >= maxRounds {
                DispatchQueue.main.asyncAfter(deadline: .now() ) {
                    self.handlePuzzleCompletion()
                }

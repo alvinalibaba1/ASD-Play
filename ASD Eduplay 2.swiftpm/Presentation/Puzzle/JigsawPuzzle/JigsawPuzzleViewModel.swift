@@ -24,6 +24,7 @@ final class JigsawPuzzleViewModel: ObservableObject {
         
         self.currentImageIndex = jigsawUseCase.getCurrentImageIndex()
         setupInitialState()
+        ProgressStore.shared.recordSessionStart(.jigsaw)
     }
     
     private func setupInitialState() {
@@ -46,6 +47,7 @@ final class JigsawPuzzleViewModel: ObservableObject {
         
         if !isInBoard {
             Haptic.shared.error()
+            ProgressStore.shared.recordIncorrect(.jigsaw)
             return
         }
         
@@ -64,14 +66,16 @@ final class JigsawPuzzleViewModel: ObservableObject {
                         self.placedPieces.append(placedPiece)
                         Haptic.shared.success()
                         AudioPlayerManager.shared.playAudio(named: AudioConstants.correctAction, withExtension: AudioConstants.audioExtension)
+                        ProgressStore.shared.recordCorrect(.jigsaw)
                     }
                 }
-                
+
                 self.checkLevelCompletion()
             }
         } else {
             Haptic.shared.error()
             AudioPlayerManager.shared.playAudio(named: AudioConstants.incorrectAction, withExtension: AudioConstants.audioExtension)
+            ProgressStore.shared.recordIncorrect(.jigsaw)
         }
     }
     
@@ -80,7 +84,8 @@ final class JigsawPuzzleViewModel: ObservableObject {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 withAnimation {
                     self.isCompleted = true
-                    
+                    ProgressStore.shared.recordRoundCompleted(.jigsaw)
+
                     if self.currentImageIndex < self.getTotalImageCount() - 1 {
                         AudioPlayerManager.shared.playAudio(named: AudioConstants.roundComplete, withExtension: AudioConstants.audioExtension)
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {

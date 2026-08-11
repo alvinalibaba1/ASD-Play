@@ -182,7 +182,6 @@ struct MatchingPuzzleView: View {
     }
     
     private func playSuccessSound() {
-        let generator = UINotificationFeedbackGenerator()
-        generator.notificationOccurred(.success)
+        Haptic.shared.correct()
     }
 }

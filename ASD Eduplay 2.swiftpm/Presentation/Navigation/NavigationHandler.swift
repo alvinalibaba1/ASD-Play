@@ -19,6 +19,8 @@ final class NavigationHandler {
             CreditView()
         case .menu:
             MenuView()
+        case .sensorySettings:
+            SensorySettingsView()
         case .jigsawPuzzle:
             JigsawPuzzleView(viewModel: self.container.makeJigsawPuzzleViewModel())
         case .matchingPuzzle:

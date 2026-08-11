@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct HeartbeatPlayButton: View {
+    @EnvironmentObject var settings: SensorySettings
     @State private var isAnimating = false
     @State private var scale: CGFloat = 1.0
     let action: () -> Void
@@ -82,6 +83,8 @@ struct HeartbeatPlayButton: View {
     }
     
     private func startHeartbeatAnimation() {
+        guard !settings.motionReduced else { return }
+
         let animation = Animation
             .easeInOut(duration: 0.5)
             .delay(0.1)

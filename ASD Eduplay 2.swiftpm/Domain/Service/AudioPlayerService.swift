@@ -27,15 +27,32 @@ class AudioPlayerManager: NSObject, @preconcurrency AVAudioPlayerDelegate, Audio
     private var audioPlayer: AVAudioPlayer?
     private var backgroundMusicPlayer: AVAudioPlayer?
     private var isTransitioning = false
-    
+
+    /// Remembered even while music is muted, so re-enabling can resume the right track.
+    private var currentMusicTrack: (name: String, fileExtension: String)?
+
     private(set) var isIntroMusicPlaying: Bool = false
-    
+
     private override init() {
         super.init()
         setupAudioSession()
     }
-    
+
+    func applyMusicSetting(enabled: Bool) {
+        if enabled {
+            guard backgroundMusicPlayer?.isPlaying != true, let track = currentMusicTrack else { return }
+            startNewBackgroundMusic(filename: track.name, fileExtension: track.fileExtension)
+        } else {
+            // Stops without the usual fade: a child asking for quiet should get it immediately.
+            backgroundMusicPlayer?.stop()
+            backgroundMusicPlayer = nil
+            isTransitioning = false
+        }
+    }
+
     func playAudio(named filename: String, withExtension fileExtension: String) {
+        guard SensorySettings.shared.soundEffectsEnabled else { return }
+
         guard let url = Bundle.main.url(forResource: filename, withExtension: fileExtension) else {
             print("Could not find audio file: \(filename).\(fileExtension)")
             return
@@ -61,13 +78,16 @@ class AudioPlayerManager: NSObject, @preconcurrency AVAudioPlayerDelegate, Audio
         }
         
         func playBackgroundMusic(named filename: String, withExtension fileExtension: String) {
-            guard !isTransitioning else { return }
-            isTransitioning = true
-            
+            currentMusicTrack = (filename, fileExtension)
+
             if filename == AudioConstants.introMusic {
                      isIntroMusicPlaying = true
                  }
-            
+
+            guard SensorySettings.shared.musicEnabled else { return }
+            guard !isTransitioning else { return }
+            isTransitioning = true
+
             if let currentPlayer = backgroundMusicPlayer, currentPlayer.isPlaying {
                 fadeOutBackgroundMusic {
                     self.startNewBackgroundMusic(filename: filename, fileExtension: fileExtension)
@@ -78,6 +98,13 @@ class AudioPlayerManager: NSObject, @preconcurrency AVAudioPlayerDelegate, Audio
         }
         
         private func startNewBackgroundMusic(filename: String, fileExtension: String) {
+            // Re-checked because the fade-out completion reaches here asynchronously,
+            // by which point the setting may have been switched off.
+            guard SensorySettings.shared.musicEnabled else {
+                isTransitioning = false
+                return
+            }
+
             guard let url = Bundle.main.url(forResource: filename, withExtension: fileExtension) else {
                 print("Could not find background music: \(filename).\(fileExtension)")
                 isTransitioning = false

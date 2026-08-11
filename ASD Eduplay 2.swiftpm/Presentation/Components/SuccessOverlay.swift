@@ -9,7 +9,8 @@ import SwiftUI
 struct SuccessOverlay: View {
     let isVisible: Bool
     let onComplete: () -> Void
-    
+
+    @EnvironmentObject var settings: SensorySettings
     @State private var showStars = false
     @State private var showText = false
     
@@ -62,7 +63,7 @@ struct SuccessOverlay: View {
                         .shadow(color: .orange, radius: 2)
                         .opacity(showText ? 1 : 0)
                         .scaleEffect(showText ? 1 : 0.5)
-                        .animation(.spring(response: 0.6, dampingFraction: 0.7), value: showText)
+                        .animation(settings.animation(.spring(response: 0.6, dampingFraction: 0.7)), value: showText)
 
                         
                     Image(systemName: "trophy.fill")
@@ -73,7 +74,7 @@ struct SuccessOverlay: View {
                         .shadow(color: .orange, radius: 10)
                         .opacity(showText ? 1 : 0)
                         .scaleEffect(showText ? 1 : 0.1)
-                        .animation(.spring(response: 0.8, dampingFraction: 0.6).delay(0.5), value: showText)
+                        .animation(settings.animation(.spring(response: 0.8, dampingFraction: 0.6).delay(0.5)), value: showText)
                 }
                 .padding(40)
                 .background(
@@ -82,9 +83,10 @@ struct SuccessOverlay: View {
                         .shadow(color: .yellow.opacity(0.6), radius: 20)
                 )
                 .opacity(showStars ? 1 : 0)
-                .animation(.easeIn.delay(1.5), value: showStars)
-                
-                ForEach(0..<starCount, id: \.self) { index in
+                .animation(settings.animation(.easeIn.delay(1.5)), value: showStars)
+
+                if !settings.motionReduced {
+                    ForEach(0..<starCount, id: \.self) { index in
                     Star()
                         .fill(starColors[index])
                         .frame(width: 30, height: 30)
@@ -99,6 +101,7 @@ struct SuccessOverlay: View {
                                 .repeatCount(1, autoreverses: false),
                             value: showStars
                         )
+                    }
                 }
             }
         }
@@ -116,10 +119,17 @@ struct SuccessOverlay: View {
     }
     
     private func startAnimations() {
+        guard !settings.motionReduced else {
+            // Reward still appears, just without the shower or the staged reveal.
+            showStars = true
+            showText = true
+            return
+        }
+
         withAnimation {
             showStars = true
         }
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             withAnimation {
                 showText = true

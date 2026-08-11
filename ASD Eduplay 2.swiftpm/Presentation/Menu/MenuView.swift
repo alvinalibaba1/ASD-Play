@@ -2,7 +2,8 @@ import SwiftUI
 
 struct MenuView: View {
     @EnvironmentObject var router: NavigationRouter
-    
+    @EnvironmentObject var settings: SensorySettings
+
     @State private var animateBackground = false
     @State private var buttonScale: [CGFloat] = [1.0, 1.0, 1.0, 1.0]
     @State private var showButtons = false
@@ -22,10 +23,14 @@ struct MenuView: View {
                 .saturation(animateBackground ? 1.05 : 1.0)
                 .brightness(animateBackground ? 0.03 : 0)
                 .animation(
-                    Animation.easeInOut(duration: 4.0).repeatForever(autoreverses: true),
+                    settings.motionReduced
+                        ? nil
+                        : Animation.easeInOut(duration: 4.0).repeatForever(autoreverses: true),
                     value: animateBackground
                 )
-                .onAppear { animateBackground = true }
+                .onAppear {
+                    if !settings.motionReduced { animateBackground = true }
+                }
             
             Color.white.opacity(0.2)
                 .edgesIgnoringSafeArea(.all)
@@ -38,8 +43,12 @@ struct MenuView: View {
                             .opacity(showButtons ? 1 : 0)
                             .offset(x: showButtons ? 0 : -60)
                         Spacer()
+                        SettingsButton()
+                            .scaleEffect(0.8)
+                            .opacity(showButtons ? 1 : 0)
+                            .offset(x: showButtons ? 0 : 60)
                     }
-                    .padding(.leading, 20)
+                    .padding(.horizontal, 20)
                     .padding(.top, 0)
                     
                     Spacer()
@@ -124,6 +133,12 @@ struct MenuView: View {
     }
     
     private func startEntryAnimation() {
+        guard !settings.motionReduced else {
+            // No entrance choreography, but the buttons must still become interactive.
+            showButtons = true
+            return
+        }
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             withAnimation {
                 showButtons = true

@@ -20,5 +20,6 @@ struct ASDEduplay: App {
             }
         }
         .environmentObject(router)
+        .environmentObject(SensorySettings.shared)
     }
 }

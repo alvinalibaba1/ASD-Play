@@ -4,6 +4,7 @@ import AVFoundation
 
 struct IntroView: View {
     @EnvironmentObject var router: NavigationRouter
+    @EnvironmentObject var settings: SensorySettings
     @State private var leftBirdOffset = CGSize.zero
     @State private var rightBirdOffset = CGSize.zero
     @State private var leftCloudOffset = CGSize.zero
@@ -63,21 +64,16 @@ struct IntroView: View {
                         .frame(width: 500)
                     
                     HeartbeatPlayButton {
-                        let generator = UIImpactFeedbackGenerator(style: .medium)
-                        generator.impactOccurred()
-                        
-
+                        Haptic.shared.tap()
                         AudioPlayerManager.shared.playAudio(named: "tapButton", withExtension: "mp3")
                         router.navigate(to: .menu)
                     }
                     .padding(.bottom, 80)
-                    
+
                     CreditButton(
                         title: "Credit"
                     ) {
-                        let generator = UIImpactFeedbackGenerator(style: .medium)
-                        generator.impactOccurred()
-                        
+                        Haptic.shared.tap()
                         AudioPlayerManager.shared.playAudio(named: "tapButton", withExtension: "mp3")
                         router.navigate(to: .credit)
                     }
@@ -86,9 +82,23 @@ struct IntroView: View {
                 .padding(.horizontal, 25)
                 .padding(.bottom, 50)
             }
-            
+
+            VStack {
+                HStack {
+                    Spacer()
+                    SettingsButton()
+                        .padding(.trailing, 20)
+                }
+                .padding(.top, 20)
+
+                Spacer()
+            }
+
             Spacer()
         }
+        // Rebuilds the subtree when the motion preference flips, which resets the
+        // repeatForever animations that SwiftUI otherwise keeps running.
+        .id(settings.motionReduced)
         .onAppear {
             startAnimations()
             if !AudioPlayerManager.shared.isIntroMusicPlaying {
@@ -117,6 +127,8 @@ struct IntroView: View {
     
     
     private func startAnimations() {
+        guard !settings.motionReduced else { return }
+
         withAnimation(Animation.easeInOut(duration: 0.6).repeatForever(autoreverses: true)) {
             flapWings = true
         }

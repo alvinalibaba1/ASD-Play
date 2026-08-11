@@ -20,9 +20,8 @@ struct CompactMenuButton: View {
                 scale = 0.95
             }
             
-            let generator = UIImpactFeedbackGenerator(style: .medium)
-            generator.impactOccurred()
-            
+            Haptic.shared.tap()
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 AudioPlayerManager.shared.playAudio(named: "tapButton", withExtension: "mp3")
             }
