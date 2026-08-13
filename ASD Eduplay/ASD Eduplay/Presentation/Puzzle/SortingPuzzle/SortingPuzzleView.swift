@@ -77,7 +77,7 @@ struct SortingPuzzleView: View {
             }
             .onDisappear {
                 AudioPlayerManager.shared.stopBackgroundMusic()
-                AudioPlayerManager.shared.playAudio(named: AudioConstants.introMusic, withExtension: AudioConstants.audioExtension)
+                AudioPlayerManager.shared.playBackgroundMusic(named: AudioConstants.introMusic, withExtension: AudioConstants.audioExtension)
             }
             .onChange(of: viewModel.isComplete) { isComplete in
                 if isComplete && viewModel.currentRound == 5 && !isTransitioning {

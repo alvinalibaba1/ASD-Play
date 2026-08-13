@@ -50,13 +50,17 @@ struct MatchingPuzzleView: View {
                     Spacer()
                     
                     VStack {
-                        // Sized against the available width (with a cap matching the
-                        // original iPad size) so 4 pieces + spacing always fit instead
-                        // of overflowing a narrow iPhone screen.
-                        let circleDiameter = min(geometry.size.width / 5, 150)
+                        // Solved from a fixed, comfortable gap rather than a fraction of
+                        // circleDiameter - that made the gap shrink to almost nothing
+                        // alongside the circles on narrow screens, reading as the 4
+                        // pieces touching each other. Capped at the original iPad size.
+                        let itemSpacing: CGFloat = 16
+                        let horizontalPadding: CGFloat = 20
+                        let availableWidth = geometry.size.width - horizontalPadding * 2
+                        let circleDiameter = min((availableWidth - itemSpacing * 3) / 4, 150)
                         let imageDiameter = circleDiameter * (110.0 / 150.0)
 
-                        HStack(spacing: circleDiameter * 0.15) {
+                        HStack(spacing: itemSpacing) {
                             ForEach(viewModel.pieces) { piece in
                                 if piece.isVisible {
                                     Image(piece.imageName)
@@ -116,7 +120,7 @@ struct MatchingPuzzleView: View {
             }
             .onDisappear {
                 AudioPlayerManager.shared.stopBackgroundMusic()
-                AudioPlayerManager.shared.playAudio(named: AudioConstants.introMusic, withExtension: AudioConstants.audioExtension)
+                AudioPlayerManager.shared.playBackgroundMusic(named: AudioConstants.introMusic, withExtension: AudioConstants.audioExtension)
             }
             .onChange(of: viewModel.matchCompleted) { completed in
                 if completed {

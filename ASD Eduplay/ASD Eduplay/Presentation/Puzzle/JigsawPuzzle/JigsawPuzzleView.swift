@@ -123,7 +123,7 @@ struct JigsawPuzzleView: View {
             .onDisappear {
                 viewModel.resetGame()
                 AudioPlayerManager.shared.stopBackgroundMusic()
-                AudioPlayerManager.shared.playAudio(named: AudioConstants.introMusic, withExtension: AudioConstants.audioExtension)
+                AudioPlayerManager.shared.playBackgroundMusic(named: AudioConstants.introMusic, withExtension: AudioConstants.audioExtension)
             }
             .onChange(of: viewModel.currentImageIndex) { _ in
                 showShadowImage = true
