@@ -18,6 +18,7 @@ struct IntroView: View {
     
     var body: some View {
         GeometryReader { geometry in
+        let isPortrait = geometry.size.height > geometry.size.width
         ZStack {
             GeometryReader { bgGeometry in
                 Image("backgroundIntro")
@@ -62,31 +63,63 @@ struct IntroView: View {
                         y: -geometry.size.height/3)
 
 
-            VStack {
-                VStack(spacing: 0) {
+            if isPortrait {
+                VStack {
+                    VStack(spacing: 0) {
+                        Image("logo")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: min(500, geometry.size.width * 0.85))
+
+                        HeartbeatPlayButton {
+                            Haptic.shared.tap()
+                            AudioPlayerManager.shared.playAudio(named: "tapButton", withExtension: "mp3")
+                            router.navigate(to: .menu)
+                        }
+                        .padding(.bottom, 80)
+
+                        CreditButton(
+                            title: "Credit"
+                        ) {
+                            Haptic.shared.tap()
+                            AudioPlayerManager.shared.playAudio(named: "tapButton", withExtension: "mp3")
+                            router.navigate(to: .credit)
+                        }
+                        .frame(width: 300, height: 80)
+                    }
+                    .padding(.horizontal, 25)
+                    .padding(.bottom, 50)
+                }
+            } else {
+                // Stacking the logo above both buttons needed ~690pt of height
+                // (logo + play button + its padding + credit button + outer
+                // padding), far more than an iPhone's landscape height. Placing the
+                // logo beside the buttons instead uses landscape's abundant width
+                // rather than fighting its short height.
+                HStack(spacing: 40) {
                     Image("logo")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: min(500, geometry.size.width * 0.85))
-                    
-                    HeartbeatPlayButton {
-                        Haptic.shared.tap()
-                        AudioPlayerManager.shared.playAudio(named: "tapButton", withExtension: "mp3")
-                        router.navigate(to: .menu)
-                    }
-                    .padding(.bottom, 80)
+                        .frame(height: min(260, geometry.size.height * 0.75))
 
-                    CreditButton(
-                        title: "Credit"
-                    ) {
-                        Haptic.shared.tap()
-                        AudioPlayerManager.shared.playAudio(named: "tapButton", withExtension: "mp3")
-                        router.navigate(to: .credit)
+                    VStack(spacing: 16) {
+                        HeartbeatPlayButton {
+                            Haptic.shared.tap()
+                            AudioPlayerManager.shared.playAudio(named: "tapButton", withExtension: "mp3")
+                            router.navigate(to: .menu)
+                        }
+
+                        CreditButton(
+                            title: "Credit"
+                        ) {
+                            Haptic.shared.tap()
+                            AudioPlayerManager.shared.playAudio(named: "tapButton", withExtension: "mp3")
+                            router.navigate(to: .credit)
+                        }
+                        .frame(width: 220, height: 60)
                     }
-                    .frame(width: 300, height: 80)
                 }
-                .padding(.horizontal, 25)
-                .padding(.bottom, 50)
+                .padding(.horizontal, 40)
             }
 
             VStack {

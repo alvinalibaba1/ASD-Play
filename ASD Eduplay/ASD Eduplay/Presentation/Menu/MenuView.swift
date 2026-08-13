@@ -16,6 +16,8 @@ struct MenuView: View {
     ]
     
     var body: some View {
+        GeometryReader { outerGeometry in
+        let isPortrait = outerGeometry.size.height > outerGeometry.size.width
         ZStack {
             GeometryReader { bgGeometry in
                 Image("backgroundMenu")
@@ -87,34 +89,37 @@ struct MenuView: View {
                     .opacity(showButtons ? 1 : 0)
                     
                     Spacer()
-                    
-                    VStack(spacing: 22) {
-                        ForEach(0..<menuItems.count, id: \.self) { index in
-                            CompactMenuButton(
-                                title: menuItems[index].title,
-                                icon: menuItems[index].icon,
-                                color: menuItems[index].color,
-                                scale: $buttonScale[index],
-                                action: {
-                                    handleButtonPress(at: index)
-                                }
-                            )
-                            .scaleEffect(showButtons ? 1 : 0.5)
-                            .opacity(showButtons ? 1 : 0)
-                            .offset(y: showButtons ? 0 : 60)
-                            .animation(
-                                Animation.spring(response: 0.5, dampingFraction: 0.7)
-                                    .delay(Double(index) * 0.1),
-                                value: showButtons
-                            )
+
+                    if isPortrait {
+                        VStack(spacing: 22) {
+                            ForEach(0..<menuItems.count, id: \.self) { index in
+                                menuButton(at: index)
+                            }
+                        }
+                    } else {
+                        // 4 stacked full-width buttons need ~450pt of height (see
+                        // CompactMenuButton's fixed padding/icon size), more than an
+                        // iPhone's landscape height has available. A 2x2 grid halves
+                        // that requirement instead of shrinking touch targets or
+                        // requiring a scroll to see every game.
+                        VStack(spacing: 14) {
+                            HStack(spacing: 14) {
+                                menuButton(at: 0)
+                                menuButton(at: 1)
+                            }
+                            HStack(spacing: 14) {
+                                menuButton(at: 2)
+                                menuButton(at: 3)
+                            }
                         }
                     }
-                    
+
                     Spacer()
                 }
                 .padding(.horizontal, 25)
                 .padding(.bottom, 50)
             }
+        }
         }
         .onAppear {
             startEntryAnimation()
@@ -129,6 +134,27 @@ struct MenuView: View {
         .allowsHitTesting(showButtons)
     }
     
+    @ViewBuilder
+    private func menuButton(at index: Int) -> some View {
+        CompactMenuButton(
+            title: menuItems[index].title,
+            icon: menuItems[index].icon,
+            color: menuItems[index].color,
+            scale: $buttonScale[index],
+            action: {
+                handleButtonPress(at: index)
+            }
+        )
+        .scaleEffect(showButtons ? 1 : 0.5)
+        .opacity(showButtons ? 1 : 0)
+        .offset(y: showButtons ? 0 : 60)
+        .animation(
+            Animation.spring(response: 0.5, dampingFraction: 0.7)
+                .delay(Double(index) * 0.1),
+            value: showButtons
+        )
+    }
+
     private func handleButtonPress(at index: Int) {
         withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
             buttonScale[index] = 0.95

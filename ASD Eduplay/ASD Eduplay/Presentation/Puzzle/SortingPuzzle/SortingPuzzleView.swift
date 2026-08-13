@@ -43,13 +43,13 @@ struct SortingPuzzleView: View {
                 VStack {
                     ZStack {
                         ForEach(viewModel.workspaces, id: \.id) { workspace in
-                            workspaceView(for: workspace, containerWidth: geometry.size.width)
+                            workspaceView(for: workspace, containerSize: geometry.size)
                                 .opacity(elementsVisible ? 1 : 0)
                                 .scaleEffect(elementsVisible ? 1 : 0.5)
                         }
 
                         ForEach(viewModel.puzzlePieces, id: \.id) { piece in
-                            puzzlePieceView(for: piece, containerWidth: geometry.size.width)
+                            puzzlePieceView(for: piece, containerSize: geometry.size)
                                 .opacity(elementsVisible ? 1 : 0)
                                 .scaleEffect(elementsVisible ? 1 : 0.5)
                         }
@@ -158,12 +158,13 @@ struct SortingPuzzleView: View {
         }
     }
     
-    // Mirrors SortingPuzzleViewModel.pieceSpacing's formula (min(width * 0.35, cap))
-    // so piece/workspace art stays proportionally sized relative to the spacing
-    // between them instead of overlapping on a narrow screen or looking tiny
-    // against the gap on a wide one.
-    private func workspaceView(for workspace: Workspace, containerWidth: CGFloat) -> some View {
-        let size = min(containerWidth * 0.35, 300)
+    // Mirrors SortingPuzzleViewModel.pieceSpacing's formula
+    // (min(width * 0.35, height * 0.45, cap)) so piece/workspace art stays
+    // proportionally sized relative to the spacing between them instead of
+    // overlapping (or clipping off the top of a short landscape screen) on one
+    // axis while just tracking the other.
+    private func workspaceView(for workspace: Workspace, containerSize: CGSize) -> some View {
+        let size = min(containerSize.width * 0.35, containerSize.height * 0.45, 300)
         return VStack {
             ZStack {
                 Image(workspace.imageName)
@@ -175,8 +176,8 @@ struct SortingPuzzleView: View {
         }
     }
 
-    private func puzzlePieceView(for piece: CorrectPuzzle, containerWidth: CGFloat) -> some View {
-        let size = min(containerWidth * 0.35, 300) * (200.0 / 300.0)
+    private func puzzlePieceView(for piece: CorrectPuzzle, containerSize: CGSize) -> some View {
+        let size = min(containerSize.width * 0.35, containerSize.height * 0.45, 300) * (200.0 / 300.0)
         return VStack {
             ZStack {
                 Image(piece.imageName)

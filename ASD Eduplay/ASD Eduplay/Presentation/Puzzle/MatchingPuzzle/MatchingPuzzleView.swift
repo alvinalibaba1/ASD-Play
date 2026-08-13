@@ -17,6 +17,7 @@ struct MatchingPuzzleView: View {
     
     var body: some View {
         GeometryReader { geometry in
+            let isPortrait = geometry.size.height > geometry.size.width
             ZStack {
                 GeometryReader { bgGeometry in
                     Image("backgroundMatching")
@@ -41,20 +42,26 @@ struct MatchingPuzzleView: View {
                     Spacer()
                     
                     if showTargetAnimation {
+                        // Portrait's 60pt top padding + 50%-height plate area +
+                        // 120pt bottom padding (below, on the fruit row) totaled
+                        // ~527pt on a landscape iPhone - more than the ~390-450pt
+                        // actually available. Landscape uses tighter, fixed-small
+                        // padding instead of values that were only ever sized for
+                        // portrait's much taller canvas.
                         plateTargetArea(width: geometry.size.width)
                             .transition(.opacity.combined(with: .scale))
-                            .frame(height: geometry.size.height * 0.5)
-                            .padding(.top, 60)
+                            .frame(height: geometry.size.height * (isPortrait ? 0.5 : 0.45))
+                            .padding(.top, isPortrait ? 60 : 16)
                     }
-                    
+
                     Spacer()
-                    
+
                     VStack {
                         // Solved from a fixed, comfortable gap rather than a fraction of
                         // circleDiameter - that made the gap shrink to almost nothing
                         // alongside the circles on narrow screens, reading as the 4
                         // pieces touching each other. Capped at the original iPad size.
-                        let itemSpacing: CGFloat = 16
+                        let itemSpacing: CGFloat = 32
                         let horizontalPadding: CGFloat = 20
                         let availableWidth = geometry.size.width - horizontalPadding * 2
                         let circleDiameter = min((availableWidth - itemSpacing * 3) / 4, 150)
@@ -103,7 +110,7 @@ struct MatchingPuzzleView: View {
                             }
                         }
                         .padding(.horizontal, 20)
-                        .padding(.bottom, 120)
+                        .padding(.bottom, isPortrait ? 120 : 16)
                     }
                 }
                 

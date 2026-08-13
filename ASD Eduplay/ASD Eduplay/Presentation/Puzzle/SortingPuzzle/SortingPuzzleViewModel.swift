@@ -20,11 +20,14 @@ class SortingPuzzleViewModel: ObservableObject {
     private let sortingUseCase: CorrectPuzzleUseCase
     private var containerSize: CGSize = .zero
 
-    // Capped at the original iPad-tuned spread so it doesn't scale up beyond that,
-    // but shrinks proportionally on narrower screens instead of pushing pieces
-    // toward (or past) the edges.
+    // Capped at the original iPad-tuned spread so it doesn't scale up beyond
+    // that, but shrinks proportionally on narrower screens instead of pushing
+    // pieces toward (or past) the edges. The height * 0.45 term matters on
+    // landscape iPhone specifically: workspaces sit at 30% height and pieces at
+    // 70%, so on a short canvas a width-only size could be tall enough to clip
+    // off the top of the screen and overlap the piece row below it.
     private var pieceSpacing: CGFloat {
-        min(containerSize.width * 0.35, 300)
+        min(containerSize.width * 0.35, containerSize.height * 0.45, 300)
     }
 
     init(sortingUseCase: CorrectPuzzleUseCase) {
