@@ -18,9 +18,14 @@ struct MatchingPuzzleView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                Image("backgroundMatching")
-                    .resizable()
-                    .edgesIgnoringSafeArea(.all)
+                GeometryReader { bgGeometry in
+                    Image("backgroundMatching")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: bgGeometry.size.width, height: bgGeometry.size.height)
+                        .clipped()
+                }
+                .edgesIgnoringSafeArea(.all)
 
                 VStack {
                     HStack {

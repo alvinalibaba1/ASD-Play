@@ -21,6 +21,9 @@ struct IntroView: View {
         ZStack {
             Image("backgroundIntro")
                 .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: geometry.size.width, height: geometry.size.height)
+                .clipped()
                 .edgesIgnoringSafeArea(.all)
 
             Image("birdIntro")
@@ -62,7 +65,7 @@ struct IntroView: View {
                     Image("logo")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 500)
+                        .frame(width: min(500, geometry.size.width * 0.85))
                     
                     HeartbeatPlayButton {
                         Haptic.shared.tap()

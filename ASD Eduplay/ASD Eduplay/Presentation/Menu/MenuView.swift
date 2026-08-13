@@ -17,9 +17,14 @@ struct MenuView: View {
     
     var body: some View {
         ZStack {
-            Image("backgroundMenu")
-                .resizable()
-                .edgesIgnoringSafeArea(.all)
+            GeometryReader { bgGeometry in
+                Image("backgroundMenu")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: bgGeometry.size.width, height: bgGeometry.size.height)
+                    .clipped()
+            }
+            .edgesIgnoringSafeArea(.all)
                 .saturation(animateBackground ? 1.05 : 1.0)
                 .brightness(animateBackground ? 0.03 : 0)
                 .animation(
@@ -71,6 +76,8 @@ struct MenuView: View {
                         Text("Choose Puzzle")
                             .font(.system(size: 38, weight: .bold, design: .rounded))
                             .foregroundColor(.blue)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.5)
                         
                         Image(systemName: "star.fill")
                             .foregroundColor(.yellow)

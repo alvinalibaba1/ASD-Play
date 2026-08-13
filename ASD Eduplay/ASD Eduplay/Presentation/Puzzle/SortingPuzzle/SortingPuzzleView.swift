@@ -23,6 +23,9 @@ struct SortingPuzzleView: View {
             ZStack {
                 Image("backgroundSorting")
                     .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                    .clipped()
                     .edgesIgnoringSafeArea(.all)
 
                 VStack {

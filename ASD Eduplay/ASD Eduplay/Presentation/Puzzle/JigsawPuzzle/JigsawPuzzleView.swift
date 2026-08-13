@@ -34,6 +34,9 @@ struct JigsawPuzzleView: View {
             ZStack {
                 Image("backgroundJigsaw")
                     .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                    .clipped()
                     .edgesIgnoringSafeArea(.all)
                 
                 VStack {

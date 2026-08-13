@@ -26,17 +26,22 @@ struct TracingPuzzleDrawingView: View {
     }
 
     /// Converts a start/end point stored as a fraction (0...1) into an actual pixel
-    /// position within `size`, so points stay correct across rotation instead of
-    /// being tied to whatever screen size the level was first computed on.
-    private func point(for fraction: CGPoint, in size: CGSize, offset: CGPoint = .zero) -> CGPoint {
-        CGPoint(x: fraction.x * size.width + offset.x, y: fraction.y * size.height + offset.y)
+    /// position within `size`. `offsetFraction` nudges that point by a fraction of
+    /// `size` too (rather than fixed pixels), so the decorative offset between a
+    /// connection dot and its illustration stays proportionally the same instead of
+    /// collapsing together on a narrow iPhone or spreading out too far on an iPad.
+    private func point(for fraction: CGPoint, in size: CGSize, offsetFraction: CGPoint = .zero) -> CGPoint {
+        CGPoint(
+            x: fraction.x * size.width + offsetFraction.x * size.width,
+            y: fraction.y * size.height + offsetFraction.y * size.height
+        )
     }
 
     private func startConnectionPoint(in size: CGSize) -> CGPoint {
         if viewModel.currentLevel == 3 {
             return point(for: currentLevel.startPoint, in: size)
         } else {
-            return point(for: currentLevel.startPoint, in: size, offset: CGPoint(x: 120, y: 0))
+            return point(for: currentLevel.startPoint, in: size, offsetFraction: CGPoint(x: 0.10, y: 0))
         }
     }
 
@@ -44,7 +49,7 @@ struct TracingPuzzleDrawingView: View {
         if viewModel.currentLevel == 3 {
             return point(for: currentLevel.endPoint, in: size)
         } else {
-            return point(for: currentLevel.endPoint, in: size, offset: CGPoint(x: -120, y: 0))
+            return point(for: currentLevel.endPoint, in: size, offsetFraction: CGPoint(x: -0.10, y: 0))
         }
     }
 
@@ -96,14 +101,14 @@ struct TracingPuzzleDrawingView: View {
                                 .scaledToFit()
                                 .frame(width: 200, height: 200)
                                 .foregroundColor(.white)
-                                .position(point(for: currentLevel.endPoint, in: geometry.size, offset: CGPoint(x: 0, y: -100)))
+                                .position(point(for: currentLevel.endPoint, in: geometry.size, offsetFraction: CGPoint(x: 0, y: -0.11)))
                                 .opacity(0.8)
                         } else {
                             Image(currentLevel.visualTheme.endImage)
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 300, height: 300)
-                                .position(point(for: currentLevel.endPoint, in: geometry.size, offset: CGPoint(x: 0, y: -150)))
+                                .position(point(for: currentLevel.endPoint, in: geometry.size, offsetFraction: CGPoint(x: 0, y: -0.17)))
                         }
 
                         if !animatingImage {
@@ -113,13 +118,13 @@ struct TracingPuzzleDrawingView: View {
                                     .scaledToFit()
                                     .frame(width: 200, height: 200)
                                     .foregroundColor(.white)
-                                    .position(point(for: currentLevel.startPoint, in: geometry.size, offset: CGPoint(x: 0, y: 100)))
+                                    .position(point(for: currentLevel.startPoint, in: geometry.size, offsetFraction: CGPoint(x: 0, y: 0.11)))
                             } else {
                                 Image(currentLevel.visualTheme.startImage)
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 200, height: 200)
-                                    .position(point(for: currentLevel.startPoint, in: geometry.size, offset: CGPoint(x: 0, y: 100)))
+                                    .position(point(for: currentLevel.startPoint, in: geometry.size, offsetFraction: CGPoint(x: 0, y: 0.11)))
                             }
                         } else {
                             if currentLevel.visualTheme.isStartImageSystem {
@@ -145,14 +150,14 @@ struct TracingPuzzleDrawingView: View {
                                 .scaledToFit()
                                 .frame(width: 400, height: 400)
                                 .foregroundColor(.black)
-                                .position(point(for: currentLevel.endPoint, in: geometry.size, offset: CGPoint(x: 40, y: 0)))
+                                .position(point(for: currentLevel.endPoint, in: geometry.size, offsetFraction: CGPoint(x: 0.03, y: 0)))
                                 .opacity(0.5)
                         } else {
                             Image(currentLevel.visualTheme.endImage)
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 300, height: 300)
-                                .position(point(for: currentLevel.endPoint, in: geometry.size, offset: CGPoint(x: 100, y: -50)))
+                                .position(point(for: currentLevel.endPoint, in: geometry.size, offsetFraction: CGPoint(x: 0.08, y: -0.06)))
 
                         }
 
@@ -163,13 +168,13 @@ struct TracingPuzzleDrawingView: View {
                                     .scaledToFit()
                                     .frame(width: 200, height: 200)
                                     .foregroundColor(.black)
-                                    .position(point(for: currentLevel.startPoint, in: geometry.size, offset: CGPoint(x: -40, y: 0)))
+                                    .position(point(for: currentLevel.startPoint, in: geometry.size, offsetFraction: CGPoint(x: -0.03, y: 0)))
                             } else {
                                 Image(currentLevel.visualTheme.startImage)
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 200, height: 200)
-                                    .position(point(for: currentLevel.startPoint, in: geometry.size, offset: CGPoint(x: -40, y: 0)))
+                                    .position(point(for: currentLevel.startPoint, in: geometry.size, offsetFraction: CGPoint(x: -0.03, y: 0)))
                             }
                         } else {
                             if currentLevel.visualTheme.isStartImageSystem {
@@ -287,16 +292,16 @@ struct TracingPuzzleDrawingView: View {
                 animatingImage = true
 
                 if viewModel.currentLevel == 3 {
-                    animationPosition = point(for: currentLevel.startPoint, in: size, offset: CGPoint(x: 0, y: 100))
+                    animationPosition = point(for: currentLevel.startPoint, in: size, offsetFraction: CGPoint(x: 0, y: 0.11))
                 } else {
-                    animationPosition = point(for: currentLevel.startPoint, in: size, offset: CGPoint(x: -40, y: 0))
+                    animationPosition = point(for: currentLevel.startPoint, in: size, offsetFraction: CGPoint(x: -0.03, y: 0))
                 }
 
                 withAnimation(.easeInOut(duration: 1.5)) {
                     if viewModel.currentLevel == 3 {
-                        animationPosition = point(for: currentLevel.endPoint, in: size, offset: CGPoint(x: 0, y: -100))
+                        animationPosition = point(for: currentLevel.endPoint, in: size, offsetFraction: CGPoint(x: 0, y: -0.11))
                     } else {
-                        animationPosition = point(for: currentLevel.endPoint, in: size, offset: CGPoint(x: -140, y: 0))
+                        animationPosition = point(for: currentLevel.endPoint, in: size, offsetFraction: CGPoint(x: -0.12, y: 0))
                     }
                 }
 

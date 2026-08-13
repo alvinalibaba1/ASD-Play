@@ -5,9 +5,14 @@ struct SensorySettingsView: View {
 
     var body: some View {
         ZStack {
-            Image("backgroundMenu")
-                .resizable()
-                .edgesIgnoringSafeArea(.all)
+            GeometryReader { bgGeometry in
+                Image("backgroundMenu")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: bgGeometry.size.width, height: bgGeometry.size.height)
+                    .clipped()
+            }
+            .edgesIgnoringSafeArea(.all)
 
             Color.blue.opacity(0.45)
                 .edgesIgnoringSafeArea(.all)
