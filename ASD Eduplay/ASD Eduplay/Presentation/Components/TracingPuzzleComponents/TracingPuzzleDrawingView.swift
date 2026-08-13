@@ -53,11 +53,13 @@ struct TracingPuzzleDrawingView: View {
         }
     }
 
-    // Illustration sizes were tuned against a ~1200pt-wide iPad canvas; scaling by
-    // that same reference keeps them proportionally sized on any width instead of
-    // staying fixed and overflowing a narrow iPhone screen.
+    // Reference width a "base" illustration size is drawn at full scale. Lower
+    // than the ~1200pt iPad canvas this was originally tuned against - at that
+    // reference, iPhone's much narrower canvas made every illustration read as
+    // too small. iPad still hits the `base` cap either way, so this only changes
+    // iPhone-sized canvases.
     private func scaledSize(_ base: CGFloat, in size: CGSize) -> CGFloat {
-        min(size.width * (base / 1200), base)
+        min(size.width * (base / 700), base)
     }
 
     var body: some View {
@@ -111,11 +113,14 @@ struct TracingPuzzleDrawingView: View {
                                 .position(point(for: currentLevel.endPoint, in: geometry.size, offsetFraction: CGPoint(x: 0, y: -0.11)))
                                 .opacity(0.8)
                         } else {
+                            // Kept close to the finish (red) connection point rather
+                            // than far above it, so the moon reads as the destination
+                            // instead of a separate distant object near the top edge.
                             Image(currentLevel.visualTheme.endImage)
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: scaledSize(300, in: geometry.size), height: scaledSize(300, in: geometry.size))
-                                .position(point(for: currentLevel.endPoint, in: geometry.size, offsetFraction: CGPoint(x: 0, y: -0.17)))
+                                .position(point(for: currentLevel.endPoint, in: geometry.size, offsetFraction: CGPoint(x: 0, y: -0.07)))
                         }
 
                         if !animatingImage {

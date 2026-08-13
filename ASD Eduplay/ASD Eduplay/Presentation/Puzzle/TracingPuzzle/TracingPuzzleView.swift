@@ -41,8 +41,11 @@ struct TracingPuzzleView: View {
                 VStack {
                     Spacer()
                     
+                    // Previously 0.7/1.4 - taller than the screen itself, so content
+                    // near the top or bottom of the canvas (like level 3's moon)
+                    // rendered above/below the visible area instead of on-screen.
                     TracingPuzzleDrawingView(viewModel: viewModel)
-                        .frame(width: geometry.size.width * 0.7, height: geometry.size.height * 1.4)
+                        .frame(width: geometry.size.width * 0.85, height: geometry.size.height * 0.85)
                     
                     Spacer()
                 }

@@ -35,7 +35,9 @@ class TracingPuzzleRepositoryImpl: @preconcurrency TracingPuzzleRepository {
     private func getLevelPoints(level: Int) -> (CGPoint, CGPoint) {
         switch level {
         case 1:
-            return (CGPoint(x: 0.1, y: 0.45), CGPoint(x: 0.9, y: 0.45))
+            // Lower than a mid-screen line so the car and house sit on the ground
+            // in the background art instead of floating in open sky above it.
+            return (CGPoint(x: 0.1, y: 0.68), CGPoint(x: 0.9, y: 0.68))
         case 2:
             return (CGPoint(x: 0.1, y: 0.6), CGPoint(x: 0.9, y: 0.3))
         case 3:
