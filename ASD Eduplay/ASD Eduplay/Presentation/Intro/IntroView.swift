@@ -84,8 +84,9 @@ struct IntroView: View {
             }
 
             VStack {
-                HStack {
+                HStack(spacing: 14) {
                     Spacer()
+                    ProgressButton()
                     SettingsButton()
                         .padding(.trailing, 20)
                 }

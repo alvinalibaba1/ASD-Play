@@ -1,9 +1,9 @@
 import SwiftUI
 
-struct SettingsButton: View {
+struct ProgressButton: View {
     @EnvironmentObject var router: NavigationRouter
 
-    private let buttonColor = Color.blue.opacity(0.7)
+    private let buttonColor = Color.purple.opacity(0.7)
     private let buttonSize: CGFloat = 60
 
     var body: some View {
@@ -18,7 +18,7 @@ struct SettingsButton: View {
                         .stroke(Color.white.opacity(0.5), lineWidth: 2)
                         .blur(radius: 1)
 
-                    Image(systemName: "gearshape.fill")
+                    Image(systemName: "chart.bar.fill")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .padding(15)
@@ -26,7 +26,7 @@ struct SettingsButton: View {
                 }
                 .frame(width: buttonSize, height: buttonSize)
 
-                Text("Settings")
+                Text("Progress")
                     .font(.system(size: 13, weight: .semibold, design: .rounded))
                     .foregroundColor(.white)
                     .shadow(color: .black.opacity(0.4), radius: 3, x: 0, y: 1)
@@ -34,8 +34,8 @@ struct SettingsButton: View {
         }
         .buttonStyle(PlainButtonStyle())
         .frame(width: buttonSize + 20, height: buttonSize + 34)
-        .accessibilityLabel("Settings")
-        .accessibilityHint("Adjust music, sound, vibration and movement")
+        .accessibilityLabel("Progress")
+        .accessibilityHint("See sessions, rounds and accuracy for each game")
     }
 
     private func handlePress() {
@@ -44,6 +44,6 @@ struct SettingsButton: View {
             named: "tapButton",
             withExtension: AudioConstants.audioExtension
         )
-        router.navigate(to: .sensorySettings)
+        router.navigate(to: .progressSummary)
     }
 }

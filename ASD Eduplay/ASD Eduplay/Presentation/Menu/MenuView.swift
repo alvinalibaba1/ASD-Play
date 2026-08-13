@@ -43,10 +43,13 @@ struct MenuView: View {
                             .opacity(showButtons ? 1 : 0)
                             .offset(x: showButtons ? 0 : -60)
                         Spacer()
-                        SettingsButton()
-                            .scaleEffect(0.8)
-                            .opacity(showButtons ? 1 : 0)
-                            .offset(x: showButtons ? 0 : 60)
+                        HStack(spacing: 14) {
+                            ProgressButton()
+                            SettingsButton()
+                        }
+                        .scaleEffect(0.8)
+                        .opacity(showButtons ? 1 : 0)
+                        .offset(x: showButtons ? 0 : 60)
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, 0)

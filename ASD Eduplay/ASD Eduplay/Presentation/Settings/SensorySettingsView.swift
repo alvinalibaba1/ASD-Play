@@ -2,7 +2,6 @@ import SwiftUI
 
 struct SensorySettingsView: View {
     @EnvironmentObject var settings: SensorySettings
-    @EnvironmentObject var router: NavigationRouter
 
     var body: some View {
         ZStack {
@@ -95,26 +94,21 @@ struct SensorySettingsView: View {
 
                         Button {
                             Haptic.shared.tap()
-                            router.navigate(to: .progressSummary)
-                        } label: {
-                            Label("View Progress", systemImage: "chart.bar.fill")
-                                .font(.system(size: 20, weight: .medium, design: .rounded))
-                                .foregroundColor(.white.opacity(0.85))
-                                .padding(.vertical, 12)
-                        }
-                        .buttonStyle(PlainButtonStyle())
-
-                        Button {
-                            Haptic.shared.tap()
                             settings.restoreDefaults()
                             AudioPlayerManager.shared.applyMusicSetting(enabled: true)
                         } label: {
-                            Text("Reset to default")
-                                .font(.system(size: 20, weight: .medium, design: .rounded))
-                                .foregroundColor(.white)
-                                .padding(.vertical, 12)
+                            Label("Reset to Default", systemImage: "arrow.counterclockwise")
+                                .font(.system(size: 20, weight: .semibold, design: .rounded))
+                                .foregroundColor(Color.black.opacity(0.75))
+                                .padding(.vertical, 16)
+                                .frame(maxWidth: .infinity)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .fill(Color.white.opacity(0.9))
+                                )
                         }
                         .buttonStyle(PlainButtonStyle())
+                        .accessibilityHint("Turns music, sound and vibration back on")
                     }
                     .padding(.horizontal, 40)
                     .padding(.bottom, 40)
