@@ -149,7 +149,10 @@ struct JigsawPuzzleView: View {
     private func calculateAdaptivePieceSize(geometry: GeometryProxy) {
         let isPortrait = geometry.size.height > geometry.size.width
         if isPortrait {
-            let widthBasedSize = geometry.size.width / 3
+            // /4 rather than /3: the tray is 2.8x this value wide, so /3 made it
+            // span nearly the full iPhone screen edge-to-edge. /4 keeps pieces well
+            // above the 44pt minimum touch target while leaving real margins.
+            let widthBasedSize = geometry.size.width / 4
 
             // JigsawWorkspaceView's own fixed chrome (header + padding + the gap
             // between its two rows - see JigsawWorkspaceView.chromeHeight) has to be
