@@ -13,7 +13,11 @@ struct ProgressSummaryView: View {
 
     var body: some View {
         ZStack {
-            Color.blue.opacity(0.8)
+            Image("backgroundMenu")
+                .resizable()
+                .edgesIgnoringSafeArea(.all)
+
+            Color.purple.opacity(0.45)
                 .edgesIgnoringSafeArea(.all)
 
             VStack {
@@ -30,16 +34,28 @@ struct ProgressSummaryView: View {
 
             ScrollView {
                 VStack(spacing: 24) {
-                    Text("Progress")
-                        .font(.system(size: 40, weight: .bold, design: .rounded))
-                        .foregroundColor(.white)
-                        .padding(.top, 20)
+                    HStack(spacing: 10) {
+                        Image(systemName: "chart.bar.fill")
+                            .foregroundColor(.white)
+                            .font(.system(size: 28))
+
+                        Text("Progress")
+                            .font(.system(size: 36, weight: .bold, design: .rounded))
+                            .foregroundColor(.white)
+
+                        Image(systemName: "chart.bar.fill")
+                            .foregroundColor(.white)
+                            .font(.system(size: 28))
+                    }
+                    .padding(.top, 20)
+                    .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 2)
 
                     Text("How things are going across each game.")
-                        .font(.system(size: 20))
-                        .foregroundColor(.white.opacity(0.9))
+                        .font(.system(size: 18, weight: .medium, design: .rounded))
+                        .foregroundColor(.white)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 40)
+                        .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 1)
 
                     VStack(spacing: 16) {
                         ForEach(games, id: \.kind) { game in
@@ -51,16 +67,29 @@ struct ProgressSummaryView: View {
                             )
                         }
                     }
-                    .padding(.horizontal, 40)
+                    .padding(.horizontal, 24)
 
                     Button {
                         Haptic.shared.tap()
                         showResetConfirmation = true
                     } label: {
-                        Label("Reset Progress", systemImage: "trash")
-                            .font(.system(size: 20, weight: .medium, design: .rounded))
-                            .foregroundColor(.white.opacity(0.85))
-                            .padding(.vertical, 12)
+                        HStack(spacing: 10) {
+                            Image(systemName: "trash.fill")
+                                .font(.system(size: 15))
+                            Text("Reset Progress")
+                                .font(.system(size: 17, weight: .semibold, design: .rounded))
+                        }
+                        .foregroundColor(.white)
+                        .padding(.vertical, 12)
+                        .padding(.horizontal, 22)
+                        .background(
+                            Capsule()
+                                .fill(Color.black.opacity(0.25))
+                        )
+                        .overlay(
+                            Capsule()
+                                .stroke(Color.white.opacity(0.5), lineWidth: 1.5)
+                        )
                     }
                     .buttonStyle(PlainButtonStyle())
                     .padding(.bottom, 40)
@@ -106,7 +135,7 @@ private struct GameProgressCard: View {
                 Image(systemName: icon)
                     .font(.system(size: 22))
                     .foregroundColor(.white)
-                    .frame(width: 48, height: 48)
+                    .frame(width: 50, height: 50)
                     .background(
                         Circle()
                             .fill(color)
@@ -115,47 +144,57 @@ private struct GameProgressCard: View {
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)
-                        .font(.system(size: 22, weight: .bold, design: .rounded))
+                        .font(.system(size: 20, weight: .bold, design: .rounded))
                         .foregroundColor(Color.black.opacity(0.8))
                     Text(lastPlayedText)
-                        .font(.system(size: 14))
+                        .font(.system(size: 13))
                         .foregroundColor(Color.black.opacity(0.5))
                 }
 
-                Spacer()
+                Spacer(minLength: 4)
             }
 
-            HStack(spacing: 0) {
-                StatColumn(value: "\(progress.sessionsPlayed)", label: "Sessions")
-                StatColumn(value: "\(progress.roundsCompleted)", label: "Rounds")
-                StatColumn(value: accuracyText, label: "Accuracy")
+            HStack(spacing: 8) {
+                StatPill(value: "\(progress.sessionsPlayed)", label: "Sessions", color: color)
+                StatPill(value: "\(progress.roundsCompleted)", label: "Rounds", color: color)
+                StatPill(value: accuracyText, label: "Accuracy", color: color)
             }
         }
         .padding(.vertical, 16)
-        .padding(.horizontal, 20)
+        .padding(.horizontal, 18)
         .background(
             RoundedRectangle(cornerRadius: 20)
-                .fill(Color.white.opacity(0.9))
-                .shadow(color: Color.black.opacity(0.12), radius: 8, x: 0, y: 3)
+                .fill(Color.white.opacity(0.95))
+                .shadow(color: Color.black.opacity(0.15), radius: 8, x: 0, y: 3)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 20)
+                .stroke(color, lineWidth: 2.5)
         )
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(title): \(progress.sessionsPlayed) sessions, \(progress.roundsCompleted) rounds completed, \(accuracyText) accuracy, \(lastPlayedText)")
     }
 }
 
-private struct StatColumn: View {
+private struct StatPill: View {
     let value: String
     let label: String
+    let color: Color
 
     var body: some View {
         VStack(spacing: 2) {
             Text(value)
-                .font(.system(size: 20, weight: .bold, design: .rounded))
+                .font(.system(size: 18, weight: .bold, design: .rounded))
                 .foregroundColor(Color.black.opacity(0.8))
             Text(label)
-                .font(.system(size: 13))
-                .foregroundColor(Color.black.opacity(0.5))
+                .font(.system(size: 12, weight: .medium))
+                .foregroundColor(Color.black.opacity(0.55))
         }
         .frame(maxWidth: .infinity)
+        .padding(.vertical, 8)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(color.opacity(0.12))
+        )
     }
 }

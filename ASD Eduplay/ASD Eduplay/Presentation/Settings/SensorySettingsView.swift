@@ -5,7 +5,11 @@ struct SensorySettingsView: View {
 
     var body: some View {
         ZStack {
-            Color.blue.opacity(0.8)
+            Image("backgroundMenu")
+                .resizable()
+                .edgesIgnoringSafeArea(.all)
+
+            Color.blue.opacity(0.45)
                 .edgesIgnoringSafeArea(.all)
 
             VStack {
@@ -22,16 +26,29 @@ struct SensorySettingsView: View {
 
             ScrollView {
                 VStack(spacing: 24) {
-                    Text("Sensory Settings")
-                        .font(.system(size: 40, weight: .bold, design: .rounded))
-                        .foregroundColor(.white)
-                        .padding(.top, 20)
+                    HStack(spacing: 10) {
+                        Image(systemName: "gearshape.fill")
+                            .foregroundColor(.white)
+                            .font(.system(size: 28))
+
+                        Text("Sensory Settings")
+                            .font(.system(size: 36, weight: .bold, design: .rounded))
+                            .foregroundColor(.white)
+                            .multilineTextAlignment(.center)
+
+                        Image(systemName: "gearshape.fill")
+                            .foregroundColor(.white)
+                            .font(.system(size: 28))
+                    }
+                    .padding(.top, 20)
+                    .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 2)
 
                     Text("Adjust the sound, movement and vibration to whatever feels comfortable.")
-                        .font(.system(size: 20))
-                        .foregroundColor(.white.opacity(0.9))
+                        .font(.system(size: 18, weight: .medium, design: .rounded))
+                        .foregroundColor(.white)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 40)
+                        .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 1)
 
                     VStack(spacing: 16) {
                         SensoryToggleRow(
@@ -61,56 +78,44 @@ struct SensorySettingsView: View {
                         SensoryToggleRow(
                             title: "Reduce Motion",
                             subtitle: settings.systemReduceMotion
-                                ? "Already on in your iPad's accessibility settings"
+                                ? "Already on in your device's accessibility settings"
                                 : "Calmer screens with less movement",
                             icon: "wind",
                             color: .green,
-                            // Shown as on-and-locked when iPadOS already forces reduced motion,
+                            // Shown as on-and-locked when the OS already forces reduced motion,
                             // so the switch never contradicts what the child actually sees.
                             isOn: settings.systemReduceMotion ? .constant(true) : $settings.reduceMotionEnabled,
                             isLocked: settings.systemReduceMotion
                         )
                     }
-                    .padding(.horizontal, 40)
+                    .padding(.horizontal, 24)
 
                     VStack(spacing: 14) {
-                        Button {
+                        SensoryActionRow(
+                            title: "Quiet Mode",
+                            subtitle: "Turn everything off at once",
+                            icon: "moon.fill",
+                            color: .indigo
+                        ) {
                             Haptic.shared.tap()
                             settings.calmEverything()
                             AudioPlayerManager.shared.applyMusicSetting(enabled: false)
-                        } label: {
-                            Label("Quiet Mode", systemImage: "moon.fill")
-                                .font(.system(size: 24, weight: .semibold, design: .rounded))
-                                .foregroundColor(.blue)
-                                .padding(.vertical, 20)
-                                .frame(maxWidth: .infinity)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .fill(Color.white)
-                                )
                         }
-                        .buttonStyle(PlainButtonStyle())
                         .accessibilityHint("Turns off music, sound, vibration and movement all at once")
 
-                        Button {
+                        SensoryActionRow(
+                            title: "Reset to Default",
+                            subtitle: "Turn everything back on",
+                            icon: "arrow.counterclockwise",
+                            color: .blue
+                        ) {
                             Haptic.shared.tap()
                             settings.restoreDefaults()
                             AudioPlayerManager.shared.applyMusicSetting(enabled: true)
-                        } label: {
-                            Label("Reset to Default", systemImage: "arrow.counterclockwise")
-                                .font(.system(size: 20, weight: .semibold, design: .rounded))
-                                .foregroundColor(Color.black.opacity(0.75))
-                                .padding(.vertical, 16)
-                                .frame(maxWidth: .infinity)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .fill(Color.white.opacity(0.9))
-                                )
                         }
-                        .buttonStyle(PlainButtonStyle())
                         .accessibilityHint("Turns music, sound and vibration back on")
                     }
-                    .padding(.horizontal, 40)
+                    .padding(.horizontal, 24)
                     .padding(.bottom, 40)
                 }
             }
@@ -135,43 +140,110 @@ struct SensoryToggleRow: View {
     var isLocked: Bool = false
 
     var body: some View {
-        HStack(spacing: 18) {
+        HStack(spacing: 16) {
             Image(systemName: icon)
-                .font(.system(size: 26))
+                .font(.system(size: 24))
                 .foregroundColor(.white)
-                .frame(width: 56, height: 56)
+                .frame(width: 52, height: 52)
                 .background(
                     Circle()
                         .fill(color.opacity(isLocked ? 0.4 : 1))
                         .shadow(color: color.opacity(0.4), radius: 5, x: 0, y: 3)
                 )
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 3) {
                 Text(title)
-                    .font(.system(size: 24, weight: .bold, design: .rounded))
+                    .font(.system(size: 20, weight: .bold, design: .rounded))
                     .foregroundColor(Color.black.opacity(0.8))
 
                 Text(subtitle)
-                    .font(.system(size: 16))
+                    .font(.system(size: 14))
                     .foregroundColor(Color.black.opacity(0.5))
                     .fixedSize(horizontal: false, vertical: true)
             }
 
-            Spacer()
+            Spacer(minLength: 8)
 
             Toggle("", isOn: $isOn)
                 .labelsHidden()
                 .disabled(isLocked)
         }
-        .padding(.vertical, 16)
-        .padding(.horizontal, 20)
+        .padding(.vertical, 14)
+        .padding(.horizontal, 18)
         .background(
             RoundedRectangle(cornerRadius: 20)
-                .fill(Color.white.opacity(0.9))
-                .shadow(color: Color.black.opacity(0.12), radius: 8, x: 0, y: 3)
+                .fill(Color.white.opacity(0.95))
+                .shadow(color: Color.black.opacity(0.15), radius: 8, x: 0, y: 3)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 20)
+                .stroke(color, lineWidth: 2.5)
         )
         .accessibilityElement(children: .combine)
         .accessibilityLabel(title)
         .accessibilityHint(subtitle)
+    }
+}
+
+struct SensoryActionRow: View {
+    let title: String
+    let subtitle: String
+    let icon: String
+    let color: Color
+    let action: () -> Void
+
+    @State private var scale: CGFloat = 1.0
+
+    var body: some View {
+        Button {
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                scale = 0.96
+            }
+            action()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                scale = 1.0
+            }
+        } label: {
+            HStack(spacing: 16) {
+                Image(systemName: icon)
+                    .font(.system(size: 22))
+                    .foregroundColor(.white)
+                    .frame(width: 48, height: 48)
+                    .background(
+                        Circle()
+                            .fill(color)
+                            .shadow(color: color.opacity(0.4), radius: 5, x: 0, y: 3)
+                    )
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.system(size: 19, weight: .bold, design: .rounded))
+                        .foregroundColor(Color.black.opacity(0.8))
+
+                    Text(subtitle)
+                        .font(.system(size: 13))
+                        .foregroundColor(Color.black.opacity(0.5))
+                }
+
+                Spacer(minLength: 8)
+
+                Image(systemName: "hand.tap.fill")
+                    .font(.system(size: 18))
+                    .foregroundColor(color.opacity(0.7))
+            }
+            .padding(.vertical, 14)
+            .padding(.horizontal, 18)
+            .background(
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(Color.white.opacity(0.95))
+                    .shadow(color: Color.black.opacity(0.15), radius: 8, x: 0, y: 3)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(color, lineWidth: 2.5)
+            )
+        }
+        .buttonStyle(PlainButtonStyle())
+        .scaleEffect(scale)
     }
 }
