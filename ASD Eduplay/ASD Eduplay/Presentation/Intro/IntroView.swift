@@ -96,30 +96,44 @@ struct IntroView: View {
                 // padding), far more than an iPhone's landscape height. Placing the
                 // logo beside the buttons instead uses landscape's abundant width
                 // rather than fighting its short height.
-                HStack(spacing: 40) {
-                    Image("logo")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: min(260, geometry.size.height * 0.75))
+                //
+                // Wrapped in Spacer()-content-Spacer() rather than left as a bare
+                // ZStack child: centering across the *full* screen height (ZStack's
+                // default) put the content close enough to the Progress/Settings
+                // buttons above to feel cramped against them. The top padding
+                // reserves that bar's height so this instead centers - with real
+                // breathing room - in the space below it.
+                VStack {
+                    Spacer()
 
-                    VStack(spacing: 16) {
-                        HeartbeatPlayButton {
-                            Haptic.shared.tap()
-                            AudioPlayerManager.shared.playAudio(named: "tapButton", withExtension: "mp3")
-                            router.navigate(to: .menu)
-                        }
+                    HStack(spacing: 40) {
+                        Image("logo")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: min(230, geometry.size.height * 0.65))
 
-                        CreditButton(
-                            title: "Credit"
-                        ) {
-                            Haptic.shared.tap()
-                            AudioPlayerManager.shared.playAudio(named: "tapButton", withExtension: "mp3")
-                            router.navigate(to: .credit)
+                        VStack(spacing: 24) {
+                            HeartbeatPlayButton {
+                                Haptic.shared.tap()
+                                AudioPlayerManager.shared.playAudio(named: "tapButton", withExtension: "mp3")
+                                router.navigate(to: .menu)
+                            }
+
+                            CreditButton(
+                                title: "Credit"
+                            ) {
+                                Haptic.shared.tap()
+                                AudioPlayerManager.shared.playAudio(named: "tapButton", withExtension: "mp3")
+                                router.navigate(to: .credit)
+                            }
+                            .frame(width: 220, height: 60)
                         }
-                        .frame(width: 220, height: 60)
                     }
+                    .padding(.horizontal, 40)
+
+                    Spacer()
                 }
-                .padding(.horizontal, 40)
+                .padding(.top, 100)
             }
 
             VStack {

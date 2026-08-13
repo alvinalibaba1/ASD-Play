@@ -41,84 +41,94 @@ struct MenuView: View {
             
             Color.white.opacity(0.2)
                 .edgesIgnoringSafeArea(.all)
-            
-            VStack(spacing: 20) {
-                VStack {
-                    HStack {
-                        CustomBackButton()
-                            .scaleEffect(0.8)
-                            .opacity(showButtons ? 1 : 0)
-                            .offset(x: showButtons ? 0 : -60)
-                        Spacer()
-                        HStack(spacing: 14) {
-                            ProgressButton()
-                            SettingsButton()
-                        }
+
+            // Top bar - an independent ZStack sibling pinned to the top via its own
+            // internal Spacer, rather than sharing a parent VStack with the main
+            // content below. Sharing one meant this row's Spacer and the content's
+            // Spacers were competing for the same leftover space in a way that
+            // wasn't predictable, and empirically came out uneven (a large gap
+            // above "Choose Puzzle" but almost none below the button grid).
+            VStack {
+                HStack {
+                    CustomBackButton()
                         .scaleEffect(0.8)
                         .opacity(showButtons ? 1 : 0)
-                        .offset(x: showButtons ? 0 : 60)
-                    }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 0)
-                    
+                        .offset(x: showButtons ? 0 : -60)
                     Spacer()
-                }
-                .animation(
-                    .spring(response: 0.5, dampingFraction: 0.7)
-                    .delay(0.3),
-                    value: showButtons
-                )
-                
-                VStack(spacing: 20) {
-                    HStack(spacing: 10) {
-                        Image(systemName: "star.fill")
-                            .foregroundColor(.yellow)
-                            .font(.system(size: 30))
-                        
-                        Text("Choose Puzzle")
-                            .font(.system(size: 38, weight: .bold, design: .rounded))
-                            .foregroundColor(.blue)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.5)
-                        
-                        Image(systemName: "star.fill")
-                            .foregroundColor(.yellow)
-                            .font(.system(size: 30))
+                    HStack(spacing: 14) {
+                        ProgressButton()
+                        SettingsButton()
                     }
-                    .offset(y: showButtons ? 0 : -60)
+                    .scaleEffect(0.8)
                     .opacity(showButtons ? 1 : 0)
-                    
-                    Spacer()
+                    .offset(x: showButtons ? 0 : 60)
+                }
+                .padding(.horizontal, 20)
 
-                    if isPortrait {
-                        VStack(spacing: 22) {
-                            ForEach(0..<menuItems.count, id: \.self) { index in
-                                menuButton(at: index)
-                            }
-                        }
-                    } else {
-                        // 4 stacked full-width buttons need ~450pt of height (see
-                        // CompactMenuButton's fixed padding/icon size), more than an
-                        // iPhone's landscape height has available. A 2x2 grid halves
-                        // that requirement instead of shrinking touch targets or
-                        // requiring a scroll to see every game.
-                        VStack(spacing: 14) {
-                            HStack(spacing: 14) {
-                                menuButton(at: 0)
-                                menuButton(at: 1)
-                            }
-                            HStack(spacing: 14) {
-                                menuButton(at: 2)
-                                menuButton(at: 3)
-                            }
+                Spacer()
+            }
+            .animation(
+                .spring(response: 0.5, dampingFraction: 0.7)
+                .delay(0.3),
+                value: showButtons
+            )
+
+            // Main content - a single VStack with one Spacer on each side of the
+            // title+grid block guarantees they split the remaining space equally
+            // (true centering), instead of the previous two-separate-VStacks
+            // arrangement where that wasn't guaranteed. Padded from the top by
+            // roughly the top bar's own height so this centers within the space
+            // below it rather than the full screen (which risked overlapping the
+            // top bar on landscape's short height).
+            VStack(spacing: 20) {
+                Spacer()
+
+                HStack(spacing: 10) {
+                    Image(systemName: "star.fill")
+                        .foregroundColor(.yellow)
+                        .font(.system(size: 30))
+
+                    Text("Choose Puzzle")
+                        .font(.system(size: 38, weight: .bold, design: .rounded))
+                        .foregroundColor(.blue)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.5)
+
+                    Image(systemName: "star.fill")
+                        .foregroundColor(.yellow)
+                        .font(.system(size: 30))
+                }
+                .offset(y: showButtons ? 0 : -60)
+                .opacity(showButtons ? 1 : 0)
+
+                if isPortrait {
+                    VStack(spacing: 22) {
+                        ForEach(0..<menuItems.count, id: \.self) { index in
+                            menuButton(at: index)
                         }
                     }
-
-                    Spacer()
+                } else {
+                    // 4 stacked full-width buttons need ~450pt of height (see
+                    // CompactMenuButton's fixed padding/icon size), more than an
+                    // iPhone's landscape height has available. A 2x2 grid halves
+                    // that requirement instead of shrinking touch targets or
+                    // requiring a scroll to see every game.
+                    VStack(spacing: 14) {
+                        HStack(spacing: 14) {
+                            menuButton(at: 0)
+                            menuButton(at: 1)
+                        }
+                        HStack(spacing: 14) {
+                            menuButton(at: 2)
+                            menuButton(at: 3)
+                        }
+                    }
                 }
-                .padding(.horizontal, 25)
-                .padding(.bottom, 50)
+
+                Spacer()
             }
+            .padding(.horizontal, 25)
+            .padding(.top, 85)
         }
         }
         .onAppear {

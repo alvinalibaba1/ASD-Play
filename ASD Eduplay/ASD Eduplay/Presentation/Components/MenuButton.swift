@@ -54,6 +54,8 @@ struct CompactMenuButton: View {
                 Text(title)
                     .font(.system(size: 26, weight: .bold, design: .rounded))
                     .foregroundColor(Color.black.opacity(0.8))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
                 
                 Spacer()
                 
