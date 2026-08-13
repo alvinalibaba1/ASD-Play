@@ -164,8 +164,25 @@ struct JigsawPuzzleView: View {
 
             adaptivePieceSize = max(70, min(widthBasedSize, heightBasedSize, 150))
         } else {
-            // Original piece size for landscape
-            adaptivePieceSize = min(geometry.size.width / 5, 200)
+            // The landscape HStack lays out board (2x pieceSize wide) + a fixed
+            // 60pt gap + tray (2.8x pieceSize wide), inside 60pt of padding on each
+            // side - so the combined footprint is 4.8x pieceSize + 180. The old
+            // width/5 formula never accounted for that footprint (it was tuned for
+            // iPad's much wider landscape canvas), so on an iPhone in landscape the
+            // required width exceeded what was actually available, overflowing the
+            // tray outside its own container.
+            let horizontalChrome: CGFloat = 180
+            let hstackDivisor: CGFloat = 4.8
+            let widthBasedSize = (geometry.size.width - horizontalChrome) / hstackDivisor
+
+            // Same height-awareness as portrait: the back button row plus its
+            // padding has to be reserved before the board/tray get whatever
+            // vertical space remains.
+            let verticalChrome: CGFloat = 150
+            let heightBudget = geometry.size.height - verticalChrome
+            let heightBasedSize = (heightBudget - JigsawWorkspaceView.chromeHeight) / 2
+
+            adaptivePieceSize = max(70, min(widthBasedSize, heightBasedSize, 200))
         }
     }
     
