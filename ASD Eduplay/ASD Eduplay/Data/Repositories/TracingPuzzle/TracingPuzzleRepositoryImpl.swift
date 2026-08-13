@@ -18,11 +18,8 @@ class TracingPuzzleRepositoryImpl: @preconcurrency TracingPuzzleRepository {
     }
     
     private func setupInitialLevels() {
-        let screenWidth = UIScreen.main.bounds.width
-        let screenHeight = UIScreen.main.bounds.height
-        
         levels = (1...totalLevels).map { levelNum in
-            let (startPoint, endPoint) = getLevelPoints(level: levelNum, screenWidth: screenWidth, screenHeight: screenHeight)
+            let (startPoint, endPoint) = getLevelPoints(level: levelNum)
             return TracingPuzzleLevel(
                 id: levelNum,
                 startPoint: startPoint,
@@ -31,22 +28,21 @@ class TracingPuzzleRepositoryImpl: @preconcurrency TracingPuzzleRepository {
             )
         }
     }
-    
-    private func getLevelPoints(level: Int, screenWidth: CGFloat, screenHeight: CGFloat) -> (CGPoint, CGPoint) {
+
+    /// Returns start/end points as fractions (0...1) of the drawing view's own size,
+    /// not absolute pixels, so the trace path stays correct across rotation and
+    /// different iPad sizes instead of being fixed to the screen size at launch.
+    private func getLevelPoints(level: Int) -> (CGPoint, CGPoint) {
         switch level {
         case 1:
-            return (CGPoint(x: screenWidth * 0.1, y: screenHeight * 0.45),
-                    CGPoint(x: screenWidth * 0.9, y: screenHeight * 0.45))
+            return (CGPoint(x: 0.1, y: 0.45), CGPoint(x: 0.9, y: 0.45))
         case 2:
-            return (CGPoint(x: screenWidth * 0.1, y: screenHeight * 0.6),
-                    CGPoint(x: screenWidth * 0.9, y: screenHeight * 0.3))
+            return (CGPoint(x: 0.1, y: 0.6), CGPoint(x: 0.9, y: 0.3))
         case 3:
-            let centerX = screenWidth * 0.5
-                    return (CGPoint(x: centerX, y: screenHeight * 0.6),  
-                            CGPoint(x: centerX, y: screenHeight * 0.3))
+            let centerX: CGFloat = 0.5
+            return (CGPoint(x: centerX, y: 0.6), CGPoint(x: centerX, y: 0.3))
         default:
-            return (CGPoint(x: screenWidth * 0.25, y: screenHeight * 0.5),
-                    CGPoint(x: screenWidth * 0.75, y: screenHeight * 0.5))
+            return (CGPoint(x: 0.25, y: 0.5), CGPoint(x: 0.75, y: 0.5))
         }
     }
     
