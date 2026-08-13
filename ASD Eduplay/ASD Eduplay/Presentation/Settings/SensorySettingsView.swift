@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SensorySettingsView: View {
     @EnvironmentObject var settings: SensorySettings
+    @EnvironmentObject var router: NavigationRouter
 
     var body: some View {
         ZStack {
@@ -91,6 +92,17 @@ struct SensorySettingsView: View {
                         }
                         .buttonStyle(PlainButtonStyle())
                         .accessibilityHint("Turns off music, sound, vibration and movement all at once")
+
+                        Button {
+                            Haptic.shared.tap()
+                            router.navigate(to: .progressSummary)
+                        } label: {
+                            Label("View Progress", systemImage: "chart.bar.fill")
+                                .font(.system(size: 20, weight: .medium, design: .rounded))
+                                .foregroundColor(.white.opacity(0.85))
+                                .padding(.vertical, 12)
+                        }
+                        .buttonStyle(PlainButtonStyle())
 
                         Button {
                             Haptic.shared.tap()

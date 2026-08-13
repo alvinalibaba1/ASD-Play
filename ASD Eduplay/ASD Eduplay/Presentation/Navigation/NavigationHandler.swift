@@ -21,6 +21,8 @@ final class NavigationHandler {
             MenuView()
         case .sensorySettings:
             SensorySettingsView()
+        case .progressSummary:
+            ProgressSummaryView()
         case .jigsawPuzzle:
             JigsawPuzzleView(viewModel: self.container.makeJigsawPuzzleViewModel())
         case .matchingPuzzle:

@@ -5,6 +5,7 @@ enum Destination: Hashable {
     case credit
     case menu
     case sensorySettings
+    case progressSummary
     case jigsawPuzzle
     case matchingPuzzle
     case sortingPuzzle
