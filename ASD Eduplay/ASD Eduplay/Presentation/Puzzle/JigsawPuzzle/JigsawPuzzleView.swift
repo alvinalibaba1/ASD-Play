@@ -32,12 +32,14 @@ struct JigsawPuzzleView: View {
             let isPortrait = geometry.size.height > geometry.size.width
             
             ZStack {
-                Image("backgroundJigsaw")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: geometry.size.width, height: geometry.size.height)
-                    .clipped()
-                    .edgesIgnoringSafeArea(.all)
+                GeometryReader { bgGeometry in
+                    Image("backgroundJigsaw")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: bgGeometry.size.width, height: bgGeometry.size.height)
+                        .clipped()
+                }
+                .edgesIgnoringSafeArea(.all)
                 
                 VStack {
                     HStack {

@@ -19,12 +19,14 @@ struct IntroView: View {
     var body: some View {
         GeometryReader { geometry in
         ZStack {
-            Image("backgroundIntro")
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: geometry.size.width, height: geometry.size.height)
-                .clipped()
-                .edgesIgnoringSafeArea(.all)
+            GeometryReader { bgGeometry in
+                Image("backgroundIntro")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: bgGeometry.size.width, height: bgGeometry.size.height)
+                    .clipped()
+            }
+            .edgesIgnoringSafeArea(.all)
 
             Image("birdIntro")
                 .resizable()

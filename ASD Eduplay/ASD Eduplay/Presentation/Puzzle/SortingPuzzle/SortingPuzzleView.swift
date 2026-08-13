@@ -21,12 +21,14 @@ struct SortingPuzzleView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                Image("backgroundSorting")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: geometry.size.width, height: geometry.size.height)
-                    .clipped()
-                    .edgesIgnoringSafeArea(.all)
+                GeometryReader { bgGeometry in
+                    Image("backgroundSorting")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: bgGeometry.size.width, height: bgGeometry.size.height)
+                        .clipped()
+                }
+                .edgesIgnoringSafeArea(.all)
 
                 VStack {
                     HStack {

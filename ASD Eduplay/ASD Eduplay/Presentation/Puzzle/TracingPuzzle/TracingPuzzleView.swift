@@ -18,9 +18,14 @@ struct TracingPuzzleView: View {
     
     var body: some View {
         ZStack {
-            Image(viewModel.levels[viewModel.currentLevel - 1].visualTheme.backgroundImage)
-                .resizable()
-                .edgesIgnoringSafeArea(.all)
+            GeometryReader { bgGeometry in
+                Image(viewModel.levels[viewModel.currentLevel - 1].visualTheme.backgroundImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: bgGeometry.size.width, height: bgGeometry.size.height)
+                    .clipped()
+            }
+            .edgesIgnoringSafeArea(.all)
             
             VStack {
                 HStack {
