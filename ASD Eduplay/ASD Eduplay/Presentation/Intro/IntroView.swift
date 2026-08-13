@@ -17,45 +17,46 @@ struct IntroView: View {
     private let audioService = AudioPlayerManager.shared
     
     var body: some View {
+        GeometryReader { geometry in
         ZStack {
             Image("backgroundIntro")
                 .resizable()
                 .edgesIgnoringSafeArea(.all)
-            
+
             Image("birdIntro")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 120)
                 .rotationEffect(flapWings ? Angle(degrees: 10) : Angle(degrees: -10))
-                .offset(x: -UIScreen.main.bounds.width/3 + leftBirdOffset.width,
-                        y: -UIScreen.main.bounds.height/3)
-            
+                .offset(x: -geometry.size.width/3 + leftBirdOffset.width,
+                        y: -geometry.size.height/3)
+
             Image("birdIntro")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 120)
                 .scaleEffect(x: -1, y: 1)
                 .rotationEffect(flapWings ? Angle(degrees: -8) : Angle(degrees: 8))
-                .offset(x: UIScreen.main.bounds.width/3 + rightBirdOffset.width,
-                        y: -UIScreen.main.bounds.height/4)
-            
+                .offset(x: geometry.size.width/3 + rightBirdOffset.width,
+                        y: -geometry.size.height/4)
+
             Image("cloud")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 220)
                 .opacity(0.85)
-                .offset(x: -UIScreen.main.bounds.width/2.5 + leftCloudOffset.width,
-                        y: -UIScreen.main.bounds.height/2.5)
-            
+                .offset(x: -geometry.size.width/2.5 + leftCloudOffset.width,
+                        y: -geometry.size.height/2.5)
+
             Image("cloud")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 180)
                 .opacity(0.75)
-                .offset(x: UIScreen.main.bounds.width/2.5 + rightCloudOffset.width,
-                        y: -UIScreen.main.bounds.height/3)
-            
-            
+                .offset(x: geometry.size.width/2.5 + rightCloudOffset.width,
+                        y: -geometry.size.height/3)
+
+
             VStack {
                 VStack(spacing: 0) {
                     Image("logo")
@@ -97,18 +98,20 @@ struct IntroView: View {
 
             Spacer()
         }
-        // Rebuilds the subtree when the motion preference flips, which resets the
-        // repeatForever animations that SwiftUI otherwise keeps running.
-        .id(settings.motionReduced)
+        // Rebuilds the subtree when the motion preference or the screen width changes
+        // (e.g. rotation), which resets the repeatForever animations that SwiftUI
+        // otherwise keeps running toward a stale, now-incorrect target distance.
+        .id("\(settings.motionReduced)_\(Int(geometry.size.width))")
         .onAppear {
-            startAnimations()
+            startAnimations(screenWidth: geometry.size.width)
             if !AudioPlayerManager.shared.isIntroMusicPlaying {
                 AudioPlayerManager.shared.playBackgroundMusic(
                     named: AudioConstants.introMusic,
                     withExtension: AudioConstants.audioExtension
                 )
             }
-            
+
+        }
         }
     }
     
@@ -127,21 +130,21 @@ struct IntroView: View {
 
     
     
-    private func startAnimations() {
+    private func startAnimations(screenWidth: CGFloat) {
         guard !settings.motionReduced else { return }
 
         withAnimation(Animation.easeInOut(duration: 0.6).repeatForever(autoreverses: true)) {
             flapWings = true
         }
-        
+
         withAnimation(Animation.linear(duration: 16).repeatForever(autoreverses: false)) {
-            leftBirdOffset = CGSize(width: UIScreen.main.bounds.width * 1.5, height: 0)
-            rightBirdOffset = CGSize(width: -UIScreen.main.bounds.width * 1.5, height: 0)
+            leftBirdOffset = CGSize(width: screenWidth * 1.5, height: 0)
+            rightBirdOffset = CGSize(width: -screenWidth * 1.5, height: 0)
         }
-        
+
         withAnimation(Animation.linear(duration: 45).repeatForever(autoreverses: false)) {
-            leftCloudOffset = CGSize(width: UIScreen.main.bounds.width * 1.2, height: 0)
-            rightCloudOffset = CGSize(width: -UIScreen.main.bounds.width * 1.2, height: 0)
+            leftCloudOffset = CGSize(width: screenWidth * 1.2, height: 0)
+            rightCloudOffset = CGSize(width: -screenWidth * 1.2, height: 0)
         }
     }
     

@@ -10,57 +10,29 @@ import SwiftUI
 
 @MainActor
 class SortingPuzzleViewModel: ObservableObject {
-    @Published private(set) var puzzlePieces: [CorrectPuzzle]
-    @Published private(set) var workspaces: [Workspace]
+    @Published private(set) var puzzlePieces: [CorrectPuzzle] = []
+    @Published private(set) var workspaces: [Workspace] = []
     @Published var isComplete: Bool = false
     @Published var currentRound: Int = 1
     @Published private(set) var currentTheme: CorrectPuzzleTheme
     @Published var shouldReturnToMenu: Bool = false
-    
+
     private let sortingUseCase: CorrectPuzzleUseCase
-    
+    private var containerSize: CGSize = .zero
+
     init(sortingUseCase: CorrectPuzzleUseCase) {
         self.sortingUseCase = sortingUseCase
-        
-        let theme = sortingUseCase.getNextTheme()
-        self.currentTheme = theme
-        
-        let screenWidth = UIScreen.main.bounds.width
-        let screenHeight = UIScreen.main.bounds.height
-        let workspaceY = screenHeight * 0.3
-        let pieceY = screenHeight * 0.7
-        let pieceSpacing: CGFloat = 300
-        let centerX = screenWidth / 2
-        
-        self.workspaces = [
-            Workspace(
-                id: "workspaceA",
-                position: CGPoint(x: screenWidth * 0.25, y: workspaceY),
-                imageName: theme.workspaceAImageName
-            ),
-            Workspace(
-                id: "workspaceB",
-                position: CGPoint(x: screenWidth * 0.75, y: workspaceY),
-                imageName: theme.workspaceBImageName
-            )
-        ]
-        
-        self.puzzlePieces = [
-            CorrectPuzzle(
-                id: "A",
-                correctWorkspaceId: "workspaceA",
-                initialPosition: CGPoint(x: centerX - pieceSpacing/2, y: pieceY),
-                imageName: theme.pieceAImageName
-            ),
-            CorrectPuzzle(
-                id: "B",
-                correctWorkspaceId: "workspaceB",
-                initialPosition: CGPoint(x: centerX + pieceSpacing/2, y: pieceY),
-                imageName: theme.pieceBImageName
-            )
-        ]
-
+        self.currentTheme = sortingUseCase.getNextTheme()
         ProgressStore.shared.recordSessionStart(.sorting)
+    }
+
+    /// Called by the view whenever its rendered size is known or changes (including
+    /// rotation), so pieces are laid out for the actual canvas instead of whatever
+    /// screen size happened to be current when this view model was created.
+    func updateLayout(containerSize: CGSize) {
+        guard containerSize.width > 0, containerSize.height > 0, containerSize != self.containerSize else { return }
+        self.containerSize = containerSize
+        resetPieces()
     }
 
     func nextRound() {
@@ -71,7 +43,7 @@ class SortingPuzzleViewModel: ObservableObject {
             isComplete = false
         }
     }
-    
+
     func resetGame() {
         currentRound = 1
         sortingUseCase.resetGame()
@@ -79,28 +51,30 @@ class SortingPuzzleViewModel: ObservableObject {
         resetPieces()
         isComplete = false
     }
-    
+
     private func resetPieces() {
+        guard containerSize.width > 0, containerSize.height > 0 else { return }
+
         let theme = self.currentTheme
-        let screenWidth = UIScreen.main.bounds.width
-        let screenHeight = UIScreen.main.bounds.height
-        let pieceY = screenHeight * 0.7
+        let size = containerSize
+        let workspaceY = size.height * 0.3
+        let pieceY = size.height * 0.7
         let pieceSpacing: CGFloat = 300
-        let centerX = screenWidth / 2
-        
+        let centerX = size.width / 2
+
         workspaces = [
             Workspace(
                 id: "workspaceA",
-                position: CGPoint(x: screenWidth * 0.25, y: screenHeight * 0.3),
+                position: CGPoint(x: size.width * 0.25, y: workspaceY),
                 imageName: theme.workspaceAImageName
             ),
             Workspace(
                 id: "workspaceB",
-                position: CGPoint(x: screenWidth * 0.75, y: screenHeight * 0.3),
+                position: CGPoint(x: size.width * 0.75, y: workspaceY),
                 imageName: theme.workspaceBImageName
             )
         ]
-        
+
         puzzlePieces = [
             CorrectPuzzle(
                 id: "A",
@@ -193,11 +167,10 @@ class SortingPuzzleViewModel: ObservableObject {
     }
     
     private func getOriginalPosition(for pieceId: String) -> CGPoint {
-        let screenWidth = UIScreen.main.bounds.width
-        let pieceY = UIScreen.main.bounds.height * 0.7
+        let pieceY = containerSize.height * 0.7
         let pieceSpacing: CGFloat = 300
-        let centerX = screenWidth / 2
-        
+        let centerX = containerSize.width / 2
+
         return pieceId == "A"
         ? CGPoint(x: centerX - pieceSpacing/2, y: pieceY)
         : CGPoint(x: centerX + pieceSpacing/2, y: pieceY)

@@ -23,32 +23,29 @@ struct SuccessOverlay: View {
     init(isVisible: Bool, onComplete: @escaping () -> Void) {
         self.isVisible = isVisible
         self.onComplete = onComplete
-        
+
         var initialStarScales: [CGFloat] = []
-        var initialStarPositions: [CGPoint] = []
         var initialStarAngles: [Double] = []
         var initialStarColors: [Color] = []
-        
-        let screenWidth = UIScreen.main.bounds.width
+
         let starColorOptions: [Color] = [.yellow, Color(hex: "FFD700"), Color(hex: "FFDF00"), Color(hex: "FFC125")]
-        
+
         for _ in 0..<starCount {
             initialStarScales.append(CGFloat.random(in: 0.3...1.2))
-            initialStarPositions.append(CGPoint(
-                x: CGFloat.random(in: -20...screenWidth + 20),
-                y: CGFloat.random(in: -200...0)
-            ))
             initialStarAngles.append(Double.random(in: 0...360))
             initialStarColors.append(starColorOptions.randomElement() ?? .yellow)
         }
-        
+
         _starScales = State(initialValue: initialStarScales)
-        _starPositions = State(initialValue: initialStarPositions)
+        // Placeholder until startAnimations(screenSize:) spreads these across the
+        // actual rendered width, which isn't known until the view has a GeometryReader.
+        _starPositions = State(initialValue: Array(repeating: .zero, count: starCount))
         _starAngles = State(initialValue: initialStarAngles)
         _starColors = State(initialValue: initialStarColors)
     }
-    
+
     var body: some View {
+        GeometryReader { geometry in
         ZStack {
             if isVisible {
                 Color.black.opacity(0.7)
@@ -93,7 +90,7 @@ struct SuccessOverlay: View {
                         .scaleEffect(starScales[index])
                         .rotationEffect(.degrees(starAngles[index]))
                         .position(x: starPositions[index].x,
-                                  y: showStars ? UIScreen.main.bounds.height + 100 : starPositions[index].y)
+                                  y: showStars ? geometry.size.height + 100 : starPositions[index].y)
                         .opacity(showStars ? 0.9 : 0)
                         .animation(
                             Animation.easeIn(duration: 3.0)
@@ -107,8 +104,8 @@ struct SuccessOverlay: View {
         }
         .onChange(of: isVisible) { visible in
             if visible {
-                startAnimations()
-                
+                startAnimations(screenSize: geometry.size)
+
                 DispatchQueue.main.asyncAfter(deadline: .now() + 6.0) {
                     onComplete()
                 }
@@ -116,14 +113,22 @@ struct SuccessOverlay: View {
                 resetAnimations()
             }
         }
+        }
     }
-    
-    private func startAnimations() {
+
+    private func startAnimations(screenSize: CGSize) {
         guard !settings.motionReduced else {
             // Reward still appears, just without the shower or the staged reveal.
             showStars = true
             showText = true
             return
+        }
+
+        starPositions = (0..<starCount).map { _ in
+            CGPoint(
+                x: CGFloat.random(in: -20...screenSize.width + 20),
+                y: CGFloat.random(in: -200...0)
+            )
         }
 
         withAnimation {

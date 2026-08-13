@@ -10,7 +10,7 @@ import SwiftUI
 struct CreditView: View {
     @EnvironmentObject var router: NavigationRouter
     
-    @State private var scrollOffset: CGFloat = UIScreen.main.bounds.height
+    @State private var scrollOffset: CGFloat = 0
     @State private var isAnimating = false
     @State private var animationWorkItem: DispatchWorkItem?
     
@@ -71,10 +71,11 @@ struct CreditView: View {
                 .padding(.horizontal)
                 .offset(y: scrollOffset)
                 .drawingGroup()
+                .onAppear {
+                    scrollOffset = geometry.size.height
+                    startContinuousAnimation(screenHeight: geometry.size.height)
+                }
             }
-        }
-        .onAppear {
-            startContinuousAnimation()
         }
         .onDisappear {
             animationWorkItem?.cancel()
@@ -82,30 +83,30 @@ struct CreditView: View {
         }
         .navigationBarBackButtonHidden(true)
     }
-    
-    private func startContinuousAnimation() {
+
+    private func startContinuousAnimation(screenHeight: CGFloat) {
         let contentHeight = CGFloat(creditItems.count * 200) + 400
         let animationDuration: Double = 25
-        
+
 
         func animateCycle() {
             withAnimation(.linear(duration: animationDuration)) {
                 scrollOffset = -contentHeight
             }
-            
+
             let workItem = DispatchWorkItem {
-                scrollOffset = UIScreen.main.bounds.height
+                scrollOffset = screenHeight
                 animateCycle()
             }
-            
+
             animationWorkItem = workItem
-            
+
             DispatchQueue.main.asyncAfter(
                 deadline: .now() + animationDuration - 0.1,
                 execute: workItem
             )
         }
-        
+
         animateCycle()
     }
 }

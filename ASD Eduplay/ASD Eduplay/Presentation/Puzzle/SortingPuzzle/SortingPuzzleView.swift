@@ -19,86 +19,91 @@ struct SortingPuzzleView: View {
     }
     
     var body: some View {
-        ZStack {
-            Image("backgroundSorting")
-                .resizable()
-                .edgesIgnoringSafeArea(.all)
-            
-            VStack {
-                HStack {
-                    CustomBackButton()
-                        .padding(.leading, 20)
+        GeometryReader { geometry in
+            ZStack {
+                Image("backgroundSorting")
+                    .resizable()
+                    .edgesIgnoringSafeArea(.all)
+
+                VStack {
+                    HStack {
+                        CustomBackButton()
+                            .padding(.leading, 20)
+                        Spacer()
+                    }
+                    .padding(.top, 20)
                     Spacer()
                 }
-                .padding(.top, 20)
-                Spacer()
-            }
-            
-            VStack {
-                ZStack {
-                    ForEach(viewModel.workspaces, id: \.id) { workspace in
-                        workspaceView(for: workspace)
-                            .opacity(elementsVisible ? 1 : 0)
-                            .scaleEffect(elementsVisible ? 1 : 0.5)
-                    }
-                    
-                    ForEach(viewModel.puzzlePieces, id: \.id) { piece in
-                        puzzlePieceView(for: piece)
-                            .opacity(elementsVisible ? 1 : 0)
-                            .scaleEffect(elementsVisible ? 1 : 0.5)
-                    }
-                }
-                .allowsHitTesting(!isTransitioning)
-            }
-            
-            SuccessOverlay(
-                isVisible: showSuccessOverlay,
-                onComplete: {
-                    showSuccessOverlay = false
-                    viewModel.finishSuccessAndReturnToMenu()
-                }
-            )
-        }
-        .onAppear {
-            withAnimation(.easeIn(duration: 1.0)) {
-                elementsVisible = true
-                AudioPlayerManager.shared.playAudio(named: AudioConstants.dialogSorting, withExtension: AudioConstants.audioExtension)
-            }
-        }
-        .onDisappear {
-            AudioPlayerManager.shared.stopBackgroundMusic()
-            AudioPlayerManager.shared.playAudio(named: AudioConstants.introMusic, withExtension: AudioConstants.audioExtension)
-        }
-        .onChange(of: viewModel.isComplete) { isComplete in
-            if isComplete && viewModel.currentRound == 5 && !isTransitioning {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    showSuccessOverlay = true
-                }
-            }
-        }
-        .onChange(of: viewModel.shouldReturnToMenu) { shouldReturn in
-            if shouldReturn {
-                router.navigateToRoot()
-                router.navigate(to: .menu)
-            }
-        }
-        .blockInteractions(when: showSuccessOverlay)
-        .gesture(
-            showSuccessOverlay ?
-            DragGesture().onChanged { _ in } :
-            nil
-        )
-        .navigationBarBackButtonHidden(showSuccessOverlay)
-        .onDisappear {
-            if showSuccessOverlay {
-                DispatchQueue.main.async {
-                    router.navigateBack()
-                    router.navigate(to: .sortingPuzzle)
-                }
-            }
-        }
-        .navigationBarBackButtonHidden(true)
 
+                VStack {
+                    ZStack {
+                        ForEach(viewModel.workspaces, id: \.id) { workspace in
+                            workspaceView(for: workspace)
+                                .opacity(elementsVisible ? 1 : 0)
+                                .scaleEffect(elementsVisible ? 1 : 0.5)
+                        }
+
+                        ForEach(viewModel.puzzlePieces, id: \.id) { piece in
+                            puzzlePieceView(for: piece)
+                                .opacity(elementsVisible ? 1 : 0)
+                                .scaleEffect(elementsVisible ? 1 : 0.5)
+                        }
+                    }
+                    .allowsHitTesting(!isTransitioning)
+                }
+
+                SuccessOverlay(
+                    isVisible: showSuccessOverlay,
+                    onComplete: {
+                        showSuccessOverlay = false
+                        viewModel.finishSuccessAndReturnToMenu()
+                    }
+                )
+            }
+            .onAppear {
+                viewModel.updateLayout(containerSize: geometry.size)
+                withAnimation(.easeIn(duration: 1.0)) {
+                    elementsVisible = true
+                    AudioPlayerManager.shared.playAudio(named: AudioConstants.dialogSorting, withExtension: AudioConstants.audioExtension)
+                }
+            }
+            .onChange(of: geometry.size) { newSize in
+                viewModel.updateLayout(containerSize: newSize)
+            }
+            .onDisappear {
+                AudioPlayerManager.shared.stopBackgroundMusic()
+                AudioPlayerManager.shared.playAudio(named: AudioConstants.introMusic, withExtension: AudioConstants.audioExtension)
+            }
+            .onChange(of: viewModel.isComplete) { isComplete in
+                if isComplete && viewModel.currentRound == 5 && !isTransitioning {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        showSuccessOverlay = true
+                    }
+                }
+            }
+            .onChange(of: viewModel.shouldReturnToMenu) { shouldReturn in
+                if shouldReturn {
+                    router.navigateToRoot()
+                    router.navigate(to: .menu)
+                }
+            }
+            .blockInteractions(when: showSuccessOverlay)
+            .gesture(
+                showSuccessOverlay ?
+                DragGesture().onChanged { _ in } :
+                nil
+            )
+            .navigationBarBackButtonHidden(showSuccessOverlay)
+            .onDisappear {
+                if showSuccessOverlay {
+                    DispatchQueue.main.async {
+                        router.navigateBack()
+                        router.navigate(to: .sortingPuzzle)
+                    }
+                }
+            }
+            .navigationBarBackButtonHidden(true)
+        }
     }
     
     private func proceedToNextRound() {
