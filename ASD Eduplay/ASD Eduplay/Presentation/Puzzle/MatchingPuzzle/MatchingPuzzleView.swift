@@ -41,7 +41,7 @@ struct MatchingPuzzleView: View {
                     Spacer()
                     
                     if showTargetAnimation {
-                        plateTargetArea
+                        plateTargetArea(width: geometry.size.width)
                             .transition(.opacity.combined(with: .scale))
                             .frame(height: geometry.size.height * 0.5)
                             .padding(.top, 60)
@@ -50,13 +50,19 @@ struct MatchingPuzzleView: View {
                     Spacer()
                     
                     VStack {
-                        HStack(spacing: 50) {
+                        // Sized against the available width (with a cap matching the
+                        // original iPad size) so 4 pieces + spacing always fit instead
+                        // of overflowing a narrow iPhone screen.
+                        let circleDiameter = min(geometry.size.width / 5, 150)
+                        let imageDiameter = circleDiameter * (110.0 / 150.0)
+
+                        HStack(spacing: circleDiameter * 0.15) {
                             ForEach(viewModel.pieces) { piece in
                                 if piece.isVisible {
                                     Image(piece.imageName)
                                         .resizable()
                                         .scaledToFit()
-                                        .frame(width: 110, height: 110)
+                                        .frame(width: imageDiameter, height: imageDiameter)
                                         .opacity(piece.isMatched ? 0.5 : 1.0)
                                         .offset(piece.offSet)
                                         .shadow(radius: 8)
@@ -64,12 +70,12 @@ struct MatchingPuzzleView: View {
                                             Circle()
                                                 .fill(Color.white.opacity(0.95))
                                                 .shadow(radius: 8)
-                                                .frame(width: 150, height: 150)
+                                                .frame(width: circleDiameter, height: circleDiameter)
                                         )
                                         .overlay(
                                             Circle()
                                                 .stroke(Color.blue.opacity(0.3), lineWidth: 3)
-                                                .frame(width: 150, height: 150)
+                                                .frame(width: circleDiameter, height: circleDiameter)
                                         )
                                         .gesture(
                                             DragGesture(coordinateSpace: .global)
@@ -137,13 +143,15 @@ struct MatchingPuzzleView: View {
         }
     }
     
-    private var plateTargetArea: some View {
-        ZStack {
+    private func plateTargetArea(width: CGFloat) -> some View {
+        let plateSize = min(width * 0.4, 200)
+
+        return ZStack {
             VStack(spacing: 20) {
                     Image(viewModel.currentTarget)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 200, height: 200)
+                        .frame(width: plateSize, height: plateSize)
                         .shadow(color: Color.white.opacity(0.6), radius: 10)
                         .padding(.bottom, 50)
                 

@@ -20,6 +20,13 @@ class SortingPuzzleViewModel: ObservableObject {
     private let sortingUseCase: CorrectPuzzleUseCase
     private var containerSize: CGSize = .zero
 
+    // Capped at the original iPad-tuned spread so it doesn't scale up beyond that,
+    // but shrinks proportionally on narrower screens instead of pushing pieces
+    // toward (or past) the edges.
+    private var pieceSpacing: CGFloat {
+        min(containerSize.width * 0.35, 300)
+    }
+
     init(sortingUseCase: CorrectPuzzleUseCase) {
         self.sortingUseCase = sortingUseCase
         self.currentTheme = sortingUseCase.getNextTheme()
@@ -59,7 +66,6 @@ class SortingPuzzleViewModel: ObservableObject {
         let size = containerSize
         let workspaceY = size.height * 0.3
         let pieceY = size.height * 0.7
-        let pieceSpacing: CGFloat = 300
         let centerX = size.width / 2
 
         workspaces = [
@@ -168,7 +174,6 @@ class SortingPuzzleViewModel: ObservableObject {
     
     private func getOriginalPosition(for pieceId: String) -> CGPoint {
         let pieceY = containerSize.height * 0.7
-        let pieceSpacing: CGFloat = 300
         let centerX = containerSize.width / 2
 
         return pieceId == "A"

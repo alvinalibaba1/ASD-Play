@@ -41,13 +41,13 @@ struct SortingPuzzleView: View {
                 VStack {
                     ZStack {
                         ForEach(viewModel.workspaces, id: \.id) { workspace in
-                            workspaceView(for: workspace)
+                            workspaceView(for: workspace, containerWidth: geometry.size.width)
                                 .opacity(elementsVisible ? 1 : 0)
                                 .scaleEffect(elementsVisible ? 1 : 0.5)
                         }
 
                         ForEach(viewModel.puzzlePieces, id: \.id) { piece in
-                            puzzlePieceView(for: piece)
+                            puzzlePieceView(for: piece, containerWidth: geometry.size.width)
                                 .opacity(elementsVisible ? 1 : 0)
                                 .scaleEffect(elementsVisible ? 1 : 0.5)
                         }
@@ -156,25 +156,31 @@ struct SortingPuzzleView: View {
         }
     }
     
-    private func workspaceView(for workspace: Workspace) -> some View {
-        VStack {
+    // Mirrors SortingPuzzleViewModel.pieceSpacing's formula (min(width * 0.35, cap))
+    // so piece/workspace art stays proportionally sized relative to the spacing
+    // between them instead of overlapping on a narrow screen or looking tiny
+    // against the gap on a wide one.
+    private func workspaceView(for workspace: Workspace, containerWidth: CGFloat) -> some View {
+        let size = min(containerWidth * 0.35, 300)
+        return VStack {
             ZStack {
                 Image(workspace.imageName)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 300, height: 300)
+                    .frame(width: size, height: size)
             }
             .position(workspace.position)
         }
     }
-    
-    private func puzzlePieceView(for piece: CorrectPuzzle) -> some View {
-        VStack {
+
+    private func puzzlePieceView(for piece: CorrectPuzzle, containerWidth: CGFloat) -> some View {
+        let size = min(containerWidth * 0.35, 300) * (200.0 / 300.0)
+        return VStack {
             ZStack {
                 Image(piece.imageName)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 200, height: 200)
+                    .frame(width: size, height: size)
             }
             .position(piece.currentPosition)
             .gesture(
