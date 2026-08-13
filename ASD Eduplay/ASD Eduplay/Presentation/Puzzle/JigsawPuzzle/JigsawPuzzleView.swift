@@ -60,8 +60,8 @@ struct JigsawPuzzleView: View {
                                     boardFrame = newFrame
                                 }
                             )
-                            .frame(height: geometry.size.height * 0.45)
-                            
+                            .frame(height: geometry.size.height * 0.38)
+
                             JigsawWorkspaceView(
                                 viewModel: viewModel,
                                 pieceSize: adaptivePieceSize,
@@ -69,7 +69,7 @@ struct JigsawPuzzleView: View {
                                 onDragChanged: handleDragChanged,
                                 onDragEnded: handleDragEnded
                             )
-                            .frame(height: geometry.size.height * 0.35)
+                            .frame(height: geometry.size.height * 0.45)
                         }
                         .padding(.horizontal, 20)
                     } else {
@@ -149,8 +149,17 @@ struct JigsawPuzzleView: View {
     private func calculateAdaptivePieceSize(geometry: GeometryProxy) {
         let isPortrait = geometry.size.height > geometry.size.width
         if isPortrait {
-            // Smaller pieces for portrait mode
-            adaptivePieceSize = min(geometry.size.width / 3, 150)
+            let widthBasedSize = geometry.size.width / 3
+
+            // JigsawWorkspaceView's own fixed chrome (header + padding + the gap
+            // between its two rows - see JigsawWorkspaceView.chromeHeight) has to be
+            // reserved from its allotted height before splitting the rest across 2
+            // rows. Without this, piece size was picked from width alone and could
+            // be too tall to fit, forcing the tray to scroll to see every piece.
+            let workspaceHeight = geometry.size.height * 0.45
+            let heightBasedSize = (workspaceHeight - JigsawWorkspaceView.chromeHeight) / 2
+
+            adaptivePieceSize = max(70, min(widthBasedSize, heightBasedSize, 150))
         } else {
             // Original piece size for landscape
             adaptivePieceSize = min(geometry.size.width / 5, 200)

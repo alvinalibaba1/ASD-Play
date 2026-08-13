@@ -13,22 +13,32 @@ struct JigsawWorkspaceView: View {
     let disableInteractions: Bool
     let onDragChanged: (DragGesture.Value, PuzzlePiece) -> Void
     let onDragEnded: (DragGesture.Value) -> Void
-    
+
+    private static let headerHeight: CGFloat = 36
+    private static let outerPadding: CGFloat = 16
+    private static let rowSpacing: CGFloat = 16
+
+    /// Fixed vertical space this view needs beyond its two piece rows (header +
+    /// top/bottom padding + the gap between rows). JigsawPuzzleView subtracts this
+    /// from the workspace's allotted height before sizing pieces, so the exact
+    /// values here and the ones actually used in `body` must stay in sync.
+    static let chromeHeight: CGFloat = headerHeight + outerPadding * 2 + rowSpacing
+
     var body: some View {
         VStack(spacing: 0) {
             Rectangle()
                 .fill(Color.blue.opacity(0.1))
-                .frame(height: 60)
+                .frame(height: Self.headerHeight)
                 .clipShape(
                     RoundedCorner(radius: 16, corners: [.topLeft, .topRight])
                 )
-            
-            VStack(spacing: 30) {
+
+            VStack(spacing: Self.rowSpacing) {
                 pieceRow(startIndex: 0)
-                
+
                 pieceRow(startIndex: 2)
             }
-            .padding(30)
+            .padding(Self.outerPadding)
             .background(Color.white)
             .clipShape(
                 RoundedCorner(radius: 16, corners: [.bottomLeft, .bottomRight])
@@ -42,9 +52,9 @@ struct JigsawWorkspaceView: View {
         )
         .allowsHitTesting(!disableInteractions)
     }
-    
+
     private func pieceRow(startIndex: Int) -> some View {
-        HStack(spacing: 30) {
+        HStack(spacing: 20) {
             ForEach(0..<2) { index in
                 let pieceIndex = startIndex + index
                 if pieceIndex < viewModel.pieces.count {
