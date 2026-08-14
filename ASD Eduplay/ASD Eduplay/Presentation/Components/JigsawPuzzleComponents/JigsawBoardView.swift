@@ -53,6 +53,16 @@ struct JigsawBoardView: View {
                 )
             }
 
+            // Shown 1.5s after completion (see JigsawPuzzleViewModel.checkLevelCompletion)
+            // as a "wrapping up" cue right before the picture changes, sitting above
+            // the finished picture but below the checkmark so the checkmark stays
+            // bright and readable while the picture itself dims.
+            if viewModel.showCompletionDim {
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color.black.opacity(0.35))
+                    .transition(.opacity)
+            }
+
             // Placed directly in the board's own ZStack (board-local
             // coordinates) rather than positioned from the .global boardFrame
             // captured elsewhere, so it's guaranteed to land exactly in the

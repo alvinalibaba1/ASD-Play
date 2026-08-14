@@ -11,6 +11,7 @@ final class JigsawPuzzleViewModel: ObservableObject {
     @Published var draggedPiece: PuzzlePiece?
     @Published var currentImageIndex: Int = 0
     @Published var isCompleted: Bool = false
+    @Published var showCompletionDim: Bool = false
     @Published var showSuccessOverlay: Bool = false
     @Published var shouldReturnToMenu: Bool = false
     
@@ -121,16 +122,27 @@ final class JigsawPuzzleViewModel: ObservableObject {
 
                     if self.currentImageIndex < self.getTotalImageCount() - 1 {
                         AudioPlayerManager.shared.playAudio(named: AudioConstants.roundComplete, withExtension: AudioConstants.audioExtension)
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    }
+                }
+
+                // Leaves the finished picture bright and clear for 1.5s so the
+                // checkmark celebration reads first, then dims it as a "wrapping
+                // up" cue right before moving on - instead of holding the same
+                // bright frame the whole time and then cutting straight to the
+                // next picture (or the full success overlay) with no transition.
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    withAnimation {
+                        self.showCompletionDim = true
+                    }
+
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        if self.currentImageIndex < self.getTotalImageCount() - 1 {
                             self.nextLevel()
-                        }
-                    } else {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        } else {
                             withAnimation {
                                 self.showSuccessOverlay = true
-                                AudioPlayerManager.shared.playAudio(named: AudioConstants.puzzleComplete, withExtension: AudioConstants.audioExtension)
-
                             }
+                            AudioPlayerManager.shared.playAudio(named: AudioConstants.puzzleComplete, withExtension: AudioConstants.audioExtension)
                         }
                     }
                 }
@@ -142,16 +154,18 @@ final class JigsawPuzzleViewModel: ObservableObject {
         if let _ = jigsawUseCase.nextImage() {
             withAnimation {
                 isCompleted = false
+                showCompletionDim = false
                 currentImageIndex = jigsawUseCase.getCurrentImageIndex()
                 placedPieces = []
                 pieces = jigsawUseCase.createPuzzlePieces(rows: rows, cols: cols)
             }
         }
     }
-    
+
     func resetGame() {
         withAnimation {
             isCompleted = false
+            showCompletionDim = false
             showSuccessOverlay = false
             _ = jigsawUseCase.resetImages()
             currentImageIndex = jigsawUseCase.getCurrentImageIndex()
