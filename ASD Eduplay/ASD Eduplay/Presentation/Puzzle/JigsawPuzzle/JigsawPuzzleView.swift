@@ -47,16 +47,7 @@ struct JigsawPuzzleView: View {
                         .clipped()
                 }
                 .edgesIgnoringSafeArea(.all)
-                // Everything that measures or reports a drag position (piece drag
-                // gesture, board frame capture, dragged-piece rendering) shares this
-                // one named space. Using .global for some of those and this ZStack's
-                // own local space for others (e.g. rendering via .position()) meant a
-                // piece could visually line up with the right board cell while the
-                // coordinates actually used for hit-testing were offset by the status
-                // bar/safe-area gap - so a drop that looked correct on screen still
-                // failed and had to be retried.
-                .coordinateSpace(name: Self.jigsawCoordinateSpace)
-                
+
                 VStack {
                     HStack {
                         CustomBackButton()
@@ -145,6 +136,15 @@ struct JigsawPuzzleView: View {
                         .position(celebrationPoint)
                 }
             }
+            // Everything that measures or reports a drag position (piece drag
+            // gesture, board frame capture, dragged-piece rendering) shares this
+            // one named space, scoped to this whole ZStack. Using .global for
+            // some of those and this ZStack's own local space for others (e.g.
+            // rendering via .position()) meant a piece could visually line up
+            // with the right board cell while the coordinates actually used for
+            // hit-testing were offset by the status bar/safe-area gap - so a
+            // drop that looked correct on screen still failed.
+            .coordinateSpace(name: Self.jigsawCoordinateSpace)
             .onAppear {
                 showShadowImage = true
                 // Set adaptive piece size based on screen dimensions
