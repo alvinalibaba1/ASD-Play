@@ -10,14 +10,14 @@ import SwiftUI
 
 @MainActor
 class SortingPuzzleViewModel: ObservableObject {
-    @Published private(set) var puzzlePieces: [CorrectPuzzle] = []
+    @Published private(set) var puzzlePieces: [SortingPuzzlePiece] = []
     @Published private(set) var workspaces: [Workspace] = []
     @Published var isComplete: Bool = false
     @Published var currentRound: Int = 1
-    @Published private(set) var currentTheme: CorrectPuzzleTheme
+    @Published private(set) var currentTheme: SortingPuzzleTheme
     @Published var shouldReturnToMenu: Bool = false
 
-    private let sortingUseCase: CorrectPuzzleUseCase
+    private let sortingUseCase: SortingPuzzleUseCase
     private var containerSize: CGSize = .zero
 
     // Capped at the original iPad-tuned spread so it doesn't scale up beyond
@@ -30,7 +30,7 @@ class SortingPuzzleViewModel: ObservableObject {
         min(containerSize.width * 0.35, containerSize.height * 0.45, 300)
     }
 
-    init(sortingUseCase: CorrectPuzzleUseCase) {
+    init(sortingUseCase: SortingPuzzleUseCase) {
         self.sortingUseCase = sortingUseCase
         self.currentTheme = sortingUseCase.getNextTheme()
         ProgressStore.shared.recordSessionStart(.sorting)
@@ -52,14 +52,6 @@ class SortingPuzzleViewModel: ObservableObject {
             resetPieces()
             isComplete = false
         }
-    }
-
-    func resetGame() {
-        currentRound = 1
-        sortingUseCase.resetGame()
-        currentTheme = sortingUseCase.getNextTheme()
-        resetPieces()
-        isComplete = false
     }
 
     private func resetPieces() {
@@ -85,15 +77,15 @@ class SortingPuzzleViewModel: ObservableObject {
         ]
 
         puzzlePieces = [
-            CorrectPuzzle(
+            SortingPuzzlePiece(
                 id: "A",
-                correctWorkspaceId: "workspaceA",
+                targetWorkspaceId: "workspaceA",
                 initialPosition: CGPoint(x: centerX - pieceSpacing/2, y: pieceY),
                 imageName: theme.pieceAImageName
             ),
-            CorrectPuzzle(
+            SortingPuzzlePiece(
                 id: "B",
-                correctWorkspaceId: "workspaceB",
+                targetWorkspaceId: "workspaceB",
                 initialPosition: CGPoint(x: centerX + pieceSpacing/2, y: pieceY),
                 imageName: theme.pieceBImageName
             )
@@ -109,7 +101,7 @@ class SortingPuzzleViewModel: ObservableObject {
         }
     }
     
-    func movePiece(_ piece: CorrectPuzzle, to position: CGPoint, isDragging: Bool) {
+    func movePiece(_ piece: SortingPuzzlePiece, to position: CGPoint, isDragging: Bool) {
         guard let index = puzzlePieces.firstIndex(where: { $0.id == piece.id }) else { return }
         
         if isDragging {

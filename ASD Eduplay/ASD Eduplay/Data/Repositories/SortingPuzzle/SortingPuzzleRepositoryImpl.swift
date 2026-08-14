@@ -7,39 +7,39 @@
 
 import Foundation
 
-class CorrectPuzzleRepositoryImpl: CorrectPuzzleRepository {
+class SortingPuzzleRepositoryImpl: SortingPuzzleRepository {
     private var currentThemeIndex: Int = 0
     
-    private let themes: [CorrectPuzzleTheme] = [
-        CorrectPuzzleTheme(
+    private let themes: [SortingPuzzleTheme] = [
+        SortingPuzzleTheme(
             id: 1,
             pieceAImageName: "jeans",
             workspaceAImageName: "closet",
             pieceBImageName: "shoes",
             workspaceBImageName: "rackShoes"
         ),
-        CorrectPuzzleTheme(
+        SortingPuzzleTheme(
             id: 2,
             pieceAImageName: "book",
             workspaceAImageName: "bookshelf",
             pieceBImageName: "pencilpen",
             workspaceBImageName: "pencilpenHolder"
         ),
-        CorrectPuzzleTheme(
+        SortingPuzzleTheme(
             id: 3,
             pieceAImageName: "trash",
             workspaceAImageName: "trashCan",
             pieceBImageName: "plant",
             workspaceBImageName: "garden"
         ),
-        CorrectPuzzleTheme(
+        SortingPuzzleTheme(
             id: 4,
             pieceAImageName: "apple",
             workspaceAImageName: "basketFruit",
             pieceBImageName: "wortel",
             workspaceBImageName: "vegetables"
         ),
-        CorrectPuzzleTheme(
+        SortingPuzzleTheme(
             id: 5,
             pieceAImageName: "basketball",
             workspaceAImageName: "basketballRing",
@@ -47,7 +47,7 @@ class CorrectPuzzleRepositoryImpl: CorrectPuzzleRepository {
             workspaceBImageName: "soccerNet"
         )
     ]
-    func getThemes() -> [CorrectPuzzleTheme] {
+    func getThemes() -> [SortingPuzzleTheme] {
         return themes
     }
     
@@ -57,9 +57,5 @@ class CorrectPuzzleRepositoryImpl: CorrectPuzzleRepository {
     
     func updateThemeIndex(_ index: Int) {
         currentThemeIndex = index % themes.count
-    }
-    
-    func resetThemes() {
-        currentThemeIndex = 0
     }
 }

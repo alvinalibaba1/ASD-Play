@@ -1,11 +1,10 @@
 import SwiftUI
 
-@available(iOS 17.0, *)
 final class NavigationHandler {
-    
-    private let container: DepedencyContainer
-    
-    init(container: DepedencyContainer) {
+
+    private let container: DependencyContainer
+
+    init(container: DependencyContainer) {
         self.container = container
     }
     
@@ -28,7 +27,7 @@ final class NavigationHandler {
         case .matchingPuzzle:
             MatchingPuzzleView(viewModel: self.container.makeMatchingPuzzleViewModel())
         case .sortingPuzzle:
-            SortingPuzzleView(viewModel: self.container.makeCorrectPuzzleViewModel())
+            SortingPuzzleView(viewModel: self.container.makeSortingPuzzleViewModel())
         case .tracingPuzzle:
             TracingPuzzleView(viewModel: self.container.makeTracingPuzzleViewModel())
         }

@@ -120,7 +120,7 @@ final class JigsawPuzzleViewModel: ObservableObject {
         withAnimation {
             isCompleted = false
             showSuccessOverlay = false
-            jigsawUseCase.resetImages()
+            _ = jigsawUseCase.resetImages()
             currentImageIndex = jigsawUseCase.getCurrentImageIndex()
             placedPieces = []
             pieces = jigsawUseCase.createPuzzlePieces(rows: rows, cols: cols)

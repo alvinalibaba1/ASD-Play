@@ -70,7 +70,6 @@ struct TracingPuzzleView: View {
         .blockInteractions(when: showSuccess)
         .onChange(of: viewModel.showSuccessOverlay) { shouldShow in
             if shouldShow {
-                print("ShowSuccessOverlay changed to true - updating local state")
                 withAnimation {
                     showSuccess = true
                 }

@@ -7,12 +7,11 @@
 
 import Foundation
 
-protocol CorrectPuzzleUseCase {
-    func checkPiecePlacement(piece: CorrectPuzzle, workspace: Workspace) -> Bool
-    func isPuzzleComplete(pieces: [CorrectPuzzle]) -> Bool
-    func updatePiecePosition(piece: CorrectPuzzle, to position: CGPoint) -> CorrectPuzzle
-    func getNextTheme() -> CorrectPuzzleTheme
-    func resetGame()
+protocol SortingPuzzleUseCase {
+    func checkPiecePlacement(piece: SortingPuzzlePiece, workspace: Workspace) -> Bool
+    func isPuzzleComplete(pieces: [SortingPuzzlePiece]) -> Bool
+    func updatePiecePosition(piece: SortingPuzzlePiece, to position: CGPoint) -> SortingPuzzlePiece
+    func getNextTheme() -> SortingPuzzleTheme
 }
 
 

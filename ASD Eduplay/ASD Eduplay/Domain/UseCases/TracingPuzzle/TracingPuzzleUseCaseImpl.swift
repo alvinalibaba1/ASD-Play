@@ -22,10 +22,6 @@ class TracingPuzzleUseCaseImpl: TracingPuzzleUseCase {
         repository.updateLevelCompletion(level: level, isCompleted: true)
     }
     
-    func resetLevel(_ level: Int) {
-        repository.updateLevelCompletion(level: level, isCompleted: false)
-    }
-    
     func nextLevel(_ currentLevel: Int) -> Int? {
         let totalLevels = repository.getTotalLevels()
         return currentLevel < totalLevels ? currentLevel + 1 : nil

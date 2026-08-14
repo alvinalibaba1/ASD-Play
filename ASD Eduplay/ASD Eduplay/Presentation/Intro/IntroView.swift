@@ -1,6 +1,4 @@
 import SwiftUI
-import AVFoundation
-
 
 struct IntroView: View {
     @EnvironmentObject var router: NavigationRouter
@@ -9,13 +7,8 @@ struct IntroView: View {
     @State private var rightBirdOffset = CGSize.zero
     @State private var leftCloudOffset = CGSize.zero
     @State private var rightCloudOffset = CGSize.zero
-    @State private var showButtons = false
-    @State private var buttonScales: [CGFloat] = [1.0, 1.0]
-    @State private var audioPlayer: AVAudioPlayer?
     @State private var flapWings = false
-    
-    private let audioService = AudioPlayerManager.shared
-    
+
     var body: some View {
         GeometryReader { geometry in
         let isPortrait = geometry.size.height > geometry.size.width
@@ -164,19 +157,6 @@ struct IntroView: View {
             }
 
         }
-        }
-    }
-    
-    
-    private func handleButtonPress(index: Int, action: @escaping () -> Void) {
-        withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
-            buttonScales[index] = 0.95
-        }
-        
-        Haptic.shared.success()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            buttonScales[index] = 1.0
-            action()
         }
     }
 

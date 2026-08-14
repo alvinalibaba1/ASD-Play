@@ -1,12 +1,12 @@
 import SwiftUI
-@available(iOS 17.0, *)
+
 @main
 struct ASDEduplay: App {
     @ObservedObject var router = NavigationRouter()
     let navigationHandler: NavigationHandler
     
     init() {
-        self.navigationHandler = NavigationHandler(container: DepedencyContainer.shared)
+        self.navigationHandler = NavigationHandler(container: DependencyContainer.shared)
     }
     
    

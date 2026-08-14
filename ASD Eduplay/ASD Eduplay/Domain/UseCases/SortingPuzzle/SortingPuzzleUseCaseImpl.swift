@@ -7,34 +7,30 @@
 
 import Foundation
 
-final class CorrectPuzzleUseCaseImpl: CorrectPuzzleUseCase {
-    private let themeRepository: CorrectPuzzleRepository
+final class SortingPuzzleUseCaseImpl: SortingPuzzleUseCase {
+    private let themeRepository: SortingPuzzleRepository
     
-    init(themeRepository: CorrectPuzzleRepository) {
+    init(themeRepository: SortingPuzzleRepository) {
         self.themeRepository = themeRepository
     }
     
-    func checkPiecePlacement(piece: CorrectPuzzle, workspace: Workspace) -> Bool {
-        return piece.correctWorkspaceId == workspace.id
+    func checkPiecePlacement(piece: SortingPuzzlePiece, workspace: Workspace) -> Bool {
+        return piece.targetWorkspaceId == workspace.id
     }
     
-    func isPuzzleComplete(pieces: [CorrectPuzzle]) -> Bool {
+    func isPuzzleComplete(pieces: [SortingPuzzlePiece]) -> Bool {
         return pieces.allSatisfy { $0.isPlaced }
     }
     
-    func updatePiecePosition(piece: CorrectPuzzle, to position: CGPoint) -> CorrectPuzzle {
+    func updatePiecePosition(piece: SortingPuzzlePiece, to position: CGPoint) -> SortingPuzzlePiece {
         var updatedPiece = piece
         updatedPiece.currentPosition = position
         return updatedPiece
     }
     
-    func getNextTheme() -> CorrectPuzzleTheme {
+    func getNextTheme() -> SortingPuzzleTheme {
         let currentIndex = themeRepository.getCurrentThemeIndex()
         themeRepository.updateThemeIndex(currentIndex + 1)
         return themeRepository.getThemes()[currentIndex]
-    }
-    
-    func resetGame() {
-        themeRepository.resetThemes()
     }
 }

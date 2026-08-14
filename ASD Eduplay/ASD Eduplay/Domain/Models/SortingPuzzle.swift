@@ -1,8 +1,7 @@
 import SwiftUI
-
 import Foundation
 
-struct CorrectPuzzleTheme {
+struct SortingPuzzleTheme {
     let id: Int
     let pieceAImageName: String
     let workspaceAImageName: String
@@ -10,16 +9,16 @@ struct CorrectPuzzleTheme {
     let workspaceBImageName: String
 }
 
-struct CorrectPuzzle: Identifiable {
+struct SortingPuzzlePiece: Identifiable {
     let id: String
-    let correctWorkspaceId: String
+    let targetWorkspaceId: String
     var currentPosition: CGPoint
     var isPlaced: Bool
     let imageName: String
-    
-    init(id: String, correctWorkspaceId: String, initialPosition: CGPoint, imageName: String) {
+
+    init(id: String, targetWorkspaceId: String, initialPosition: CGPoint, imageName: String) {
         self.id = id
-        self.correctWorkspaceId = correctWorkspaceId
+        self.targetWorkspaceId = targetWorkspaceId
         self.currentPosition = initialPosition
         self.isPlaced = false
         self.imageName = imageName

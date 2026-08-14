@@ -6,9 +6,8 @@
 //
 
 import Foundation
-protocol CorrectPuzzleRepository {
-    func getThemes() -> [CorrectPuzzleTheme]
+protocol SortingPuzzleRepository {
+    func getThemes() -> [SortingPuzzleTheme]
     func getCurrentThemeIndex() -> Int
     func updateThemeIndex(_ index: Int)
-    func resetThemes()
 }

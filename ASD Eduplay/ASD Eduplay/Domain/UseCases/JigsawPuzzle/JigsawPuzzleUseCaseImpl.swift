@@ -1,7 +1,5 @@
 import SwiftUI
 
-import SwiftUI
-
 final class JigsawPuzzleUseCaseImpl: JigsawPuzzleUseCase {
     private let repository: JigsawPuzzleRepository
     
@@ -20,9 +18,7 @@ final class JigsawPuzzleUseCaseImpl: JigsawPuzzleUseCase {
     }
     
     func validatePiecePlacement(pieces: PuzzlePiece, dropRow: Int, dropCol: Int) -> Bool {
-        let isValid = pieces.row == dropRow && pieces.col == dropCol
-        print("Validating - Piece(\(pieces.row),\(pieces.col)) at position(\(dropRow),\(dropCol)) - Valid: \(isValid)")
-        return isValid
+        pieces.row == dropRow && pieces.col == dropCol
     }
     
     func isLevelCompleted(placedPieces: [PuzzlePiece], totalPieces: Int) -> Bool {

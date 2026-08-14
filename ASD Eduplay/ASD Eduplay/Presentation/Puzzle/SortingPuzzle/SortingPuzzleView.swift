@@ -111,53 +111,6 @@ struct SortingPuzzleView: View {
         }
     }
     
-    private func proceedToNextRound() {
-        guard !isTransitioning else { return }
-        isTransitioning = true
-        
-        withAnimation(.easeOut(duration: 0.5)) {
-            elementsVisible = false
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
-            viewModel.nextRound()
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                withAnimation(.easeIn(duration: 1.0)) {
-                    elementsVisible = true
-                }
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
-                    isTransitioning = false
-                }
-            }
-        }
-    }
-    
-    private func resetGame() {
-        guard !isTransitioning else { return }
-        isTransitioning = true
-        showSuccessOverlay = false
-        
-        withAnimation(.easeOut(duration: 0.5)) {
-            elementsVisible = false
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
-            viewModel.resetGame()
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                withAnimation(.easeIn(duration: 1.0)) {
-                    elementsVisible = true
-                }
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
-                    isTransitioning = false
-                }
-            }
-        }
-    }
-    
     // Mirrors SortingPuzzleViewModel.pieceSpacing's formula
     // (min(width * 0.35, height * 0.45, cap)) so piece/workspace art stays
     // proportionally sized relative to the spacing between them instead of
@@ -176,7 +129,7 @@ struct SortingPuzzleView: View {
         }
     }
 
-    private func puzzlePieceView(for piece: CorrectPuzzle, containerSize: CGSize) -> some View {
+    private func puzzlePieceView(for piece: SortingPuzzlePiece, containerSize: CGSize) -> some View {
         let size = min(containerSize.width * 0.35, containerSize.height * 0.45, 300) * (200.0 / 300.0)
         return VStack {
             ZStack {
