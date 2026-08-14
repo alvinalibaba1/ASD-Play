@@ -72,11 +72,17 @@ struct JigsawBoardView: View {
         .cornerRadius(16)
         .shadow(radius: 8)
         .background(GeometryReader { proxy in
+            // Captured in the same named coordinate space as the piece drag
+            // gesture (JigsawPuzzleView.jigsawCoordinateSpace) - using .global
+            // here while drag position was reported in the ZStack's own local
+            // space (or vice versa) meant this frame and the touch location
+            // didn't actually agree on where the board was, even though a
+            // piece could look correctly placed on screen.
             Color.clear
                 .onAppear {
-                    boardFrameUpdated(proxy.frame(in: .global))
+                    boardFrameUpdated(proxy.frame(in: .named(JigsawPuzzleView.jigsawCoordinateSpace)))
                 }
-                .onChange(of: proxy.frame(in: .global)) { newFrame in
+                .onChange(of: proxy.frame(in: .named(JigsawPuzzleView.jigsawCoordinateSpace))) { newFrame in
                     boardFrameUpdated(newFrame)
                 }
         })

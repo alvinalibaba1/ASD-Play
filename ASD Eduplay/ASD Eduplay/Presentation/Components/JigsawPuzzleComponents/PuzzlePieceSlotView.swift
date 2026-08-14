@@ -35,7 +35,7 @@ struct PuzzlePieceSlotView: View {
         .scaleEffect(viewModel.draggedPiece?.id == piece.id ? 1.05 : 1.0)
         .contentShape(Rectangle())
         .gesture(
-            DragGesture(coordinateSpace: .global)
+            DragGesture(coordinateSpace: .named(JigsawPuzzleView.jigsawCoordinateSpace))
                 .onChanged { value in
                     if viewModel.draggedPiece == nil || viewModel.draggedPiece?.id == piece.id {
                         onDragChanged(value, piece)

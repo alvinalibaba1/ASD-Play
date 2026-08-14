@@ -8,7 +8,12 @@
 import SwiftUI
 
 struct JigsawPuzzleView: View {
-    
+
+    /// Shared coordinate space name for everything on this screen that reports
+    /// or consumes a drag position - see the .coordinateSpace(name:) usage
+    /// below for why this needs to be a single consistent space.
+    static let jigsawCoordinateSpace = "jigsawPuzzleSpace"
+
     @EnvironmentObject var router: NavigationRouter
     @StateObject private var viewModel: JigsawPuzzleViewModel
     @State private var dragOffset: CGSize = .zero
@@ -42,6 +47,15 @@ struct JigsawPuzzleView: View {
                         .clipped()
                 }
                 .edgesIgnoringSafeArea(.all)
+                // Everything that measures or reports a drag position (piece drag
+                // gesture, board frame capture, dragged-piece rendering) shares this
+                // one named space. Using .global for some of those and this ZStack's
+                // own local space for others (e.g. rendering via .position()) meant a
+                // piece could visually line up with the right board cell while the
+                // coordinates actually used for hit-testing were offset by the status
+                // bar/safe-area gap - so a drop that looked correct on screen still
+                // failed and had to be retried.
+                .coordinateSpace(name: Self.jigsawCoordinateSpace)
                 
                 VStack {
                     HStack {
