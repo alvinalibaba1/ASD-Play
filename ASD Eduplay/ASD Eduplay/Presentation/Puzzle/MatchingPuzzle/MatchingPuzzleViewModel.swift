@@ -24,10 +24,10 @@ final class MatchingPuzzleViewModel: ObservableObject {
     
     func handlePuzzleDrop(piece: MatchingPuzzle, dropLocation: CGPoint, targetFrame: CGRect) {
         let pieceFrame = CGRect(
-            x: dropLocation.x - 40,
-            y: dropLocation.y - 40,
-            width: 80,
-            height: 80
+            x: dropLocation.x - 55,
+            y: dropLocation.y - 55,
+            width: 110,
+            height: 110
         )
         
         if targetFrame.intersects(pieceFrame) {

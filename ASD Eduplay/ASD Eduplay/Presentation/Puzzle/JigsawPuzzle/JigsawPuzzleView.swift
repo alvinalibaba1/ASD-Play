@@ -15,7 +15,9 @@ struct JigsawPuzzleView: View {
     @State private var startLocation: CGPoint = .zero
     @State private var boardFrame: CGRect = .zero
     @State private var showShadowImage: Bool = true
-    
+    @State private var celebrationPoint: CGPoint?
+    @State private var celebrationToken: Int = 0
+
     // Adaptive piece size based on orientation and screen size
     @State private var adaptivePieceSize: CGFloat = 200
     
@@ -46,6 +48,11 @@ struct JigsawPuzzleView: View {
                         CustomBackButton()
                             .padding(.leading, 20)
                         Spacer()
+                        JigsawProgressBadge(
+                            placed: viewModel.placedPieces.count,
+                            total: viewModel.rows * viewModel.cols
+                        )
+                        .padding(.trailing, 20)
                     }
                     .padding(.bottom, isPortrait ? 20 : 50)
                     
@@ -117,6 +124,12 @@ struct JigsawPuzzleView: View {
                         viewModel.finishSuccessAndReturnToMenu()
                     }
                 )
+
+                if let celebrationPoint {
+                    JigsawPieceCelebrationView()
+                        .id(celebrationToken)
+                        .position(celebrationPoint)
+                }
             }
             .onAppear {
                 showShadowImage = true
@@ -135,6 +148,17 @@ struct JigsawPuzzleView: View {
             }
             .onChange(of: viewModel.currentImageIndex) { _ in
                 showShadowImage = true
+            }
+            .onChange(of: viewModel.placedPieces.count) { newCount in
+                // Fires a sparkle burst at the piece that was just placed correctly,
+                // not only when the whole picture is finished - so every correct
+                // placement gets its own moment of positive feedback.
+                guard newCount > 0, let lastPiece = viewModel.placedPieces.last, boardFrame != .zero else { return }
+                celebrationToken += 1
+                celebrationPoint = CGPoint(
+                    x: boardFrame.minX + CGFloat(lastPiece.col) * adaptivePieceSize + adaptivePieceSize / 2,
+                    y: boardFrame.minY + CGFloat(lastPiece.row) * adaptivePieceSize + adaptivePieceSize / 2
+                )
             }
         }
         .blockInteractions(when: viewModel.showSuccessOverlay)

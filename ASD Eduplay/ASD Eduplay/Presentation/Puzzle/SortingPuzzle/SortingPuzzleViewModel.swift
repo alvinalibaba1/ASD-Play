@@ -159,7 +159,7 @@ class SortingPuzzleViewModel: ObservableObject {
         }
     
     private func findNearestWorkspace(to position: CGPoint) -> Workspace? {
-        let threshold: CGFloat = 100.0
+        let threshold: CGFloat = 130.0
         return workspaces.first { workspace in
             let distance = hypot(position.x - workspace.position.x,
                                  position.y - workspace.position.y)

@@ -43,8 +43,15 @@ final class JigsawPuzzleViewModel: ObservableObject {
             self.draggedPiece = nil
         }
         
-        let isInBoard = boardFrame.contains(dropPoint)
-        
+        // Special-needs-friendly tolerance: a kid with fine motor difficulty
+        // often releases a piece a little short of or past the board's exact
+        // edge while clearly aiming for it. Expanding the hit area by a
+        // comfortable margin before the containment check keeps that near-miss
+        // from being punished as a full "wrong drop" (error haptic + incorrect
+        // count) when the piece was obviously headed for the board.
+        let dropTolerance: CGFloat = 60
+        let isInBoard = boardFrame.insetBy(dx: -dropTolerance, dy: -dropTolerance).contains(dropPoint)
+
         if !isInBoard {
             Haptic.shared.error()
             ProgressStore.shared.recordIncorrect(.jigsaw)
