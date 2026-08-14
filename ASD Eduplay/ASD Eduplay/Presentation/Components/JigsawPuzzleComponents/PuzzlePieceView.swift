@@ -17,8 +17,6 @@ struct PuzzlePieceView: View {
                 .clipped()
         }
         .frame(width: pieceSize, height: pieceSize)
-        .background(Color.white)
-        .border(Color.black, width: 1)
         .animation(nil, value: UUID())
     }
 }

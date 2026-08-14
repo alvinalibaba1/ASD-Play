@@ -23,6 +23,12 @@ struct JigsawDraggedPieceView: View {
                     pieceSize: pieceSize
                 )
                 .frame(width: pieceSize, height: pieceSize)
+                .background(Color.white)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color.green.opacity(0.5), lineWidth: 3)
+                )
                 .position(
                     x: startLocation.x + dragOffset.width,
                     y: startLocation.y + dragOffset.height
