@@ -50,8 +50,16 @@ struct JigsawPuzzleView: View {
                     .padding(.bottom, isPortrait ? 20 : 50)
                     
                     if isPortrait {
-                        // Portrait layout (vertical stack)
-                        VStack(spacing: 30) {
+                        // Portrait layout (vertical stack). Board and workspace are
+                        // NOT given fixed-height slots here - both already size
+                        // themselves from pieceSize (JigsawBoardView and
+                        // JigsawWorkspaceView each carry their own explicit
+                        // .frame()). Forcing them into oversized fixed-percentage
+                        // slots left a lot of slack once pieceSize shrank (the
+                        // fixed heights were tuned for a larger piece size), spread
+                        // across several gaps instead of one - a trailing Spacer()
+                        // pulls the whole compact block toward the top instead.
+                        VStack(spacing: 24) {
                             JigsawBoardView(
                                 viewModel: viewModel,
                                 pieceSize: adaptivePieceSize,
@@ -60,7 +68,6 @@ struct JigsawPuzzleView: View {
                                     boardFrame = newFrame
                                 }
                             )
-                            .frame(height: geometry.size.height * 0.38)
 
                             JigsawWorkspaceView(
                                 viewModel: viewModel,
@@ -69,7 +76,8 @@ struct JigsawPuzzleView: View {
                                 onDragChanged: handleDragChanged,
                                 onDragEnded: handleDragEnded
                             )
-                            .frame(height: geometry.size.height * 0.45)
+
+                            Spacer()
                         }
                         .padding(.horizontal, 20)
                     } else {
