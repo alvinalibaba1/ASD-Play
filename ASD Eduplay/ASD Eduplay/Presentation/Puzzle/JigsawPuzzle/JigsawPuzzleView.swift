@@ -130,13 +130,6 @@ struct JigsawPuzzleView: View {
                         .id(celebrationToken)
                         .position(celebrationPoint)
                 }
-
-                if viewModel.isCompleted && !viewModel.showSuccessOverlay && boardFrame != .zero {
-                    JigsawLevelCompleteView()
-                        .id(viewModel.currentImageIndex)
-                        .position(x: boardFrame.midX, y: boardFrame.midY)
-                        .transition(.opacity)
-                }
             }
             .onAppear {
                 showShadowImage = true

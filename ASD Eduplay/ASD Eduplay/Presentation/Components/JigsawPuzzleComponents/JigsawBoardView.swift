@@ -52,6 +52,17 @@ struct JigsawBoardView: View {
                     y: CGFloat(piece.row) * pieceSize + pieceSize / 2
                 )
             }
+
+            // Placed directly in the board's own ZStack (board-local
+            // coordinates) rather than positioned from the .global boardFrame
+            // captured elsewhere, so it's guaranteed to land exactly in the
+            // middle of the board regardless of safe-area/coordinate-space
+            // offsets between the board and the outer screen layout.
+            if viewModel.isCompleted && !viewModel.showSuccessOverlay {
+                JigsawLevelCompleteView()
+                    .id(viewModel.currentImageIndex)
+                    .transition(.opacity)
+            }
         }
         .frame(
             width: CGFloat(viewModel.cols) * pieceSize,
