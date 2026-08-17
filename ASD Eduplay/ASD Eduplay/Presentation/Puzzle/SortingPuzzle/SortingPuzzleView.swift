@@ -112,32 +112,33 @@ struct SortingPuzzleView: View {
     }
     
     // Mirrors SortingPuzzleViewModel.pieceSpacing's formula
-    // (min(width * 0.35, height * 0.45, cap)) so piece/workspace art stays
+    // (min(width * 0.35, height * 0.45, cap)) so the bin/piece shapes stay
     // proportionally sized relative to the spacing between them instead of
     // overlapping (or clipping off the top of a short landscape screen) on one
     // axis while just tracking the other.
     private func workspaceView(for workspace: Workspace, containerSize: CGSize) -> some View {
         let size = min(containerSize.width * 0.35, containerSize.height * 0.45, 300)
-        return VStack {
-            ZStack {
-                Image(workspace.imageName)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: size, height: size)
-            }
-            .position(workspace.position)
+        return ZStack {
+            Circle()
+                .fill(workspace.color.opacity(0.18))
+                .frame(width: size, height: size)
+            Circle()
+                .strokeBorder(workspace.color, style: StrokeStyle(lineWidth: 6, dash: [12, 8]))
+                .frame(width: size, height: size)
+            Text(workspace.label)
+                .font(.system(size: size * 0.14, weight: .bold, design: .rounded))
+                .foregroundColor(workspace.color)
         }
+        .position(workspace.position)
     }
 
     private func puzzlePieceView(for piece: SortingPuzzlePiece, containerSize: CGSize) -> some View {
         let size = min(containerSize.width * 0.35, containerSize.height * 0.45, 300) * (200.0 / 300.0)
-        return VStack {
-            ZStack {
-                Image(piece.imageName)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: size, height: size)
-            }
+        return Circle()
+            .fill(piece.color)
+            .overlay(Circle().stroke(Color.white, lineWidth: 4))
+            .shadow(radius: 4)
+            .frame(width: size, height: size)
             .position(piece.currentPosition)
             .gesture(
                 DragGesture()
@@ -149,7 +150,6 @@ struct SortingPuzzleView: View {
                     }
             )
             .disabled(isTransitioning)
-        }
-        .animation(.spring(), value: piece.isPlaced)
+            .animation(.spring(), value: piece.isPlaced)
     }
 }

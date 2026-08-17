@@ -67,12 +67,14 @@ class SortingPuzzleViewModel: ObservableObject {
             Workspace(
                 id: "workspaceA",
                 position: CGPoint(x: size.width * 0.25, y: workspaceY),
-                imageName: theme.workspaceAImageName
+                color: theme.colorA,
+                label: theme.labelA
             ),
             Workspace(
                 id: "workspaceB",
                 position: CGPoint(x: size.width * 0.75, y: workspaceY),
-                imageName: theme.workspaceBImageName
+                color: theme.colorB,
+                label: theme.labelB
             )
         ]
 
@@ -81,13 +83,13 @@ class SortingPuzzleViewModel: ObservableObject {
                 id: "A",
                 targetWorkspaceId: "workspaceA",
                 initialPosition: CGPoint(x: centerX - pieceSpacing/2, y: pieceY),
-                imageName: theme.pieceAImageName
+                color: theme.colorA
             ),
             SortingPuzzlePiece(
                 id: "B",
                 targetWorkspaceId: "workspaceB",
                 initialPosition: CGPoint(x: centerX + pieceSpacing/2, y: pieceY),
-                imageName: theme.pieceBImageName
+                color: theme.colorB
             )
         ]
     }
