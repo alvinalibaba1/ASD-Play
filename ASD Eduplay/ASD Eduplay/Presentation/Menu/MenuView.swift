@@ -12,7 +12,10 @@ struct MenuView: View {
         (title: "Jigsaw Puzzle", icon: "puzzlepiece.fill", color: Color.cyan, destination: Destination.jigsawPuzzle),
         (title: "Matching", icon: "equal.circle.fill", color: Color.brown, destination: Destination.matchingPuzzle),
         (title: "Sorting", icon: "arrow.up.and.down.circle.fill", color: Color.green, destination: Destination.sortingPuzzle),
-        (title: "Tracing", icon: "hand.draw.fill", color: Color.orange, destination: Destination.tracingPuzzle)
+        (title: "Tracing", icon: "hand.draw.fill", color: Color.orange, destination: Destination.tracingPuzzle),
+        (title: "Feelings", icon: "face.smiling.fill", color: Color.purple, destination: Destination.emotionMatching),
+        (title: "My Routine", icon: "list.number", color: Color.teal, destination: Destination.routineSequencing),
+        (title: "Tap & Play", icon: "hand.tap.fill", color: Color.yellow, destination: Destination.causeEffect)
     ]
     
     var body: some View {
@@ -101,29 +104,22 @@ struct MenuView: View {
                 .offset(y: showButtons ? 0 : -60)
                 .opacity(showButtons ? 1 : 0)
 
-                if isPortrait {
-                    VStack(spacing: 22) {
+                // An adaptive grid rather than a hardcoded isPortrait 4x1 list /
+                // landscape 2x2 grid - the old landscape branch indexed exactly
+                // 4 buttons by position, so adding a 5th game would have silently
+                // made it unreachable in landscape. .adaptive(minimum:) naturally
+                // gives 1 column on a narrow iPhone portrait and 2+ once there's
+                // room, for any number of games. Wrapped in a ScrollView so a
+                // growing game list never overflows a short screen instead of
+                // relying on exact-fit math.
+                ScrollView(showsIndicators: false) {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 320), spacing: 22)], spacing: 22) {
                         ForEach(0..<menuItems.count, id: \.self) { index in
                             menuButton(at: index)
                         }
                     }
-                } else {
-                    // 4 stacked full-width buttons need ~450pt of height (see
-                    // CompactMenuButton's fixed padding/icon size), more than an
-                    // iPhone's landscape height has available. A 2x2 grid halves
-                    // that requirement instead of shrinking touch targets or
-                    // requiring a scroll to see every game.
-                    VStack(spacing: 14) {
-                        HStack(spacing: 14) {
-                            menuButton(at: 0)
-                            menuButton(at: 1)
-                        }
-                        HStack(spacing: 14) {
-                            menuButton(at: 2)
-                            menuButton(at: 3)
-                        }
-                    }
                 }
+                .frame(maxHeight: isPortrait ? .infinity : 260)
 
                 Spacer()
             }

@@ -30,6 +30,12 @@ final class NavigationHandler {
             SortingPuzzleView(viewModel: self.container.makeSortingPuzzleViewModel())
         case .tracingPuzzle:
             TracingPuzzleView(viewModel: self.container.makeTracingPuzzleViewModel())
+        case .emotionMatching:
+            EmotionMatchingView(viewModel: self.container.makeEmotionMatchingViewModel())
+        case .routineSequencing:
+            RoutineSequencingView(viewModel: self.container.makeRoutineSequencingViewModel())
+        case .causeEffect:
+            CauseEffectView(viewModel: self.container.makeCauseEffectViewModel())
         }
     }
 }

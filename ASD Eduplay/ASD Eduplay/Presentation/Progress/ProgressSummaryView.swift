@@ -8,7 +8,10 @@ struct ProgressSummaryView: View {
         (.jigsaw, "Jigsaw Puzzle", "puzzlepiece.fill", .cyan),
         (.matching, "Matching", "equal.circle.fill", .brown),
         (.sorting, "Sorting", "arrow.up.and.down.circle.fill", .green),
-        (.tracing, "Tracing", "hand.draw.fill", .orange)
+        (.tracing, "Tracing", "hand.draw.fill", .orange),
+        (.emotionMatching, "Feelings", "face.smiling.fill", .purple),
+        (.routineSequencing, "My Routine", "list.number", .teal),
+        (.causeEffect, "Tap & Play", "hand.tap.fill", .yellow)
     ]
 
     var body: some View {

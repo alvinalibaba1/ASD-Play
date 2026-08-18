@@ -10,5 +10,7 @@ enum Destination: Hashable {
     case matchingPuzzle
     case sortingPuzzle
     case tracingPuzzle
-    
+    case emotionMatching
+    case routineSequencing
+    case causeEffect
 }
