@@ -5,10 +5,9 @@ struct MenuView: View {
     @EnvironmentObject var settings: SensorySettings
 
     @State private var animateBackground = false
-    @State private var buttonScale: [CGFloat] = [1.0, 1.0, 1.0, 1.0]
     @State private var showButtons = false
-    
-    private let menuItems = [
+
+    private static let menuItems = [
         (title: "Jigsaw Puzzle", icon: "puzzlepiece.fill", color: Color.cyan, destination: Destination.jigsawPuzzle),
         (title: "Matching", icon: "equal.circle.fill", color: Color.brown, destination: Destination.matchingPuzzle),
         (title: "Sorting", icon: "arrow.up.and.down.circle.fill", color: Color.green, destination: Destination.sortingPuzzle),
@@ -17,6 +16,15 @@ struct MenuView: View {
         (title: "My Routine", icon: "list.number", color: Color.teal, destination: Destination.routineSequencing),
         (title: "Tap & Play", icon: "hand.tap.fill", color: Color.yellow, destination: Destination.causeEffect)
     ]
+
+    // Sized from menuItems.count rather than a fixed literal - a fixed-size
+    // array here was exactly what caused the "Index out of range" crash when
+    // 3 more games were added to menuItems without updating this alongside it.
+    @State private var buttonScale: [CGFloat]
+
+    init() {
+        _buttonScale = State(initialValue: Array(repeating: 1.0, count: Self.menuItems.count))
+    }
     
     var body: some View {
         GeometryReader { outerGeometry in
@@ -114,7 +122,7 @@ struct MenuView: View {
                 // relying on exact-fit math.
                 ScrollView(showsIndicators: false) {
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 320), spacing: 22)], spacing: 22) {
-                        ForEach(0..<menuItems.count, id: \.self) { index in
+                        ForEach(0..<Self.menuItems.count, id: \.self) { index in
                             menuButton(at: index)
                         }
                     }
@@ -143,9 +151,9 @@ struct MenuView: View {
     @ViewBuilder
     private func menuButton(at index: Int) -> some View {
         CompactMenuButton(
-            title: menuItems[index].title,
-            icon: menuItems[index].icon,
-            color: menuItems[index].color,
+            title: Self.menuItems[index].title,
+            icon: Self.menuItems[index].icon,
+            color: Self.menuItems[index].color,
             scale: $buttonScale[index],
             action: {
                 handleButtonPress(at: index)
@@ -170,7 +178,7 @@ struct MenuView: View {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             buttonScale[index] = 1.0
-            router.navigate(to: menuItems[index].destination)
+            router.navigate(to: Self.menuItems[index].destination)
         }
     }
     
