@@ -123,11 +123,16 @@ private struct GameProgressCard: View {
     let color: Color
     let progress: GameProgress
 
+    private var totalAttempts: Int { progress.correctCount + progress.incorrectCount }
+
+    private var accuracyFraction: Double {
+        guard totalAttempts > 0 else { return 0 }
+        return Double(progress.correctCount) / Double(totalAttempts)
+    }
+
     private var accuracyText: String {
-        let total = progress.correctCount + progress.incorrectCount
-        guard total > 0 else { return "—" }
-        let percent = Int((Double(progress.correctCount) / Double(total) * 100).rounded())
-        return "\(percent)%"
+        guard totalAttempts > 0 else { return "No attempts yet" }
+        return "\(Int((accuracyFraction * 100).rounded()))% correct"
     }
 
     private var lastPlayedText: String {
@@ -138,12 +143,12 @@ private struct GameProgressCard: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: 16) {
             HStack(spacing: 14) {
                 Image(systemName: icon)
-                    .font(.system(size: 22))
+                    .font(.system(size: 24))
                     .foregroundColor(.white)
-                    .frame(width: 50, height: 50)
+                    .frame(width: 54, height: 54)
                     .background(
                         Circle()
                             .fill(color)
@@ -152,57 +157,81 @@ private struct GameProgressCard: View {
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)
-                        .font(.system(size: 20, weight: .bold, design: .rounded))
-                        .foregroundColor(Color.black.opacity(0.8))
+                        .font(.system(size: 21, weight: .bold, design: .rounded))
+                        .foregroundColor(Color.black.opacity(0.85))
                     Text(lastPlayedText)
-                        .font(.system(size: 13))
+                        .font(.system(size: 14))
                         .foregroundColor(Color.black.opacity(0.5))
                 }
 
                 Spacer(minLength: 4)
             }
 
-            HStack(spacing: 8) {
-                StatPill(value: "\(progress.sessionsPlayed)", label: "Sessions", color: color)
-                StatPill(value: "\(progress.roundsCompleted)", label: "Rounds", color: color)
-                StatPill(value: accuracyText, label: "Accuracy", color: color)
+            // A filled bar rather than a bare "X%" - the number alone required
+            // reading and interpreting it as good/bad, while a bar reads as
+            // "progress" at a glance the same way the rest of the app already
+            // uses fill/dim/checkmark cues during actual gameplay.
+            VStack(alignment: .leading, spacing: 6) {
+                HStack {
+                    Text("Accuracy")
+                        .font(.system(size: 15, weight: .semibold, design: .rounded))
+                        .foregroundColor(Color.black.opacity(0.6))
+                    Spacer()
+                    Text(accuracyText)
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .foregroundColor(color)
+                }
+
+                GeometryReader { geometry in
+                    ZStack(alignment: .leading) {
+                        Capsule()
+                            .fill(color.opacity(0.15))
+
+                        if totalAttempts > 0 {
+                            Capsule()
+                                .fill(color)
+                                .frame(width: max(10, geometry.size.width * accuracyFraction))
+                        }
+                    }
+                }
+                .frame(height: 16)
+            }
+
+            HStack(spacing: 28) {
+                statLabel(icon: "play.circle.fill", value: "\(progress.sessionsPlayed)", label: "Sessions")
+                statLabel(icon: "checkmark.seal.fill", value: "\(progress.roundsCompleted)", label: "Rounds Done")
             }
         }
-        .padding(.vertical, 16)
-        .padding(.horizontal, 18)
+        .padding(.vertical, 18)
+        .padding(.horizontal, 20)
         .background(
             RoundedRectangle(cornerRadius: 20)
                 .fill(Color.white.opacity(0.95))
                 .shadow(color: Color.black.opacity(0.15), radius: 8, x: 0, y: 3)
         )
         .overlay(
+            // .strokeBorder rather than .stroke - see MenuButton's identical
+            // fix for why .stroke reads thin/uneven at a rounded corner.
             RoundedRectangle(cornerRadius: 20)
-                .stroke(color, lineWidth: 2.5)
+                .strokeBorder(color, lineWidth: 3)
         )
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(title): \(progress.sessionsPlayed) sessions, \(progress.roundsCompleted) rounds completed, \(accuracyText) accuracy, \(lastPlayedText)")
+        .accessibilityLabel("\(title): \(progress.sessionsPlayed) sessions, \(progress.roundsCompleted) rounds completed, \(accuracyText), \(lastPlayedText)")
     }
-}
 
-private struct StatPill: View {
-    let value: String
-    let label: String
-    let color: Color
-
-    var body: some View {
-        VStack(spacing: 2) {
-            Text(value)
-                .font(.system(size: 18, weight: .bold, design: .rounded))
-                .foregroundColor(Color.black.opacity(0.8))
-            Text(label)
-                .font(.system(size: 12, weight: .medium))
-                .foregroundColor(Color.black.opacity(0.55))
+    private func statLabel(icon: String, value: String, label: String) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: icon)
+                .font(.system(size: 17))
+                .foregroundColor(color)
+            VStack(alignment: .leading, spacing: 0) {
+                Text(value)
+                    .font(.system(size: 19, weight: .bold, design: .rounded))
+                    .foregroundColor(Color.black.opacity(0.8))
+                Text(label)
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundColor(Color.black.opacity(0.5))
+            }
         }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 8)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(color.opacity(0.12))
-        )
     }
 }
