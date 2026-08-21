@@ -40,31 +40,38 @@ struct CompactMenuButton: View {
                 action()
             }
         } label: {
-            HStack(spacing: 15) {
+            // Icon circle, title, and tap-hint were fixed pixel sizes that made
+            // sense when the card was narrower - now that the button spans
+            // almost the full screen width (see MenuView's adaptive grid), those
+            // small fixed accents read as lost at the edges with a lot of empty
+            // middle. Scaled everything up together so the accents fill the
+            // card's actual size instead of floating in it - which also grows
+            // the touch targets, a plus for this audience.
+            HStack(spacing: 20) {
                 Image(systemName: icon)
-                    .font(.system(size: 28))
+                    .font(.system(size: 36))
                     .foregroundColor(.white)
-                    .frame(width: 60, height: 60)
+                    .frame(width: 76, height: 76)
                     .background(
                         Circle()
                             .fill(color)
-                            .shadow(color: color.opacity(0.4), radius: 5, x: 0, y: 3)
+                            .shadow(color: color.opacity(0.4), radius: 6, x: 0, y: 3)
                     )
-                
+
                 Text(title)
-                    .font(.system(size: 26, weight: .bold, design: .rounded))
+                    .font(.system(size: 30, weight: .bold, design: .rounded))
                     .foregroundColor(Color.black.opacity(0.8))
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
-                
+
                 Spacer()
-                
+
                 Image(systemName: "hand.tap.fill")
-                    .font(.system(size: 22))
+                    .font(.system(size: 28))
                     .foregroundColor(color.opacity(0.7))
             }
-            .padding(.vertical, 18)
-            .padding(.horizontal, 20)
+            .padding(.vertical, 22)
+            .padding(.horizontal, 24)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
                 RoundedRectangle(cornerRadius: 20)
