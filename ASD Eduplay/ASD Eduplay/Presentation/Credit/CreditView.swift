@@ -113,17 +113,23 @@ struct CreditView: View {
 
 struct CreditSectionView: View {
     let creditItem: CreditItem
-    
+
     var body: some View {
-        VStack(alignment: .center, spacing: 15) {
+        VStack(alignment: .center, spacing: 12) {
             Text(creditItem.title)
-                .font(.system(size: 24, weight: .bold))
+                .font(.system(size: 20, weight: .bold))
                 .foregroundColor(.blue)
-            
-            VStack(alignment: .center, spacing: 12) {
+
+            // These lines were sized at 24pt with no width awareness, so a
+            // longer credit (e.g. "Background illustration i made from Canva
+            // Team Pro") wrapped across many lines on a narrow portrait
+            // screen and read as excessively long. 16pt fits comfortably
+            // more characters per line before wrapping, closer to how
+            // attribution text reads elsewhere (small print, not a headline).
+            VStack(alignment: .center, spacing: 10) {
                 ForEach(creditItem.items, id: \.self) { item in
                     Text(item)
-                        .font(.system(size: 24))
+                        .font(.system(size: 16))
                         .foregroundColor(.blue)
                         .multilineTextAlignment(.center)
                 }
