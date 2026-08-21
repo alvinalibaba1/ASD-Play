@@ -3,7 +3,7 @@ import Foundation
 struct RoutineStep: Identifiable, Equatable {
     let id: String
     let order: Int
-    let icon: String
+    let imageName: String
     let title: String
 }
 

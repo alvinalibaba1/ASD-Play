@@ -112,14 +112,15 @@ struct RoutineSequencingView: View {
                 .fill(placedStep == nil ? Color.white.opacity(0.5) : Color.white.opacity(0.95))
                 .overlay(
                     RoundedRectangle(cornerRadius: 16)
-                        .stroke(Color.teal.opacity(0.4), style: StrokeStyle(lineWidth: 2, dash: placedStep == nil ? [6, 4] : []))
+                        .strokeBorder(Color.teal.opacity(0.4), style: StrokeStyle(lineWidth: 2, dash: placedStep == nil ? [6, 4] : []))
                 )
 
             if let placedStep {
                 VStack(spacing: 4) {
-                    Image(systemName: placedStep.icon)
-                        .font(.system(size: 22))
-                        .foregroundColor(.teal)
+                    Image(placedStep.imageName)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 26, height: 26)
                     Text("\(order)")
                         .font(.system(size: 12, weight: .bold, design: .rounded))
                         .foregroundColor(.black.opacity(0.5))
@@ -141,11 +142,12 @@ struct RoutineSequencingView: View {
             viewModel.selectStep(step)
         } label: {
             VStack(spacing: 8) {
-                Image(systemName: step.icon)
-                    .font(.system(size: 32))
-                    .foregroundColor(.white)
+                Image(step.imageName)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 44, height: 44)
                     .frame(width: 56, height: 56)
-                    .background(Circle().fill(Color.teal))
+                    .background(Circle().fill(Color.teal.opacity(0.15)))
                 Text(step.title)
                     .font(.system(size: 14, weight: .semibold, design: .rounded))
                     .foregroundColor(.black.opacity(0.75))
@@ -159,7 +161,7 @@ struct RoutineSequencingView: View {
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 18)
-                    .stroke(isWrong ? Color.red.opacity(0.6) : Color.teal.opacity(0.25), lineWidth: 3)
+                    .strokeBorder(isWrong ? Color.red.opacity(0.6) : Color.teal.opacity(0.25), lineWidth: 3)
             )
             .shadow(radius: 4)
         }

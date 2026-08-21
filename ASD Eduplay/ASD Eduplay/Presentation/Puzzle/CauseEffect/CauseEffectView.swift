@@ -66,9 +66,11 @@ struct CauseEffectView: View {
             viewModel.tap(item)
         } label: {
             VStack(spacing: 8) {
-                Image(systemName: isActivated ? item.activatedIcon : item.icon)
-                    .font(.system(size: 48))
-                    .foregroundColor(isActivated ? item.color : item.color.opacity(0.5))
+                Image(item.imageName)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 64, height: 64)
+                    .opacity(isActivated ? 1.0 : 0.75)
                     .frame(width: 90, height: 90)
                     .background(
                         Circle()

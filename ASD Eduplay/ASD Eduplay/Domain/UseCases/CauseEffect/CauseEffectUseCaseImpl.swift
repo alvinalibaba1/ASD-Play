@@ -1,13 +1,19 @@
 import SwiftUI
 
 final class CauseEffectUseCaseImpl: CauseEffectUseCase {
+    // Illustrated art (generated via Gemini, placed under
+    // Assets.xcassets/Image/Tap & Play) instead of SF Symbols - concrete,
+    // colorful pictures read faster and feel more rewarding to tap than
+    // abstract line icons, especially for younger/nonverbal kids. No "popper"
+    // item yet - that image didn't come through in the asset batch, so it's
+    // left out rather than mixing in a mismatched SF Symbol among real
+    // illustrations.
     private let items: [CauseEffectItem] = [
-        CauseEffectItem(id: "bell", icon: "bell", activatedIcon: "bell.fill", label: "Bell", color: .orange),
-        CauseEffectItem(id: "popper", icon: "party.popper", activatedIcon: "party.popper.fill", label: "Popper", color: .pink),
-        CauseEffectItem(id: "lightbulb", icon: "lightbulb", activatedIcon: "lightbulb.fill", label: "Light", color: .yellow),
-        CauseEffectItem(id: "star", icon: "star", activatedIcon: "star.fill", label: "Star", color: .purple),
-        CauseEffectItem(id: "heart", icon: "heart", activatedIcon: "heart.fill", label: "Heart", color: .red),
-        CauseEffectItem(id: "cloud", icon: "cloud", activatedIcon: "cloud.rain.fill", label: "Cloud", color: .blue)
+        CauseEffectItem(id: "bell", imageName: "bell", label: "Bell", color: .orange),
+        CauseEffectItem(id: "lightbulb", imageName: "lightbulb", label: "Light", color: .yellow),
+        CauseEffectItem(id: "star", imageName: "star", label: "Star", color: .purple),
+        CauseEffectItem(id: "heart", imageName: "heart", label: "Heart", color: .red),
+        CauseEffectItem(id: "cloud", imageName: "cloud", label: "Cloud", color: .blue)
     ]
 
     func getItems() -> [CauseEffectItem] {
