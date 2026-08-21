@@ -42,7 +42,7 @@ struct RoutineSequencingView: View {
                     // The sequence being built so far - a fixed row of numbered
                     // slots that fills in left to right as steps are tapped in
                     // the right order.
-                    HStack(spacing: 12) {
+                    HStack(spacing: 10) {
                         ForEach(1...viewModel.currentSet.steps.count, id: \.self) { order in
                             sequenceSlot(order: order)
                         }
@@ -55,7 +55,7 @@ struct RoutineSequencingView: View {
                         .font(.system(size: 18, weight: .semibold, design: .rounded))
                         .foregroundColor(.black.opacity(0.6))
 
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 130), spacing: 16)], spacing: 16) {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 160), spacing: 16)], spacing: 16) {
                         ForEach(viewModel.scrambledSteps) { step in
                             stepButton(for: step)
                         }
@@ -116,22 +116,22 @@ struct RoutineSequencingView: View {
                 )
 
             if let placedStep {
-                VStack(spacing: 4) {
+                VStack(spacing: 2) {
                     Image(placedStep.imageName)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 26, height: 26)
+                        .frame(width: 38, height: 38)
                     Text("\(order)")
                         .font(.system(size: 12, weight: .bold, design: .rounded))
                         .foregroundColor(.black.opacity(0.5))
                 }
             } else {
                 Text("\(order)")
-                    .font(.system(size: 20, weight: .bold, design: .rounded))
+                    .font(.system(size: 24, weight: .bold, design: .rounded))
                     .foregroundColor(.black.opacity(0.3))
             }
         }
-        .frame(width: 64, height: 64)
+        .frame(width: 76, height: 76)
         .animation(.spring(response: 0.4, dampingFraction: 0.7), value: placedStep?.id)
     }
 
@@ -145,16 +145,16 @@ struct RoutineSequencingView: View {
                 Image(step.imageName)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 44, height: 44)
-                    .frame(width: 56, height: 56)
+                    .frame(width: 68, height: 68)
+                    .frame(width: 84, height: 84)
                     .background(Circle().fill(Color.teal.opacity(0.15)))
                 Text(step.title)
-                    .font(.system(size: 14, weight: .semibold, design: .rounded))
+                    .font(.system(size: 15, weight: .semibold, design: .rounded))
                     .foregroundColor(.black.opacity(0.75))
                     .multilineTextAlignment(.center)
                     .lineLimit(2)
             }
-            .frame(width: 120, height: 120)
+            .frame(width: 150, height: 150)
             .background(
                 RoundedRectangle(cornerRadius: 18)
                     .fill(Color.white.opacity(0.9))
