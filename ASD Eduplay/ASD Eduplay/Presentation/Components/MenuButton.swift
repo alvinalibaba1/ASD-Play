@@ -79,8 +79,15 @@ struct CompactMenuButton: View {
                     .shadow(color: Color.black.opacity(0.12), radius: 8, x: 0, y: 3)
             )
             .overlay(
+                // .strokeBorder instead of .stroke: .stroke centers the line
+                // on the shape's own edge, so at a rounded corner the outer
+                // half gets clipped/anti-aliased differently than the inner
+                // half - the border reads as thin and uneven right where it
+                // curves. .strokeBorder draws entirely inset from the shape's
+                // edge instead, so the line renders at a consistent width the
+                // whole way around, corners included.
                 RoundedRectangle(cornerRadius: 20)
-                    .stroke(color, lineWidth: 2.5)
+                    .strokeBorder(color, lineWidth: 3.5)
             )
         }
         .buttonStyle(PlainButtonStyle())
