@@ -19,7 +19,7 @@ struct CreditView: View {
             "Jigsaw illustrations from Canva Team Pro",
             "Fruit illustration from Canva Team Pro",
             "Object illustration from Canva Team Pro",
-            "Background illustration i made from Canva Team Pro"
+            "Background art made with Canva Team Pro"
         ]),
         CreditItem(title: "Sound Effects", items: [
             "Intro Music by DvirSilver from Pixabay",
@@ -33,9 +33,23 @@ struct CreditView: View {
     
     var body: some View {
         ZStack {
-            Color.blue.opacity(0.8)
+            // Flat Color.blue.opacity(0.8) stood out as mismatched against
+            // every other screen (Menu, Progress, Settings), which all share
+            // the same illustrated backgroundMenu image under a color tint.
+            // Using that same image + tint here instead keeps Credits
+            // visually consistent with the rest of the app.
+            GeometryReader { bgGeometry in
+                Image("backgroundMenu")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: bgGeometry.size.width, height: bgGeometry.size.height)
+                    .clipped()
+            }
+            .edgesIgnoringSafeArea(.all)
+
+            Color.blue.opacity(0.45)
                 .edgesIgnoringSafeArea(.all)
-            
+
             VStack {
                 HStack {
                     CustomBackButton()
@@ -59,11 +73,6 @@ struct CreditView: View {
                         ForEach(creditItems) { item in
                             CreditSectionView(creditItem: item)
                         }
-                        
-                        Text("Made with ❤️ for ASD Kids")
-                            .font(.system(size: 20, weight: .medium))
-                            .foregroundColor(.white)
-                            .padding(.vertical, 30)
                     }
                     
                     Spacer().frame(height: geometry.size.height / 2)
