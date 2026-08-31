@@ -91,5 +91,9 @@ struct CauseEffectView: View {
         .scaleEffect(isActivated ? 1.15 : 1.0)
         .rotationEffect(.degrees(isActivated ? 8 : 0))
         .animation(.spring(response: 0.35, dampingFraction: 0.4), value: isActivated)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(item.label)
+        .accessibilityHint("Tap to see it react")
+        .accessibilityAddTraits(.isButton)
     }
 }

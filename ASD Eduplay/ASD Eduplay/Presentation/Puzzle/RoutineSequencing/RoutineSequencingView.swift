@@ -141,6 +141,11 @@ struct RoutineSequencingView: View {
         }
         .frame(width: 76, height: 76)
         .animation(.spring(response: 0.4, dampingFraction: 0.7), value: placedStep?.id)
+        // Without this, a VoiceOver user reviewing the sequence built so far
+        // gets nothing for an empty slot (the custom image has no default
+        // description) and just a bare number for a filled one.
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(placedStep.map { "Step \(order): \($0.title)" } ?? "Step \(order): empty")
     }
 
     private func stepButton(for step: RoutineStep) -> some View {
@@ -176,5 +181,8 @@ struct RoutineSequencingView: View {
         .buttonStyle(PlainButtonStyle())
         .offset(x: isWrong ? -6 : 0)
         .animation(isWrong ? .default.repeatCount(3).speed(6) : .default, value: isWrong)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(step.title)
+        .accessibilityAddTraits(.isButton)
     }
 }

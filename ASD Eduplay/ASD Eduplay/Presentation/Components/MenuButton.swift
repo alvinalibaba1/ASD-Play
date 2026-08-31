@@ -70,6 +70,14 @@ struct CompactMenuButton: View {
                     .font(.system(size: 28))
                     .foregroundColor(color.opacity(0.7))
             }
+            // Without this, VoiceOver reads the raw SF Symbol names of both
+            // icons alongside the title (e.g. "puzzlepiece.fill, Jigsaw
+            // Puzzle, hand tap fill") - hiding the two decorative icons from
+            // the accessibility tree and giving the whole card one clean
+            // label instead makes it read as "Jigsaw Puzzle game, button".
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("\(title) game")
+            .accessibilityAddTraits(.isButton)
             .padding(.vertical, 22)
             .padding(.horizontal, 24)
             .frame(maxWidth: .infinity, alignment: .leading)

@@ -48,6 +48,11 @@ struct EmotionMatchingView: View {
                         .id(viewModel.currentRound.target)
                         .transition(.scale.combined(with: .opacity))
                         .padding(.vertical, 20)
+                        // Without this, VoiceOver reads the emoji's raw Unicode
+                        // name (e.g. "grinning face") instead of describing the
+                        // actual task content - a VoiceOver user needs to know
+                        // which emotion the target face shows to answer at all.
+                        .accessibilityLabel("Face showing \(viewModel.currentRound.target.label)")
 
                     HStack(spacing: 24) {
                         ForEach(viewModel.currentRound.options, id: \.self) { option in
@@ -120,7 +125,7 @@ struct EmotionMatchingView: View {
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 20)
-                    .stroke(isWrongSelection ? Color.red.opacity(0.6) : Color.purple.opacity(0.3), lineWidth: 3)
+                    .strokeBorder(isWrongSelection ? Color.red.opacity(0.6) : Color.purple.opacity(0.3), lineWidth: 3)
             )
             .shadow(radius: 4)
         }
@@ -128,5 +133,11 @@ struct EmotionMatchingView: View {
         .disabled(viewModel.lastSelection != nil)
         .offset(x: isWrongSelection ? -6 : 0)
         .animation(isWrongSelection ? .default.repeatCount(3).speed(6) : .default, value: isWrongSelection)
+        // Hides the emoji from being read by its raw Unicode name (redundant
+        // noise alongside the label text) and gives the whole card one clean
+        // label instead of two separately-read fragments.
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(emotion.label)
+        .accessibilityAddTraits(.isButton)
     }
 }
