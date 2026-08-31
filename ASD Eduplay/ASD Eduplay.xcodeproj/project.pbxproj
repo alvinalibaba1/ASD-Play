@@ -6,19 +6,55 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		29DA87CCBBFFDDF1C00AEC5B /* RoutineSequencingViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3DED54877EEE8F5E7B9E5CC /* RoutineSequencingViewModelTests.swift */; };
+		2F6C1E278338EC17A00DD32B /* ProgressStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B16E0CF32F5486758FDD945 /* ProgressStoreTests.swift */; };
+		3376AEE26EC8F6367ABE422C /* JigsawDropMatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F9118BFE358DC35EE345EB2 /* JigsawDropMatcherTests.swift */; };
+		77A0BEBA6A9369748651337A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5B07FA4F74DD6643CBCF820 /* Foundation.framework */; };
+		7AC3309C1C034741C64D0C27 /* EmotionMatchingUseCaseImplTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23153E6B92062CE01A59AEDC /* EmotionMatchingUseCaseImplTests.swift */; };
+		8DFFAFB4E04284B35693F49E /* SortingPuzzleUseCaseImplTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BEB968EC813B24DC98989A5 /* SortingPuzzleUseCaseImplTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		80FC0975B004A28CCB575A56 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5ABE5F71302B53CC004D1B84 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5ABE5F78302B53CC004D1B84;
+			remoteInfo = "ASD Eduplay";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		0F9118BFE358DC35EE345EB2 /* JigsawDropMatcherTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = JigsawDropMatcherTests.swift; sourceTree = "<group>"; };
+		23153E6B92062CE01A59AEDC /* EmotionMatchingUseCaseImplTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EmotionMatchingUseCaseImplTests.swift; sourceTree = "<group>"; };
 		5ABE5F79302B53CC004D1B84 /* ASD Eduplay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ASD Eduplay.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		829D01D64F1AFCDA2210DDD6 /* ASD EduplayTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ASD EduplayTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8B16E0CF32F5486758FDD945 /* ProgressStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProgressStoreTests.swift; sourceTree = "<group>"; };
+		8BEB968EC813B24DC98989A5 /* SortingPuzzleUseCaseImplTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SortingPuzzleUseCaseImplTests.swift; sourceTree = "<group>"; };
+		C3DED54877EEE8F5E7B9E5CC /* RoutineSequencingViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RoutineSequencingViewModelTests.swift; sourceTree = "<group>"; };
+		F5B07FA4F74DD6643CBCF820 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		5ABE5F7B302B53CC004D1B84 /* ASD Eduplay */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = "ASD Eduplay";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		44DBFEAFFE36DEA6BE63361B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				77A0BEBA6A9369748651337A /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		5ABE5F76302B53CC004D1B84 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -29,11 +65,34 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0B75C08269B98025130D7199 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				F5B07FA4F74DD6643CBCF820 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		346F4169A28A592EC7E3BE96 /* ASD EduplayTests */ = {
+			isa = PBXGroup;
+			children = (
+				23153E6B92062CE01A59AEDC /* EmotionMatchingUseCaseImplTests.swift */,
+				0F9118BFE358DC35EE345EB2 /* JigsawDropMatcherTests.swift */,
+				8B16E0CF32F5486758FDD945 /* ProgressStoreTests.swift */,
+				C3DED54877EEE8F5E7B9E5CC /* RoutineSequencingViewModelTests.swift */,
+				8BEB968EC813B24DC98989A5 /* SortingPuzzleUseCaseImplTests.swift */,
+			);
+			name = "ASD EduplayTests";
+			path = "ASD EduplayTests";
+			sourceTree = "<group>";
+		};
 		5ABE5F70302B53CC004D1B84 = {
 			isa = PBXGroup;
 			children = (
 				5ABE5F7B302B53CC004D1B84 /* ASD Eduplay */,
 				5ABE5F7A302B53CC004D1B84 /* Products */,
+				D330CD44A2D03660FC5802B2 /* Frameworks */,
+				346F4169A28A592EC7E3BE96 /* ASD EduplayTests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -41,8 +100,17 @@
 			isa = PBXGroup;
 			children = (
 				5ABE5F79302B53CC004D1B84 /* ASD Eduplay.app */,
+				829D01D64F1AFCDA2210DDD6 /* ASD EduplayTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		D330CD44A2D03660FC5802B2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0B75C08269B98025130D7199 /* iOS */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -64,11 +132,27 @@
 				5ABE5F7B302B53CC004D1B84 /* ASD Eduplay */,
 			);
 			name = "ASD Eduplay";
-			packageProductDependencies = (
-			);
 			productName = "ASD Eduplay";
 			productReference = 5ABE5F79302B53CC004D1B84 /* ASD Eduplay.app */;
 			productType = "com.apple.product-type.application";
+		};
+		98F28427351C42C1FE4B8FA0 /* ASD EduplayTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1F8E16845F31CAE86E6BAE5A /* Build configuration list for PBXNativeTarget "ASD EduplayTests" */;
+			buildPhases = (
+				F44B8F5401A486F56B50DE1F /* Sources */,
+				44DBFEAFFE36DEA6BE63361B /* Frameworks */,
+				EB38FC2CB58EF95DFD6095DE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				104D5A7592485CC1B9AE6C08 /* PBXTargetDependency */,
+			);
+			name = "ASD EduplayTests";
+			productName = "ASD EduplayTests";
+			productReference = 829D01D64F1AFCDA2210DDD6 /* ASD EduplayTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -100,12 +184,20 @@
 			projectRoot = "";
 			targets = (
 				5ABE5F78302B53CC004D1B84 /* ASD Eduplay */,
+				98F28427351C42C1FE4B8FA0 /* ASD EduplayTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		5ABE5F77302B53CC004D1B84 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EB38FC2CB58EF95DFD6095DE /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -122,9 +214,47 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F44B8F5401A486F56B50DE1F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7AC3309C1C034741C64D0C27 /* EmotionMatchingUseCaseImplTests.swift in Sources */,
+				3376AEE26EC8F6367ABE422C /* JigsawDropMatcherTests.swift in Sources */,
+				2F6C1E278338EC17A00DD32B /* ProgressStoreTests.swift in Sources */,
+				29DA87CCBBFFDDF1C00AEC5B /* RoutineSequencingViewModelTests.swift in Sources */,
+				8DFFAFB4E04284B35693F49E /* SortingPuzzleUseCaseImplTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		104D5A7592485CC1B9AE6C08 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "ASD Eduplay";
+			target = 5ABE5F78302B53CC004D1B84 /* ASD Eduplay */;
+			targetProxy = 80FC0975B004A28CCB575A56 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		11E0E305099F6F853D60DD79 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Alvin.ASD-EduplayTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ASD Eduplay.app/ASD Eduplay";
+			};
+			name = Debug;
+		};
 		5ABE5F82302B53CE004D1B84 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -314,9 +444,36 @@
 			};
 			name = Release;
 		};
+		768AC52240AEC5E0B6AB29AF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Alvin.ASD-EduplayTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ASD Eduplay.app/ASD Eduplay";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		1F8E16845F31CAE86E6BAE5A /* Build configuration list for PBXNativeTarget "ASD EduplayTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				768AC52240AEC5E0B6AB29AF /* Release */,
+				11E0E305099F6F853D60DD79 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		5ABE5F74302B53CC004D1B84 /* Build configuration list for PBXProject "ASD Eduplay" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

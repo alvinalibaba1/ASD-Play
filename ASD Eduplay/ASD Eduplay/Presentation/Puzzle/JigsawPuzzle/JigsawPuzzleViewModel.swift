@@ -47,44 +47,17 @@ final class JigsawPuzzleViewModel: ObservableObject {
         // Special-needs-friendly matching: rather than requiring the exact
         // point where the finger lifted to fall inside one specific cell
         // (which forced kids with imprecise motor control to release with
-        // near-pixel accuracy), judge the drop by how much of the piece - a
-        // pieceSize x pieceSize square centered on the release point, i.e.
-        // where it visually was - overlaps each board cell, and pick whichever
-        // cell shares the most area with it. A piece that's clearly hovering
-        // mostly over the right quadrant lands there even if the fingertip
-        // itself ends up a bit outside the board or over a neighboring cell.
-        let pieceRect = CGRect(
-            x: dropPoint.x - pieceSize / 2,
-            y: dropPoint.y - pieceSize / 2,
-            width: pieceSize,
-            height: pieceSize
-        )
-
-        var bestCell: (row: Int, col: Int)?
-        var bestOverlapArea: CGFloat = 0
-
-        for row in 0..<rows {
-            for col in 0..<cols {
-                let cellRect = CGRect(
-                    x: boardFrame.minX + CGFloat(col) * pieceSize,
-                    y: boardFrame.minY + CGFloat(row) * pieceSize,
-                    width: pieceSize,
-                    height: pieceSize
-                )
-                let overlap = cellRect.intersection(pieceRect)
-                let overlapArea = overlap.isNull ? 0 : overlap.width * overlap.height
-                if overlapArea > bestOverlapArea {
-                    bestOverlapArea = overlapArea
-                    bestCell = (row, col)
-                }
-            }
-        }
-
-        // At least a quarter of the piece has to be over the board - enough
-        // that the drop was clearly aimed at it, not a miss that merely
-        // grazed its edge.
-        let minimumOverlapArea = (pieceSize * pieceSize) * 0.25
-        guard let dropTarget = bestCell, bestOverlapArea >= minimumOverlapArea else {
+        // near-pixel accuracy), judge the drop by how much of the piece
+        // overlaps each board cell - see JigsawDropMatcher for the geometry
+        // and why (this logic is the source of two separate past bugs, so
+        // it's extracted out into a directly unit-testable pure function).
+        guard let dropTarget = JigsawDropMatcher.bestMatchingCell(
+            dropPoint: dropPoint,
+            boardFrame: boardFrame,
+            pieceSize: pieceSize,
+            rows: rows,
+            cols: cols
+        ) else {
             Haptic.shared.error()
             ProgressStore.shared.recordIncorrect(.jigsaw)
             return
