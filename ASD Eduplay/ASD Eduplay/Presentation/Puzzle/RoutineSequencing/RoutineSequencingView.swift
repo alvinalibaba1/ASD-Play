@@ -49,11 +49,19 @@ struct RoutineSequencingView: View {
                     }
                     .padding(.horizontal, 20)
 
-                    Spacer()
-
+                    // "Tap what happens next" previously sat between two
+                    // Spacer()s, so as scrambledSteps shrank (each correct
+                    // tap removes a card) the grid below it got shorter and
+                    // both spacers redistributed the freed space - the label
+                    // visibly drifted down every time a card disappeared. A
+                    // single fixed gap here instead means its position only
+                    // depends on the fixed content above it; the one trailing
+                    // Spacer() below absorbs all the leftover space instead,
+                    // where it can't push anything above it around.
                     Text("Tap what happens next")
                         .font(.system(size: 18, weight: .semibold, design: .rounded))
                         .foregroundColor(.black.opacity(0.6))
+                        .padding(.top, 30)
 
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 160), spacing: 16)], spacing: 16) {
                         ForEach(viewModel.scrambledSteps) { step in
