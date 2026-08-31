@@ -92,7 +92,7 @@ struct JigsawBoardView: View {
                 .onAppear {
                     boardFrameUpdated(proxy.frame(in: .named(JigsawPuzzleView.jigsawCoordinateSpace)))
                 }
-                .onChange(of: proxy.frame(in: .named(JigsawPuzzleView.jigsawCoordinateSpace))) { newFrame in
+                .onChange(of: proxy.frame(in: .named(JigsawPuzzleView.jigsawCoordinateSpace))) { _, newFrame in
                     boardFrameUpdated(newFrame)
                 }
         })

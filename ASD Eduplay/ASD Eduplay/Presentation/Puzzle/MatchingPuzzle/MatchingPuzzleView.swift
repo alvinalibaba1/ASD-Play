@@ -129,12 +129,12 @@ struct MatchingPuzzleView: View {
                 AudioPlayerManager.shared.stopBackgroundMusic()
                 AudioPlayerManager.shared.playBackgroundMusic(named: AudioConstants.introMusic, withExtension: AudioConstants.audioExtension)
             }
-            .onChange(of: viewModel.matchCompleted) { completed in
+            .onChange(of: viewModel.matchCompleted) { _, completed in
                 if completed {
                     handleSuccessfulMatch()
                 }
             }
-            .onChange(of: viewModel.shouldReturnToMenu) { shouldReturn in
+            .onChange(of: viewModel.shouldReturnToMenu) { _, shouldReturn in
                 if shouldReturn {
                     router.navigateToRoot()
                     router.navigate(to: .menu)

@@ -127,10 +127,10 @@ struct SensorySettingsView: View {
             .padding(.top, 90)
         }
         .navigationBarBackButtonHidden(true)
-        .onChange(of: settings.musicEnabled) { enabled in
+        .onChange(of: settings.musicEnabled) { _, enabled in
             AudioPlayerManager.shared.applyMusicSetting(enabled: enabled)
         }
-        .onChange(of: settings.soundEffectsEnabled) { enabled in
+        .onChange(of: settings.soundEffectsEnabled) { _, enabled in
             if !enabled { AudioPlayerManager.shared.stopAudio() }
         }
     }

@@ -68,7 +68,7 @@ struct TracingPuzzleView: View {
             AudioPlayerManager.shared.playBackgroundMusic(named: AudioConstants.introMusic, withExtension: AudioConstants.audioExtension)
         }
         .blockInteractions(when: showSuccess)
-        .onChange(of: viewModel.showSuccessOverlay) { shouldShow in
+        .onChange(of: viewModel.showSuccessOverlay) { _, shouldShow in
             if shouldShow {
                 withAnimation {
                     showSuccess = true
@@ -76,7 +76,7 @@ struct TracingPuzzleView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
-        .onChange(of: viewModel.shouldReturnToMenu) { shouldReturn in
+        .onChange(of: viewModel.shouldReturnToMenu) { _, shouldReturn in
             if shouldReturn {
                 router.navigateToRoot()
                 router.navigate(to: .menu)

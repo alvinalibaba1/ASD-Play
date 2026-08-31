@@ -89,7 +89,7 @@ struct RoutineSequencingView: View {
             AudioPlayerManager.shared.playBackgroundMusic(named: AudioConstants.introMusic, withExtension: AudioConstants.audioExtension)
         }
         .blockInteractions(when: viewModel.showSuccessOverlay)
-        .onChange(of: viewModel.shouldReturnToMenu) { shouldReturn in
+        .onChange(of: viewModel.shouldReturnToMenu) { _, shouldReturn in
             if shouldReturn {
                 router.navigateToRoot()
                 router.navigate(to: .menu)

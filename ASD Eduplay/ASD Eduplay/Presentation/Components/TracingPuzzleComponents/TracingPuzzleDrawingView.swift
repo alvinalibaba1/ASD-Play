@@ -223,7 +223,7 @@ struct TracingPuzzleDrawingView: View {
                 previousLevel = viewModel.currentLevel
                 resetAnimationState()
             }
-            .onChange(of: viewModel.currentLevel) { newLevel in
+            .onChange(of: viewModel.currentLevel) { _, newLevel in
                 if previousLevel != newLevel {
                     resetAnimationState()
                     previousLevel = newLevel

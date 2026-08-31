@@ -7,6 +7,7 @@
 
 import Foundation
 import AVFoundation
+import os
 
 @MainActor
 protocol AudioPlayerService {
@@ -24,6 +25,7 @@ protocol AudioPlayerService {
 
 class AudioPlayerManager: NSObject, @preconcurrency AVAudioPlayerDelegate, AudioPlayerService {
     static let shared = AudioPlayerManager()
+    private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "ASD-Eduplay", category: "Audio")
     private var audioPlayer: AVAudioPlayer?
     private var backgroundMusicPlayer: AVAudioPlayer?
     private var isTransitioning = false
@@ -54,17 +56,17 @@ class AudioPlayerManager: NSObject, @preconcurrency AVAudioPlayerDelegate, Audio
         guard SensorySettings.shared.soundEffectsEnabled else { return }
 
         guard let url = Bundle.main.url(forResource: filename, withExtension: fileExtension) else {
-            print("Could not find audio file: \(filename).\(fileExtension)")
+            logger.error("Could not find audio file: \(filename).\(fileExtension)")
             return
         }
-        
+
         do {
             audioPlayer = try AVAudioPlayer(contentsOf: url)
             audioPlayer?.delegate = self
             audioPlayer?.prepareToPlay()
             audioPlayer?.play()
         } catch {
-            print("Error playing audio: \(error.localizedDescription)")
+            logger.error("Error playing audio: \(error.localizedDescription)")
         }
     }
     
@@ -73,7 +75,7 @@ class AudioPlayerManager: NSObject, @preconcurrency AVAudioPlayerDelegate, Audio
                 try AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default, options: [.mixWithOthers])
                 try AVAudioSession.sharedInstance().setActive(true)
             } catch {
-                print("Failed to set up audio session: \(error)")
+                logger.error("Failed to set up audio session: \(error)")
             }
         }
         
@@ -106,7 +108,7 @@ class AudioPlayerManager: NSObject, @preconcurrency AVAudioPlayerDelegate, Audio
             }
 
             guard let url = Bundle.main.url(forResource: filename, withExtension: fileExtension) else {
-                print("Could not find background music: \(filename).\(fileExtension)")
+                logger.error("Could not find background music: \(filename).\(fileExtension)")
                 isTransitioning = false
                 return
             }
@@ -121,7 +123,7 @@ class AudioPlayerManager: NSObject, @preconcurrency AVAudioPlayerDelegate, Audio
                 
                 fadeInBackgroundMusic()
             } catch {
-                print("Error playing background music: \(error)")
+                logger.error("Error playing background music: \(error)")
                 isTransitioning = false
             }
         }
@@ -216,9 +218,5 @@ class AudioPlayerManager: NSObject, @preconcurrency AVAudioPlayerDelegate, Audio
     
     func isPlaying() -> Bool {
         return audioPlayer?.isPlaying ?? false
-    }
-    
-    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        print("Audio finished playing successfully: \(flag)")
     }
 }

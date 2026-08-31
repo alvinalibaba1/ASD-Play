@@ -102,7 +102,7 @@ struct SuccessOverlay: View {
                 }
             }
         }
-        .onChange(of: isVisible) { visible in
+        .onChange(of: isVisible) { _, visible in
             if visible {
                 startAnimations(screenSize: geometry.size)
 

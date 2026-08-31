@@ -72,21 +72,21 @@ struct SortingPuzzleView: View {
                     AudioPlayerManager.shared.playAudio(named: AudioConstants.dialogSorting, withExtension: AudioConstants.audioExtension)
                 }
             }
-            .onChange(of: geometry.size) { newSize in
+            .onChange(of: geometry.size) { _, newSize in
                 viewModel.updateLayout(containerSize: newSize)
             }
             .onDisappear {
                 AudioPlayerManager.shared.stopBackgroundMusic()
                 AudioPlayerManager.shared.playBackgroundMusic(named: AudioConstants.introMusic, withExtension: AudioConstants.audioExtension)
             }
-            .onChange(of: viewModel.isComplete) { isComplete in
+            .onChange(of: viewModel.isComplete) { _, isComplete in
                 if isComplete && viewModel.currentRound == 5 && !isTransitioning {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         showSuccessOverlay = true
                     }
                 }
             }
-            .onChange(of: viewModel.shouldReturnToMenu) { shouldReturn in
+            .onChange(of: viewModel.shouldReturnToMenu) { _, shouldReturn in
                 if shouldReturn {
                     router.navigateToRoot()
                     router.navigate(to: .menu)

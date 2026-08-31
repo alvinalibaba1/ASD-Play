@@ -68,7 +68,7 @@ struct HeartbeatPlayButton: View {
             .frame(width: 100, height: 100)
             .scaleEffect(scale)
             .animation(Animation.easeInOut(duration: 0.2), value: scale)
-            .onChange(of: scale) { newScale in
+            .onChange(of: scale) { _, newScale in
                 if newScale > 1.0 {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                         scale = 1.0

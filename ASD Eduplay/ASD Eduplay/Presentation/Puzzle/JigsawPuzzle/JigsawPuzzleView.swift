@@ -151,7 +151,7 @@ struct JigsawPuzzleView: View {
                 calculateAdaptivePieceSize(geometry: geometry)
                 AudioPlayerManager.shared.playAudio(named: AudioConstants.dialogJigsaw, withExtension: AudioConstants.audioExtension)
             }
-            .onChange(of: geometry.size) { newSize in
+            .onChange(of: geometry.size) {
                 // Recalculate piece size when orientation changes
                 calculateAdaptivePieceSize(geometry: geometry)
             }
@@ -160,10 +160,10 @@ struct JigsawPuzzleView: View {
                 AudioPlayerManager.shared.stopBackgroundMusic()
                 AudioPlayerManager.shared.playBackgroundMusic(named: AudioConstants.introMusic, withExtension: AudioConstants.audioExtension)
             }
-            .onChange(of: viewModel.currentImageIndex) { _ in
+            .onChange(of: viewModel.currentImageIndex) {
                 showShadowImage = true
             }
-            .onChange(of: viewModel.placedPieces.count) { newCount in
+            .onChange(of: viewModel.placedPieces.count) { _, newCount in
                 // Fires a sparkle burst at the piece that was just placed correctly,
                 // not only when the whole picture is finished - so every correct
                 // placement gets its own moment of positive feedback.
@@ -182,7 +182,7 @@ struct JigsawPuzzleView: View {
             nil
         )
         .navigationBarBackButtonHidden(viewModel.showSuccessOverlay)
-        .onChange(of: viewModel.shouldReturnToMenu) { shouldReturn in
+        .onChange(of: viewModel.shouldReturnToMenu) { _, shouldReturn in
             if shouldReturn {
                 router.navigateToRoot()
                 router.navigate(to: .menu)

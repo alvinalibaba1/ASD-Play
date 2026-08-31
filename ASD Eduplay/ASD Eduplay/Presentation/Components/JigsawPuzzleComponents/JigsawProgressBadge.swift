@@ -24,7 +24,7 @@ struct JigsawProgressBadge: View {
                 .shadow(radius: 4)
         )
         .scaleEffect(isBumped ? 1.15 : 1.0)
-        .onChange(of: placed) { _ in
+        .onChange(of: placed) {
             withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
                 isBumped = true
             }
