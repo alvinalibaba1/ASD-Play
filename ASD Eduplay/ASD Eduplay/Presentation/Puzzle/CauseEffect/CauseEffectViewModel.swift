@@ -16,7 +16,10 @@ final class CauseEffectViewModel: ObservableObject {
     // sensory "tap and see what happens" activity rather than a scored task.
     func tap(_ item: CauseEffectItem) {
         Haptic.shared.tap()
-        AudioPlayerManager.shared.playAudio(named: AudioConstants.correctAction, withExtension: AudioConstants.audioExtension)
+        // Each item plays its own real-world sound (bell rings, dog barks,
+        // car honks) instead of one shared generic chime, so the tap
+        // actually feels like cause and effect rather than a scored "correct".
+        AudioPlayerManager.shared.playAudio(named: item.soundName, withExtension: AudioConstants.audioExtension)
         ProgressStore.shared.recordCorrect(.causeEffect)
 
         activatedIds.insert(item.id)
