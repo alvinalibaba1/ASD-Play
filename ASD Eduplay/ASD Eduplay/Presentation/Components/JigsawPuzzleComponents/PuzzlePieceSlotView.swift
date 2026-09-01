@@ -11,9 +11,10 @@ struct PuzzlePieceSlotView: View {
     let piece: PuzzlePiece
     @ObservedObject var viewModel: JigsawPuzzleViewModel
     let pieceSize: CGFloat
+    let boardFrame: CGRect
     let onDragChanged: (DragGesture.Value, PuzzlePiece) -> Void
     let onDragEnded: (DragGesture.Value) -> Void
-    
+
     var body: some View {
         PuzzlePieceView(
             imageName: viewModel.getCurrentImageName(),
@@ -48,5 +49,16 @@ struct PuzzlePieceSlotView: View {
                 }
         )
         .zIndex(viewModel.draggedPiece?.id == piece.id ? 100 : 1)
+        // The drag gesture above has no VoiceOver equivalent (VoiceOver
+        // intercepts single-finger gestures for its own navigation), so this
+        // gives a VoiceOver user a way to complete the puzzle without it:
+        // select the piece, then invoke the action to place it correctly.
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Piece for row \(piece.row + 1), column \(piece.col + 1)")
+        .accessibilityHint(boardFrame == .zero ? "" : "Double tap, then use the action to place it in its spot")
+        .accessibilityAction(named: "Place in correct spot") {
+            guard boardFrame != .zero else { return }
+            viewModel.placeInCorrectSpot(piece, boardFrame: boardFrame, pieceSize: pieceSize)
+        }
     }
 }

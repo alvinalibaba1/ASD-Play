@@ -151,5 +151,25 @@ struct SortingPuzzleView: View {
             )
             .disabled(isTransitioning)
             .animation(.spring(), value: piece.isPlaced)
+            // The drag gesture has no VoiceOver equivalent. A VO user picks
+            // which bin to place the piece in from its real actions (one per
+            // bin) instead of dragging - the same color-matching information
+            // a sighted user gets by comparing the piece's color to each
+            // bin's, just spoken instead of seen.
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("\(colorLabel(for: piece)) piece\(piece.isPlaced ? ", placed" : "")")
+            .accessibilityActions {
+                if !piece.isPlaced {
+                    ForEach(viewModel.workspaces, id: \.id) { workspace in
+                        Button(workspace.label) {
+                            viewModel.movePiece(piece, to: workspace.position, isDragging: false)
+                        }
+                    }
+                }
+            }
+    }
+
+    private func colorLabel(for piece: SortingPuzzlePiece) -> String {
+        viewModel.workspaces.first(where: { $0.id == piece.targetWorkspaceId })?.label ?? "Colored"
     }
 }

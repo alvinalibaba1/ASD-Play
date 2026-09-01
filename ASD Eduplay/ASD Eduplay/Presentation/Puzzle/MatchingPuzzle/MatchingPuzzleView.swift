@@ -106,6 +106,22 @@ struct MatchingPuzzleView: View {
                                                     )
                                                 }
                                         )
+                                        // The drag gesture has no VoiceOver equivalent (VoiceOver
+                                        // intercepts single-finger gestures), so this reuses the
+                                        // exact same handlePuzzleDrop correctness check with a
+                                        // drop point synthesized at the target's own center -
+                                        // the same right/wrong outcome a sighted drag would get.
+                                        .accessibilityElement(children: .ignore)
+                                        .accessibilityLabel(piece.imageName.capitalized)
+                                        .accessibilityHint(piece.isMatched ? "Already matched" : "Double tap, then use the action to place it on the target")
+                                        .accessibilityAction(named: "Place on target") {
+                                            guard !piece.isMatched, !showSuccess, targetPosition != .zero else { return }
+                                            viewModel.handlePuzzleDrop(
+                                                piece: piece,
+                                                dropLocation: CGPoint(x: targetPosition.midX, y: targetPosition.midY),
+                                                targetFrame: targetPosition
+                                            )
+                                        }
                                 }
                             }
                         }
@@ -165,6 +181,7 @@ struct MatchingPuzzleView: View {
                         .frame(width: plateSize, height: plateSize)
                         .shadow(color: Color.white.opacity(0.6), radius: 10)
                         .padding(.bottom, 50)
+                        .accessibilityLabel("Target: \(viewModel.currentTarget.capitalized)")
                 
                 Spacer()
             }

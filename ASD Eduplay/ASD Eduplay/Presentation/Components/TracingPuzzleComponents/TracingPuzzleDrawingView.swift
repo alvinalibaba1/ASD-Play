@@ -229,6 +229,18 @@ struct TracingPuzzleDrawingView: View {
                     previousLevel = newLevel
                 }
             }
+            // Finger-tracing a path has no meaningful VoiceOver equivalent -
+            // it's a fine-motor/visual-spatial skill, not something a swipe
+            // gesture or a spoken description can substitute for. Rather than
+            // fake an equivalent challenge, this gives VoiceOver users a way
+            // to complete the level and keep progressing through the app.
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Tracing activity: \(currentLevel.visualTheme.themeName)")
+            .accessibilityHint("This is a drawing activity. Use the action to complete it.")
+            .accessibilityAction(named: "Complete tracing") {
+                guard animationPhase == 0 else { return }
+                completeTracing(in: geometry.size)
+            }
         }
     }
 

@@ -10,6 +10,7 @@ import SwiftUI
 struct JigsawWorkspaceView: View {
     @ObservedObject var viewModel: JigsawPuzzleViewModel
     let pieceSize: CGFloat
+    let boardFrame: CGRect
     let disableInteractions: Bool
     let onDragChanged: (DragGesture.Value, PuzzlePiece) -> Void
     let onDragEnded: (DragGesture.Value) -> Void
@@ -62,6 +63,7 @@ struct JigsawWorkspaceView: View {
                         piece: viewModel.pieces[pieceIndex],
                         viewModel: viewModel,
                         pieceSize: pieceSize,
+                        boardFrame: boardFrame,
                         onDragChanged: onDragChanged,
                         onDragEnded: onDragEnded
                     )

@@ -35,6 +35,19 @@ final class JigsawPuzzleViewModel: ObservableObject {
     func isDraggingPiece(_ pieceId: UUID) -> Bool {
         return draggedPiece?.id == pieceId
     }
+
+    // VoiceOver alternative to the drag gesture: a piece's own row/col is
+    // already its correct target cell (see PuzzlePiece), so this synthesizes
+    // the drop exactly where a well-aimed drag would land instead of
+    // requiring precise on-screen dragging to place it.
+    func placeInCorrectSpot(_ piece: PuzzlePiece, boardFrame: CGRect, pieceSize: CGFloat) {
+        draggedPiece = piece
+        let dropPoint = CGPoint(
+            x: boardFrame.minX + CGFloat(piece.col) * pieceSize + pieceSize / 2,
+            y: boardFrame.minY + CGFloat(piece.row) * pieceSize + pieceSize / 2
+        )
+        handlePieceDrop(dropPoint: dropPoint, boardFrame: boardFrame, pieceSize: pieceSize)
+    }
     
     func handlePieceDrop(dropPoint: CGPoint, boardFrame: CGRect, pieceSize: CGFloat) {
         guard let piece = draggedPiece else { return }

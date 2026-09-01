@@ -84,6 +84,7 @@ struct JigsawPuzzleView: View {
                             JigsawWorkspaceView(
                                 viewModel: viewModel,
                                 pieceSize: adaptivePieceSize,
+                                boardFrame: boardFrame,
                                 disableInteractions: disableInteractions,
                                 onDragChanged: handleDragChanged,
                                 onDragEnded: handleDragEnded
@@ -107,6 +108,7 @@ struct JigsawPuzzleView: View {
                             JigsawWorkspaceView(
                                 viewModel: viewModel,
                                 pieceSize: adaptivePieceSize,
+                                boardFrame: boardFrame,
                                 disableInteractions: disableInteractions,
                                 onDragChanged: handleDragChanged,
                                 onDragEnded: handleDragEnded
