@@ -11,9 +11,9 @@ final class CauseEffectUseCaseImpl: CauseEffectUseCase {
     private let items: [CauseEffectItem] = [
         CauseEffectItem(id: "bell", imageName: "bell", soundName: "bell", label: "Bell", color: .orange),
         CauseEffectItem(id: "carHorn", imageName: "carHorn", soundName: "carHorn", label: "Car Horn", color: .red),
-        CauseEffectItem(id: "drum", imageName: "drum", soundName: "correct", label: "Drum", color: .brown),
+        CauseEffectItem(id: "drum", imageName: "drum", soundName: "drum", label: "Drum", color: .brown),
         CauseEffectItem(id: "phone", imageName: "phone", soundName: "phone", label: "Phone", color: .teal),
-        CauseEffectItem(id: "dog", imageName: "dog", soundName: "dog", label: "Dog", color: .brown),
+        CauseEffectItem(id: "dog", imageName: "dog 2", soundName: "dog", label: "Dog", color: .brown),
         CauseEffectItem(id: "popper", imageName: "popper", soundName: "popper", label: "Party Popper", color: .green)
     ]
 
