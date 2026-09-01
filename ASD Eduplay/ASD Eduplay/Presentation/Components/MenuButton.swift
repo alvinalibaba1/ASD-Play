@@ -61,8 +61,14 @@ struct CompactMenuButton: View {
                 Text(title)
                     .font(.system(size: 30, weight: .bold, design: .rounded))
                     .foregroundColor(Color.black.opacity(0.8))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.6)
+                    // A single line truncated to "Jigsaw Puz..." on narrower
+                    // cards even with minimumScaleFactor, since shrinking a
+                    // multi-word title far enough to fit one line makes it
+                    // unreadably small before it ever fits. Wrapping to 2
+                    // lines instead means the full title always stays legible.
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.75)
+                    .multilineTextAlignment(.leading)
 
                 Spacer()
 
