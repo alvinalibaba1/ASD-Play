@@ -13,18 +13,17 @@ struct HeartbeatPlayButton: View {
     @State private var scale: CGFloat = 1.0
     let action: () -> Void
     
-    let gradientColors = [
-        Color(.blue),
-        Color(.cyan)
-     
-    ]
-    
+    // Matches the puzzle-piece mascot's own blue instead of a generic
+    // system blue/cyan pair, so the button reads as part of the same
+    // character/brand rather than an unrelated UI blue.
+    private let buttonColor = Color(red: 0.42, green: 0.78, blue: 0.92)
+
     var body: some View {
         Button(action: {
             withAnimation(.spring(response: 0.4, dampingFraction: 0.6)) {
                 scale = 1.3
             }
-            
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 action()
             }
@@ -33,7 +32,7 @@ struct HeartbeatPlayButton: View {
                 Circle()
                     .fill(
                         RadialGradient(
-                            gradient: Gradient(colors: [gradientColors[0].opacity(0.3), Color.clear]),
+                            gradient: Gradient(colors: [buttonColor.opacity(0.3), Color.clear]),
                             center: .center,
                             startRadius: 50,
                             endRadius: 120
@@ -41,24 +40,17 @@ struct HeartbeatPlayButton: View {
                     )
                     .scaleEffect(isAnimating ? 1.2 : 1.0)
                     .opacity(isAnimating ? 0.6 : 0.3)
-                
+
+                // Previously a gradient fill plus a blurred, gradient-masked
+                // stroke meant to add a soft highlight - at this size the
+                // blur mostly washed the highlight out, so it added
+                // complexity without a visible payoff. A plain white ring
+                // gives the same "highlighted button" read more clearly.
                 Circle()
-                    .fill(
-                        LinearGradient(
-                            gradient: Gradient(colors: gradientColors),
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .overlay(
-                        Circle()
-                            .stroke(Color.white.opacity(0.3), lineWidth: 4)
-                            .blur(radius: 4)
-                            .offset(x: 2, y: 2)
-                            .mask(Circle().fill(LinearGradient(gradient: Gradient(colors: [Color.black, Color.clear]), startPoint: .top, endPoint: .bottom)))
-                    )
-                    .shadow(color: gradientColors[1].opacity(0.5), radius: 15, x: 0, y: 8)
-                
+                    .fill(buttonColor)
+                    .overlay(Circle().strokeBorder(Color.white, lineWidth: 5))
+                    .shadow(color: buttonColor.opacity(0.5), radius: 15, x: 0, y: 8)
+
                 Image(systemName: "play.fill")
                     .font(.system(size: 42, weight: .bold))
                     .foregroundColor(.white)
@@ -77,6 +69,8 @@ struct HeartbeatPlayButton: View {
             }
         }
         .buttonStyle(ScaleButtonStyle())
+        .accessibilityLabel("Play")
+        .accessibilityAddTraits(.isButton)
         .onAppear {
             startHeartbeatAnimation()
         }
