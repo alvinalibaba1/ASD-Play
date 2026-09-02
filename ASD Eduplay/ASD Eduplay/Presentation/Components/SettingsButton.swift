@@ -3,7 +3,10 @@ import SwiftUI
 struct SettingsButton: View {
     @EnvironmentObject var router: NavigationRouter
 
-    private let buttonColor = Color.blue.opacity(0.7)
+    // Matches the mascot/Play button's own blue instead of a generic
+    // system blue, so every "primary action" control on this screen shares
+    // one consistent brand color.
+    private let buttonColor = Color(red: 0.42, green: 0.78, blue: 0.92)
     private let buttonSize: CGFloat = 60
 
     var body: some View {
@@ -26,10 +29,16 @@ struct SettingsButton: View {
                 }
                 .frame(width: buttonSize, height: buttonSize)
 
+                // A bare shadowed label floating directly on the sky
+                // background didn't match how every other label in the app
+                // sits inside a card or pill - it read as an unfinished
+                // afterthought rather than a designed part of the button.
                 Text("Settings")
                     .font(.system(size: 13, weight: .semibold, design: .rounded))
                     .foregroundColor(.white)
-                    .shadow(color: .black.opacity(0.4), radius: 3, x: 0, y: 1)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(Capsule().fill(buttonColor))
             }
         }
         .buttonStyle(PlainButtonStyle())

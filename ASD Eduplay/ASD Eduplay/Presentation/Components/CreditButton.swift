@@ -11,23 +11,19 @@ struct CreditButton: View {
     let title: String
     let action: () -> Void
 
-    private let accentColor = Color.purple
+    // Orange instead of the old purple - ties this "informational" button to
+    // ProgressButton's color instead of a shade that didn't relate to
+    // anything else on the home screen (which was blue for Play/Settings).
+    private let accentColor = Color.orange
 
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 14) {
-                // A plain text pill didn't match the icon+label pattern every
-                // other button in the app uses (see CompactMenuButton), so it
-                // read as a stray label rather than an obviously tappable button.
+            HStack(spacing: 12) {
                 Image(systemName: "info.circle.fill")
-                    .font(.system(size: 22))
+                    .font(.system(size: 20))
                     .foregroundColor(.white)
-                    .frame(width: 44, height: 44)
-                    .background(
-                        Circle()
-                            .fill(accentColor)
-                            .shadow(color: accentColor.opacity(0.4), radius: 4, x: 0, y: 2)
-                    )
+                    .frame(width: 40, height: 40)
+                    .background(Circle().fill(accentColor))
 
                 Text(title)
                     .font(.system(size: 22, weight: .bold, design: .rounded))
@@ -37,16 +33,24 @@ struct CreditButton: View {
 
                 Spacer(minLength: 0)
             }
-            .padding(.horizontal, 18)
+            .padding(.leading, 14)
+            .padding(.trailing, 20)
             .background(
                 RoundedRectangle(cornerRadius: 20)
                     .fill(Color.white.opacity(0.9))
-                    .shadow(color: Color.black.opacity(0.12), radius: 8, x: 0, y: 3)
             )
+            // Without this, the icon circle (sized close to the pill's own
+            // height) visually bulged past the rounded corner instead of
+            // being cleanly contained by it - the background's rounded rect
+            // doesn't clip its siblings on its own, so anything sitting near
+            // a corner can poke out past the curve unless explicitly clipped
+            // to the same shape.
+            .clipShape(RoundedRectangle(cornerRadius: 20))
             .overlay(
                 RoundedRectangle(cornerRadius: 20)
                     .strokeBorder(accentColor, lineWidth: 3)
             )
+            .shadow(color: Color.black.opacity(0.12), radius: 8, x: 0, y: 3)
         }
         .buttonStyle(PlainButtonStyle())
         .accessibilityElement(children: .ignore)

@@ -3,7 +3,11 @@ import SwiftUI
 struct ProgressButton: View {
     @EnvironmentObject var router: NavigationRouter
 
-    private let buttonColor = Color.purple.opacity(0.7)
+    // Orange instead of the old purple, which didn't relate to any other
+    // color on the home screen. Blue (Play/Settings) reads as "go do
+    // something"; orange (Progress/Credit) reads as "go look something up" -
+    // a deliberate two-color system instead of an arbitrary third hue.
+    private let buttonColor = Color.orange
     private let buttonSize: CGFloat = 60
 
     var body: some View {
@@ -26,10 +30,16 @@ struct ProgressButton: View {
                 }
                 .frame(width: buttonSize, height: buttonSize)
 
+                // A bare shadowed label floating directly on the sky
+                // background didn't match how every other label in the app
+                // sits inside a card or pill - it read as an unfinished
+                // afterthought rather than a designed part of the button.
                 Text("Progress")
                     .font(.system(size: 13, weight: .semibold, design: .rounded))
                     .foregroundColor(.white)
-                    .shadow(color: .black.opacity(0.4), radius: 3, x: 0, y: 1)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(Capsule().fill(buttonColor))
             }
         }
         .buttonStyle(PlainButtonStyle())
