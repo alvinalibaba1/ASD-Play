@@ -39,13 +39,19 @@ struct IntroView: View {
                 .offset(x: geometry.size.width/3 + rightBirdOffset.width,
                         y: -geometry.size.height/4)
 
+            // Anchored a fixed distance from the top edge (rather than a
+            // fraction of the screen's center-relative height) so they stay
+            // in the sky band above the Progress/Settings row and the mascot's
+            // head regardless of screen size. The old height/2.5 and height/3
+            // fractions only cleared the previous, shorter wordmark logo - the
+            // taller mascot now reaches up into where they used to drift.
             Image("cloud")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 220)
                 .opacity(0.85)
                 .offset(x: -geometry.size.width/2.5 + leftCloudOffset.width,
-                        y: -geometry.size.height/2.5)
+                        y: -geometry.size.height/2 + 60)
 
             Image("cloud")
                 .resizable()
@@ -53,7 +59,7 @@ struct IntroView: View {
                 .frame(width: 180)
                 .opacity(0.75)
                 .offset(x: geometry.size.width/2.5 + rightCloudOffset.width,
-                        y: -geometry.size.height/3)
+                        y: -geometry.size.height/2 + 40)
 
 
             if isPortrait {
