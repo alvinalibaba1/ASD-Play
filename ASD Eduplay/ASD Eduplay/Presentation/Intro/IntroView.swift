@@ -63,7 +63,17 @@ struct IntroView: View {
 
 
             if isPortrait {
+                // Previously a bare VStack, centered across the *full* screen
+                // height by the ZStack's default alignment - that put the
+                // mascot's head right up against (and behind) the
+                // Progress/Settings row above it once the logo got taller.
+                // Same Spacer()-content-Spacer() plus a fixed top padding
+                // that reserves the header row's own height as landscape
+                // already uses below, so the block centers in the space
+                // below the header instead of across the whole screen.
                 VStack {
+                    Spacer()
+
                     VStack(spacing: 0) {
                         Image("logo")
                             .resizable()
@@ -75,7 +85,7 @@ struct IntroView: View {
                             AudioPlayerManager.shared.playAudio(named: "tapButton", withExtension: "mp3")
                             router.navigate(to: .menu)
                         }
-                        .padding(.bottom, 80)
+                        .padding(.top, 20)
 
                         CreditButton(
                             title: "Credit"
@@ -84,11 +94,13 @@ struct IntroView: View {
                             AudioPlayerManager.shared.playAudio(named: "tapButton", withExtension: "mp3")
                             router.navigate(to: .credit)
                         }
-                        .frame(width: 300, height: 80)
+                        .padding(.top, 24)
                     }
                     .padding(.horizontal, 25)
-                    .padding(.bottom, 50)
+
+                    Spacer()
                 }
+                .padding(.top, 120)
             } else {
                 // Stacking the logo above both buttons needed ~690pt of height
                 // (logo + play button + its padding + credit button + outer
@@ -125,7 +137,6 @@ struct IntroView: View {
                                 AudioPlayerManager.shared.playAudio(named: "tapButton", withExtension: "mp3")
                                 router.navigate(to: .credit)
                             }
-                            .frame(width: 220, height: 60)
                         }
                     }
                     .padding(.horizontal, 40)

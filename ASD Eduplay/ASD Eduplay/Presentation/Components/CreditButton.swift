@@ -15,42 +15,42 @@ struct CreditButton: View {
     // ProgressButton's color instead of a shade that didn't relate to
     // anything else on the home screen (which was blue for Play/Settings).
     private let accentColor = Color.orange
+    private let buttonSize: CGFloat = 72
 
+    // A wide horizontal pill looked disproportionate sitting under the round
+    // Play button and next to the round Progress/Settings buttons - every
+    // other control on this screen is a circle. Matching that same
+    // icon-circle + label-pill shape (just larger, since Credit is a more
+    // prominent home-screen action than the small corner utilities) makes
+    // the whole screen read as one consistent shape language instead of one
+    // button breaking the pattern.
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 12) {
-                Image(systemName: "info.circle.fill")
-                    .font(.system(size: 20))
-                    .foregroundColor(.white)
-                    .frame(width: 40, height: 40)
-                    .background(Circle().fill(accentColor))
+            VStack(spacing: 6) {
+                ZStack {
+                    Circle()
+                        .fill(accentColor)
+                        .shadow(color: accentColor.opacity(0.5), radius: 12, x: 0, y: 4)
+
+                    Circle()
+                        .stroke(Color.white.opacity(0.5), lineWidth: 2)
+                        .blur(radius: 1)
+
+                    Image(systemName: "info.circle.fill")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .padding(18)
+                        .foregroundColor(.white)
+                }
+                .frame(width: buttonSize, height: buttonSize)
 
                 Text(title)
-                    .font(.system(size: 22, weight: .bold, design: .rounded))
-                    .foregroundColor(.black.opacity(0.8))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
-
-                Spacer(minLength: 0)
+                    .font(.system(size: 15, weight: .semibold, design: .rounded))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 4)
+                    .background(Capsule().fill(accentColor))
             }
-            .padding(.leading, 14)
-            .padding(.trailing, 20)
-            .background(
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(Color.white.opacity(0.9))
-            )
-            // Without this, the icon circle (sized close to the pill's own
-            // height) visually bulged past the rounded corner instead of
-            // being cleanly contained by it - the background's rounded rect
-            // doesn't clip its siblings on its own, so anything sitting near
-            // a corner can poke out past the curve unless explicitly clipped
-            // to the same shape.
-            .clipShape(RoundedRectangle(cornerRadius: 20))
-            .overlay(
-                RoundedRectangle(cornerRadius: 20)
-                    .strokeBorder(accentColor, lineWidth: 3)
-            )
-            .shadow(color: Color.black.opacity(0.12), radius: 8, x: 0, y: 3)
         }
         .buttonStyle(PlainButtonStyle())
         .accessibilityElement(children: .ignore)
