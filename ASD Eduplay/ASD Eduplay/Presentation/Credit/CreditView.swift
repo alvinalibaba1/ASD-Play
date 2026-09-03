@@ -9,11 +9,7 @@ import SwiftUI
 
 struct CreditView: View {
     @EnvironmentObject var router: NavigationRouter
-    
-    @State private var scrollOffset: CGFloat = 0
-    @State private var isAnimating = false
-    @State private var animationWorkItem: DispatchWorkItem?
-    
+
     private let creditItems = [
         CreditItem(title: "Graphics Assets", items: [
             "Jigsaw illustrations from Canva Team Pro",
@@ -30,14 +26,13 @@ struct CreditView: View {
             "Alvin Reyvaldo"
         ])
     ]
-    
+
     var body: some View {
         ZStack {
-            // Flat Color.blue.opacity(0.8) stood out as mismatched against
-            // every other screen (Menu, Progress, Settings), which all share
-            // the same illustrated backgroundMenu image under a color tint.
-            // Using that same image + tint here instead keeps Credits
-            // visually consistent with the rest of the app.
+            // Matches MenuView's light Color.white.opacity(0.2) tint instead
+            // of the previous Color.blue.opacity(0.45), which was strong
+            // enough to flatten the illustration underneath into a nearly
+            // solid color block - it looked broken rather than tinted.
             GeometryReader { bgGeometry in
                 Image("backgroundMenu")
                     .resizable()
@@ -47,76 +42,49 @@ struct CreditView: View {
             }
             .edgesIgnoringSafeArea(.all)
 
-            Color.blue.opacity(0.45)
+            Color.white.opacity(0.2)
                 .edgesIgnoringSafeArea(.all)
 
-            VStack {
+            VStack(spacing: 0) {
                 HStack {
                     CustomBackButton()
                         .padding(.leading, 20)
                     Spacer()
                 }
                 .padding(.top, 20)
-                
-                Spacer()
-            }
-            .zIndex(1)
-            
-            GeometryReader { geometry in
-                VStack(spacing: 40) {
-                    Group {
-                        Text("Credits")
-                            .font(.system(size: 40, weight: .bold))
-                            .foregroundColor(.white)
-                            .padding(.vertical, 20)
-                        
+
+                // Previously an endless auto-scrolling "movie credits" roll
+                // that never paused - there was no way to actually stop and
+                // read a line before it scrolled past, which is the opposite
+                // of what this audience needs. A plain scroll view instead
+                // lets it be read at whatever pace the reader wants.
+                ScrollView {
+                    VStack(spacing: 24) {
+                        HStack(spacing: 10) {
+                            Image(systemName: "star.fill")
+                                .foregroundColor(.yellow)
+                                .font(.system(size: 26))
+
+                            Text("Credits")
+                                .font(.system(size: 34, weight: .bold, design: .rounded))
+                                .foregroundColor(.blue)
+
+                            Image(systemName: "star.fill")
+                                .foregroundColor(.yellow)
+                                .font(.system(size: 26))
+                        }
+                        .padding(.top, 16)
+
                         ForEach(creditItems) { item in
                             CreditSectionView(creditItem: item)
                         }
                     }
-                    
-                    Spacer().frame(height: geometry.size.height / 2)
-                }
-                .padding(.horizontal)
-                .offset(y: scrollOffset)
-                .drawingGroup()
-                .onAppear {
-                    scrollOffset = geometry.size.height
-                    startContinuousAnimation(screenHeight: geometry.size.height)
+                    .padding(.horizontal)
+                    .padding(.bottom, 40)
                 }
             }
-        }
-        .onDisappear {
-            animationWorkItem?.cancel()
-            animationWorkItem = nil
         }
         .navigationBarBackButtonHidden(true)
-    }
-
-    private func startContinuousAnimation(screenHeight: CGFloat) {
-        let contentHeight = CGFloat(creditItems.count * 200) + 400
-        let animationDuration: Double = 25
-
-
-        func animateCycle() {
-            withAnimation(.linear(duration: animationDuration)) {
-                scrollOffset = -contentHeight
-            }
-
-            let workItem = DispatchWorkItem {
-                scrollOffset = screenHeight
-                animateCycle()
-            }
-
-            animationWorkItem = workItem
-
-            DispatchQueue.main.asyncAfter(
-                deadline: .now() + animationDuration - 0.1,
-                execute: workItem
-            )
-        }
-
-        animateCycle()
     }
 }
 
@@ -148,10 +116,13 @@ struct CreditSectionView: View {
         .frame(maxWidth: .infinity)
         .background(
             RoundedRectangle(cornerRadius: 15)
-                .fill(Color.white)
-                .shadow(color: Color.black.opacity(0.05), radius: 10)
+                .fill(Color.white.opacity(0.9))
+                .shadow(color: Color.black.opacity(0.1), radius: 8, x: 0, y: 3)
         )
-        .drawingGroup()
+        .overlay(
+            RoundedRectangle(cornerRadius: 15)
+                .strokeBorder(Color.blue.opacity(0.2), lineWidth: 2)
+        )
     }
 }
 
