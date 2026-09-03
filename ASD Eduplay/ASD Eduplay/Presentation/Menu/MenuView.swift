@@ -126,8 +126,27 @@ struct MenuView: View {
                             menuButton(at: index)
                         }
                     }
+                    // A card scrolled up right against "Choose Puzzle" with
+                    // no gap read as crowding into the fixed title rather
+                    // than as a separate scrollable area beneath it.
+                    .padding(.top, 6)
                 }
                 .frame(maxHeight: isPortrait ? .infinity : 260)
+                // Fades a scrolled card out just before it would otherwise
+                // touch the title, instead of it visually butting straight
+                // up against fixed text with no boundary between them - the
+                // same "content slides under a sticky header" cue apps like
+                // Settings use.
+                .mask(
+                    LinearGradient(
+                        stops: [
+                            .init(color: .clear, location: 0),
+                            .init(color: .black, location: 0.035)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
 
                 Spacer()
             }
