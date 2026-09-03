@@ -15,15 +15,13 @@ struct CreditButton: View {
     // ProgressButton's color instead of a shade that didn't relate to
     // anything else on the home screen (which was blue for Play/Settings).
     private let accentColor = Color.orange
-    private let buttonSize: CGFloat = 72
+    private let buttonSize: CGFloat = 60
 
     // A wide horizontal pill looked disproportionate sitting under the round
     // Play button and next to the round Progress/Settings buttons - every
-    // other control on this screen is a circle. Matching that same
-    // icon-circle + label-pill shape (just larger, since Credit is a more
-    // prominent home-screen action than the small corner utilities) makes
-    // the whole screen read as one consistent shape language instead of one
-    // button breaking the pattern.
+    // other control on this screen is a circle. Now that this lives in the
+    // header row alongside SettingsButton, matching its exact icon-circle +
+    // label-pill shape and size keeps the row visually even.
     var body: some View {
         Button(action: action) {
             VStack(spacing: 6) {
@@ -39,16 +37,16 @@ struct CreditButton: View {
                     Image(systemName: "info.circle.fill")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .padding(18)
+                        .padding(15)
                         .foregroundColor(.white)
                 }
                 .frame(width: buttonSize, height: buttonSize)
 
                 Text(title)
-                    .font(.system(size: 15, weight: .semibold, design: .rounded))
+                    .font(.system(size: 13, weight: .semibold, design: .rounded))
                     .foregroundColor(.white)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 4)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
                     .background(Capsule().fill(accentColor))
             }
         }

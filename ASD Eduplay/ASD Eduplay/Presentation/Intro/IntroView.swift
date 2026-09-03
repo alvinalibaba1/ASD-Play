@@ -86,15 +86,6 @@ struct IntroView: View {
                             router.navigate(to: .menu)
                         }
                         .padding(.top, 20)
-
-                        CreditButton(
-                            title: "Credit"
-                        ) {
-                            Haptic.shared.tap()
-                            AudioPlayerManager.shared.playAudio(named: "tapButton", withExtension: "mp3")
-                            router.navigate(to: .credit)
-                        }
-                        .padding(.top, 24)
                     }
                     .padding(.horizontal, 25)
 
@@ -123,20 +114,10 @@ struct IntroView: View {
                             .scaledToFit()
                             .frame(height: min(230, geometry.size.height * 0.65))
 
-                        VStack(spacing: 24) {
-                            HeartbeatPlayButton {
-                                Haptic.shared.tap()
-                                AudioPlayerManager.shared.playAudio(named: "tapButton", withExtension: "mp3")
-                                router.navigate(to: .menu)
-                            }
-
-                            CreditButton(
-                                title: "Credit"
-                            ) {
-                                Haptic.shared.tap()
-                                AudioPlayerManager.shared.playAudio(named: "tapButton", withExtension: "mp3")
-                                router.navigate(to: .credit)
-                            }
+                        HeartbeatPlayButton {
+                            Haptic.shared.tap()
+                            AudioPlayerManager.shared.playAudio(named: "tapButton", withExtension: "mp3")
+                            router.navigate(to: .menu)
                         }
                     }
                     .padding(.horizontal, 40)
@@ -146,10 +127,18 @@ struct IntroView: View {
                 .padding(.top, 100)
             }
 
+            // Progress already has its own entry point from the Menu screen
+            // (see MenuView's top bar), so showing it again here was a
+            // duplicate control on the very first screen. Credit takes its
+            // place instead, since it otherwise had no home in the header row.
             VStack {
                 HStack(spacing: 14) {
                     Spacer()
-                    ProgressButton()
+                    CreditButton(title: "Credit") {
+                        Haptic.shared.tap()
+                        AudioPlayerManager.shared.playAudio(named: "tapButton", withExtension: "mp3")
+                        router.navigate(to: .credit)
+                    }
                     SettingsButton()
                         .padding(.trailing, 20)
                 }
