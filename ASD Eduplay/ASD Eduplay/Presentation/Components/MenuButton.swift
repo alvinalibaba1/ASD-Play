@@ -48,14 +48,19 @@ struct CompactMenuButton: View {
             // card's actual size instead of floating in it - which also grows
             // the touch targets, a plus for this audience.
             HStack(spacing: 20) {
-                Image(systemName: icon)
-                    .font(.system(size: 36))
-                    .foregroundColor(.white)
+                // A solid colored circle behind a white SF Symbol glyph
+                // worked when the icon was just a monochrome shape, but
+                // these illustrated icons already carry their own color -
+                // a soft tinted backdrop instead lets the artwork itself
+                // show through instead of competing with another fill.
+                Image(icon)
+                    .resizable()
+                    .scaledToFit()
+                    .padding(8)
                     .frame(width: 76, height: 76)
                     .background(
                         Circle()
-                            .fill(color)
-                            .shadow(color: color.opacity(0.4), radius: 6, x: 0, y: 3)
+                            .fill(color.opacity(0.15))
                     )
 
                 Text(title)
@@ -76,11 +81,11 @@ struct CompactMenuButton: View {
                     .font(.system(size: 28))
                     .foregroundColor(color.opacity(0.7))
             }
-            // Without this, VoiceOver reads the raw SF Symbol names of both
-            // icons alongside the title (e.g. "puzzlepiece.fill, Jigsaw
-            // Puzzle, hand tap fill") - hiding the two decorative icons from
-            // the accessibility tree and giving the whole card one clean
-            // label instead makes it read as "Jigsaw Puzzle game, button".
+            // Without this, VoiceOver would announce the decorative icon and
+            // tap-hint as their own separate elements alongside the title -
+            // hiding them from the accessibility tree and giving the whole
+            // card one clean label instead makes it read as "Jigsaw Puzzle
+            // game, button".
             .accessibilityElement(children: .ignore)
             .accessibilityLabel("\(title) game")
             .accessibilityAddTraits(.isButton)

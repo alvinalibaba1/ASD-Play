@@ -8,13 +8,13 @@ struct MenuView: View {
     @State private var showButtons = false
 
     private static let menuItems = [
-        (title: "Jigsaw Puzzle", icon: "puzzlepiece.fill", color: Color.cyan, destination: Destination.jigsawPuzzle),
-        (title: "Matching", icon: "equal.circle.fill", color: Color.brown, destination: Destination.matchingPuzzle),
-        (title: "Sorting", icon: "arrow.up.and.down.circle.fill", color: Color.green, destination: Destination.sortingPuzzle),
-        (title: "Tracing", icon: "hand.draw.fill", color: Color.orange, destination: Destination.tracingPuzzle),
-        (title: "Feelings", icon: "face.smiling.fill", color: Color.purple, destination: Destination.emotionMatching),
-        (title: "My Routine", icon: "list.number", color: Color.teal, destination: Destination.routineSequencing),
-        (title: "Tap & Play", icon: "hand.tap.fill", color: Color.yellow, destination: Destination.causeEffect)
+        (title: "Jigsaw Puzzle", icon: "jigsawIcon", color: Color.cyan, destination: Destination.jigsawPuzzle),
+        (title: "Matching", icon: "matchingIcon", color: Color.brown, destination: Destination.matchingPuzzle),
+        (title: "Sorting", icon: "sortingIcon", color: Color.green, destination: Destination.sortingPuzzle),
+        (title: "Tracing", icon: "tracingIcon", color: Color.orange, destination: Destination.tracingPuzzle),
+        (title: "Feelings", icon: "feelingsIcon", color: Color.purple, destination: Destination.emotionMatching),
+        (title: "My Routine", icon: "routineIcon", color: Color.teal, destination: Destination.routineSequencing),
+        (title: "Tap & Play", icon: "tapPlayIcon", color: Color.yellow, destination: Destination.causeEffect)
     ]
 
     // Sized from menuItems.count rather than a fixed literal - a fixed-size

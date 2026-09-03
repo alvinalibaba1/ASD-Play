@@ -5,13 +5,13 @@ struct ProgressSummaryView: View {
     @State private var showResetConfirmation = false
 
     private let games: [(kind: GameKind, title: String, icon: String, color: Color)] = [
-        (.jigsaw, "Jigsaw Puzzle", "puzzlepiece.fill", .cyan),
-        (.matching, "Matching", "equal.circle.fill", .brown),
-        (.sorting, "Sorting", "arrow.up.and.down.circle.fill", .green),
-        (.tracing, "Tracing", "hand.draw.fill", .orange),
-        (.emotionMatching, "Feelings", "face.smiling.fill", .purple),
-        (.routineSequencing, "My Routine", "list.number", .teal),
-        (.causeEffect, "Tap & Play", "hand.tap.fill", .yellow)
+        (.jigsaw, "Jigsaw Puzzle", "jigsawIcon", .cyan),
+        (.matching, "Matching", "matchingIcon", .brown),
+        (.sorting, "Sorting", "sortingIcon", .green),
+        (.tracing, "Tracing", "tracingIcon", .orange),
+        (.emotionMatching, "Feelings", "feelingsIcon", .purple),
+        (.routineSequencing, "My Routine", "routineIcon", .teal),
+        (.causeEffect, "Tap & Play", "tapPlayIcon", .yellow)
     ]
 
     var body: some View {
@@ -149,14 +149,18 @@ private struct GameProgressCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack(spacing: 14) {
-                Image(systemName: icon)
-                    .font(.system(size: 24))
-                    .foregroundColor(.white)
+                // Matches CompactMenuButton's treatment: these illustrated
+                // icons already carry their own color, so a soft tinted
+                // backdrop lets the artwork show through instead of another
+                // solid fill competing with it.
+                Image(icon)
+                    .resizable()
+                    .scaledToFit()
+                    .padding(10)
                     .frame(width: 54, height: 54)
                     .background(
                         Circle()
-                            .fill(color)
-                            .shadow(color: color.opacity(0.4), radius: 5, x: 0, y: 3)
+                            .fill(color.opacity(0.15))
                     )
 
                 VStack(alignment: .leading, spacing: 2) {
