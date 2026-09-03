@@ -47,24 +47,19 @@ struct ProgressSummaryView: View {
 
             ScrollView {
                 VStack(spacing: 24) {
-                    // Same star-flanked title treatment as MenuView's
-                    // "Choose Puzzle" instead of bare white text floating on
-                    // a colored background with only a drop shadow for
-                    // contrast - reads as a designed header, not an
-                    // afterthought, and stays legible against the lighter
-                    // background above.
-                    HStack(spacing: 10) {
+                    // A single icon before the title reads as a clean label;
+                    // two flanking bar-chart icons was busier than it needed
+                    // to be, and a generic dashboard icon doesn't carry the
+                    // same playful "this is a title" cue that the stars do
+                    // on MenuView's "Choose Puzzle".
+                    HStack(spacing: 12) {
                         Image(systemName: "chart.bar.fill")
                             .foregroundColor(.orange)
-                            .font(.system(size: 28))
+                            .font(.system(size: 30))
 
                         Text("Progress")
                             .font(.system(size: 36, weight: .bold, design: .rounded))
                             .foregroundColor(.blue)
-
-                        Image(systemName: "chart.bar.fill")
-                            .foregroundColor(.orange)
-                            .font(.system(size: 28))
                     }
                     .padding(.top, 20)
 
