@@ -25,7 +25,12 @@ struct ProgressSummaryView: View {
             }
             .edgesIgnoringSafeArea(.all)
 
-            Color.purple.opacity(0.45)
+            // Matches MenuView/CreditView's light Color.white.opacity(0.2)
+            // tint instead of a flat, strongly-colored Color.purple.opacity
+            // (0.45) - that flattened the illustration into a solid block
+            // and, since ProgressButton (the button that leads here) is
+            // orange, purple didn't even match its own entry point.
+            Color.white.opacity(0.2)
                 .edgesIgnoringSafeArea(.all)
 
             VStack {
@@ -42,28 +47,32 @@ struct ProgressSummaryView: View {
 
             ScrollView {
                 VStack(spacing: 24) {
+                    // Same star-flanked title treatment as MenuView's
+                    // "Choose Puzzle" instead of bare white text floating on
+                    // a colored background with only a drop shadow for
+                    // contrast - reads as a designed header, not an
+                    // afterthought, and stays legible against the lighter
+                    // background above.
                     HStack(spacing: 10) {
                         Image(systemName: "chart.bar.fill")
-                            .foregroundColor(.white)
+                            .foregroundColor(.orange)
                             .font(.system(size: 28))
 
                         Text("Progress")
                             .font(.system(size: 36, weight: .bold, design: .rounded))
-                            .foregroundColor(.white)
+                            .foregroundColor(.blue)
 
                         Image(systemName: "chart.bar.fill")
-                            .foregroundColor(.white)
+                            .foregroundColor(.orange)
                             .font(.system(size: 28))
                     }
                     .padding(.top, 20)
-                    .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 2)
 
                     Text("How things are going across each game.")
                         .font(.system(size: 18, weight: .medium, design: .rounded))
-                        .foregroundColor(.white)
+                        .foregroundColor(.black.opacity(0.6))
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 40)
-                        .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 1)
 
                     VStack(spacing: 16) {
                         ForEach(games, id: \.kind) { game in
@@ -194,12 +203,18 @@ private struct GameProgressCard: View {
                         }
                     }
                 }
-                .frame(height: 16)
+                .frame(height: 20)
             }
 
-            HStack(spacing: 28) {
-                statLabel(icon: "play.circle.fill", value: "\(progress.sessionsPlayed)", label: "Sessions")
-                statLabel(icon: "checkmark.seal.fill", value: "\(progress.roundsCompleted)", label: "Rounds Done")
+            // Two evenly-sized chips with their own soft background instead
+            // of a plain inline icon-number-label row - separating the two
+            // stats into their own boxes (matching the soft-background-chip
+            // language used elsewhere in the app, e.g. RoutineSequencing's
+            // slots) makes each one read as its own distinct fact at a
+            // glance instead of one dense run-on line.
+            HStack(spacing: 12) {
+                statChip(icon: "play.circle.fill", value: "\(progress.sessionsPlayed)", label: "Sessions")
+                statChip(icon: "checkmark.seal.fill", value: "\(progress.roundsCompleted)", label: "Rounds Done")
             }
         }
         .padding(.vertical, 18)
@@ -219,19 +234,29 @@ private struct GameProgressCard: View {
         .accessibilityLabel("\(title): \(progress.sessionsPlayed) sessions, \(progress.roundsCompleted) rounds completed, \(accuracyText), \(lastPlayedText)")
     }
 
-    private func statLabel(icon: String, value: String, label: String) -> some View {
-        HStack(spacing: 8) {
+    private func statChip(icon: String, value: String, label: String) -> some View {
+        HStack(spacing: 10) {
             Image(systemName: icon)
-                .font(.system(size: 17))
+                .font(.system(size: 20))
                 .foregroundColor(color)
+
             VStack(alignment: .leading, spacing: 0) {
                 Text(value)
-                    .font(.system(size: 19, weight: .bold, design: .rounded))
-                    .foregroundColor(Color.black.opacity(0.8))
+                    .font(.system(size: 22, weight: .bold, design: .rounded))
+                    .foregroundColor(Color.black.opacity(0.85))
                 Text(label)
                     .font(.system(size: 12, weight: .medium))
-                    .foregroundColor(Color.black.opacity(0.5))
+                    .foregroundColor(Color.black.opacity(0.55))
             }
+
+            Spacer(minLength: 0)
         }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+        .frame(maxWidth: .infinity)
+        .background(
+            RoundedRectangle(cornerRadius: 14)
+                .fill(color.opacity(0.1))
+        )
     }
 }
