@@ -14,6 +14,7 @@ final class DependencyContainer {
     private let emotionMatchingUseCase: EmotionMatchingUseCase
     private let routineSequencingUseCase: RoutineSequencingUseCase
     private let causeEffectUseCase: CauseEffectUseCase
+    private let soundMatchUseCase: SoundMatchUseCase
 
     private init() {
         self.sortingPuzzleRepository = SortingPuzzleRepositoryImpl()
@@ -26,6 +27,7 @@ final class DependencyContainer {
         self.emotionMatchingUseCase = EmotionMatchingUseCaseImpl()
         self.routineSequencingUseCase = RoutineSequencingUseCaseImpl()
         self.causeEffectUseCase = CauseEffectUseCaseImpl()
+        self.soundMatchUseCase = SoundMatchUseCaseImpl()
     }
 
     func makeJigsawPuzzleViewModel() -> JigsawPuzzleViewModel {
@@ -54,5 +56,9 @@ final class DependencyContainer {
 
     func makeCauseEffectViewModel() -> CauseEffectViewModel {
         return CauseEffectViewModel(useCase: causeEffectUseCase)
+    }
+
+    func makeSoundMatchViewModel() -> SoundMatchViewModel {
+        return SoundMatchViewModel(useCase: soundMatchUseCase)
     }
 }

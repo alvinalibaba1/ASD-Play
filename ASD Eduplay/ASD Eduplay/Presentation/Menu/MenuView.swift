@@ -14,7 +14,8 @@ struct MenuView: View {
         (title: "Tracing", icon: "tracingIcon", color: Color.orange, destination: Destination.tracingPuzzle),
         (title: "Feelings", icon: "feelingsIcon", color: Color.purple, destination: Destination.emotionMatching),
         (title: "My Routine", icon: "routineIcon", color: Color.teal, destination: Destination.routineSequencing),
-        (title: "Tap & Play", icon: "tapPlayIcon", color: Color.yellow, destination: Destination.causeEffect)
+        (title: "Tap & Play", icon: "tapPlayIcon", color: Color.yellow, destination: Destination.causeEffect),
+        (title: "Sound Match", icon: "speaker.wave.2.fill", color: Color.indigo, destination: Destination.soundMatch)
     ]
 
     // Sized from menuItems.count rather than a fixed literal - a fixed-size

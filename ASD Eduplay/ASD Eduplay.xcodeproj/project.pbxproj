@@ -13,6 +13,7 @@
 		77A0BEBA6A9369748651337A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5B07FA4F74DD6643CBCF820 /* Foundation.framework */; };
 		7AC3309C1C034741C64D0C27 /* EmotionMatchingUseCaseImplTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23153E6B92062CE01A59AEDC /* EmotionMatchingUseCaseImplTests.swift */; };
 		8DFFAFB4E04284B35693F49E /* SortingPuzzleUseCaseImplTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BEB968EC813B24DC98989A5 /* SortingPuzzleUseCaseImplTests.swift */; };
+		F69B7A6CEF91B948C47C8998 /* SoundMatchUseCaseImplTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04D09BA736016595CC581B5 /* SoundMatchUseCaseImplTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,6 +33,7 @@
 		829D01D64F1AFCDA2210DDD6 /* ASD EduplayTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ASD EduplayTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B16E0CF32F5486758FDD945 /* ProgressStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProgressStoreTests.swift; sourceTree = "<group>"; };
 		8BEB968EC813B24DC98989A5 /* SortingPuzzleUseCaseImplTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SortingPuzzleUseCaseImplTests.swift; sourceTree = "<group>"; };
+		B04D09BA736016595CC581B5 /* SoundMatchUseCaseImplTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundMatchUseCaseImplTests.swift; sourceTree = "<group>"; };
 		C3DED54877EEE8F5E7B9E5CC /* RoutineSequencingViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RoutineSequencingViewModelTests.swift; sourceTree = "<group>"; };
 		F5B07FA4F74DD6643CBCF820 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
@@ -81,8 +83,8 @@
 				8B16E0CF32F5486758FDD945 /* ProgressStoreTests.swift */,
 				C3DED54877EEE8F5E7B9E5CC /* RoutineSequencingViewModelTests.swift */,
 				8BEB968EC813B24DC98989A5 /* SortingPuzzleUseCaseImplTests.swift */,
+				B04D09BA736016595CC581B5 /* SoundMatchUseCaseImplTests.swift */,
 			);
-			name = "ASD EduplayTests";
 			path = "ASD EduplayTests";
 			sourceTree = "<group>";
 		};
@@ -223,6 +225,7 @@
 				2F6C1E278338EC17A00DD32B /* ProgressStoreTests.swift in Sources */,
 				29DA87CCBBFFDDF1C00AEC5B /* RoutineSequencingViewModelTests.swift in Sources */,
 				8DFFAFB4E04284B35693F49E /* SortingPuzzleUseCaseImplTests.swift in Sources */,
+				F69B7A6CEF91B948C47C8998 /* SoundMatchUseCaseImplTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

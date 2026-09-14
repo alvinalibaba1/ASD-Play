@@ -36,6 +36,8 @@ final class NavigationHandler {
             RoutineSequencingView(viewModel: self.container.makeRoutineSequencingViewModel())
         case .causeEffect:
             CauseEffectView(viewModel: self.container.makeCauseEffectViewModel())
+        case .soundMatch:
+            SoundMatchView(viewModel: self.container.makeSoundMatchViewModel())
         }
     }
 }

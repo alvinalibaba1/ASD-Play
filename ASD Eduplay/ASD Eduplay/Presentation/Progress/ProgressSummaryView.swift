@@ -11,7 +11,8 @@ struct ProgressSummaryView: View {
         (.tracing, "Tracing", "tracingIcon", .orange),
         (.emotionMatching, "Feelings", "feelingsIcon", .purple),
         (.routineSequencing, "My Routine", "routineIcon", .teal),
-        (.causeEffect, "Tap & Play", "tapPlayIcon", .yellow)
+        (.causeEffect, "Tap & Play", "tapPlayIcon", .yellow),
+        (.soundMatch, "Sound Match", "speaker.wave.2.fill", .indigo)
     ]
 
     var body: some View {
@@ -152,16 +153,25 @@ private struct GameProgressCard: View {
                 // Matches CompactMenuButton's treatment: these illustrated
                 // icons already carry their own color, so a soft tinted
                 // backdrop lets the artwork show through instead of another
-                // solid fill competing with it.
-                Image(icon)
-                    .resizable()
-                    .scaledToFit()
-                    .padding(10)
-                    .frame(width: 54, height: 54)
-                    .background(
-                        Circle()
-                            .fill(color.opacity(0.15))
-                    )
+                // solid fill competing with it. Falls back to an SF Symbol
+                // for a game without custom art yet.
+                Group {
+                    if UIImage(named: icon) != nil {
+                        Image(icon)
+                            .resizable()
+                            .scaledToFit()
+                            .padding(10)
+                    } else {
+                        Image(systemName: icon)
+                            .font(.system(size: 22))
+                            .foregroundColor(color)
+                    }
+                }
+                .frame(width: 54, height: 54)
+                .background(
+                    Circle()
+                        .fill(color.opacity(0.15))
+                )
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)

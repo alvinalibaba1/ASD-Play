@@ -8,6 +8,7 @@ enum GameKind: String, Codable, CaseIterable {
     case emotionMatching
     case routineSequencing
     case causeEffect
+    case soundMatch
 }
 
 struct GameProgress: Codable, Equatable {

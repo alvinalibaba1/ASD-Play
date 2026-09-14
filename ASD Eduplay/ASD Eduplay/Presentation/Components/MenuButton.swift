@@ -53,15 +53,26 @@ struct CompactMenuButton: View {
                 // these illustrated icons already carry their own color -
                 // a soft tinted backdrop instead lets the artwork itself
                 // show through instead of competing with another fill.
-                Image(icon)
-                    .resizable()
-                    .scaledToFit()
-                    .padding(8)
-                    .frame(width: 76, height: 76)
-                    .background(
-                        Circle()
-                            .fill(color.opacity(0.15))
-                    )
+                // Falls back to an SF Symbol (as a plain glyph on the same
+                // backdrop) for a game that hasn't gotten custom art yet,
+                // rather than rendering blank.
+                Group {
+                    if UIImage(named: icon) != nil {
+                        Image(icon)
+                            .resizable()
+                            .scaledToFit()
+                            .padding(8)
+                    } else {
+                        Image(systemName: icon)
+                            .font(.system(size: 32))
+                            .foregroundColor(color)
+                    }
+                }
+                .frame(width: 76, height: 76)
+                .background(
+                    Circle()
+                        .fill(color.opacity(0.15))
+                )
 
                 Text(title)
                     .font(.system(size: 30, weight: .bold, design: .rounded))

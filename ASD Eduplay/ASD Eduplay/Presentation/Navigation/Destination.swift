@@ -13,4 +13,5 @@ enum Destination: Hashable {
     case emotionMatching
     case routineSequencing
     case causeEffect
+    case soundMatch
 }
