@@ -63,12 +63,27 @@ struct RoutineSequencingView: View {
                         .foregroundColor(.black.opacity(0.6))
                         .padding(.top, 30)
 
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 160), spacing: 16)], spacing: 16) {
+                    // GridItem(.adaptive(minimum: 160)) with 30pt padding on
+                    // each side needs 336pt for 2 columns (160*2 + 16
+                    // spacing) - narrower phones (iPhone SE/mini, ~375pt
+                    // wide, ~315pt available) don't have that much room, so
+                    // it silently collapsed to a single column. Each card
+                    // then took the full row width instead of half of it,
+                    // producing oversized stacked cards that needed scrolling
+                    // to see. Computing the card size directly from the
+                    // actual available width instead guarantees exactly 2
+                    // columns on every device.
+                    let gridSpacing: CGFloat = 16
+                    let gridHorizontalPadding: CGFloat = 20
+                    let cardSize = min(150, (geometry.size.width - gridHorizontalPadding * 2 - gridSpacing) / 2)
+
+                    LazyVGrid(columns: [GridItem(.fixed(cardSize), spacing: gridSpacing), GridItem(.fixed(cardSize))], spacing: gridSpacing) {
                         ForEach(viewModel.scrambledSteps) { step in
-                            stepButton(for: step)
+                            stepButton(for: step, size: cardSize)
                         }
                     }
-                    .padding(.horizontal, 30)
+                    .frame(maxWidth: .infinity)
+                    .padding(.horizontal, gridHorizontalPadding)
 
                     Spacer()
                 }
@@ -148,8 +163,10 @@ struct RoutineSequencingView: View {
         .accessibilityLabel(placedStep.map { "Step \(order): \($0.title)" } ?? "Step \(order): empty")
     }
 
-    private func stepButton(for step: RoutineStep) -> some View {
+    private func stepButton(for step: RoutineStep, size: CGFloat) -> some View {
         let isWrong = viewModel.lastWrongStepId == step.id
+        let imageSize = size * 0.45
+        let imageCircleSize = size * 0.56
 
         return Button {
             viewModel.selectStep(step)
@@ -158,8 +175,8 @@ struct RoutineSequencingView: View {
                 Image(step.imageName)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 68, height: 68)
-                    .frame(width: 84, height: 84)
+                    .frame(width: imageSize, height: imageSize)
+                    .frame(width: imageCircleSize, height: imageCircleSize)
                     .background(Circle().fill(Color.teal.opacity(0.15)))
                 Text(step.title)
                     .font(.system(size: 15, weight: .semibold, design: .rounded))
@@ -167,7 +184,7 @@ struct RoutineSequencingView: View {
                     .multilineTextAlignment(.center)
                     .lineLimit(2)
             }
-            .frame(width: 150, height: 150)
+            .frame(width: size, height: size)
             .background(
                 RoundedRectangle(cornerRadius: 18)
                     .fill(Color.white.opacity(0.9))
