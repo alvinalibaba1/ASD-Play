@@ -33,6 +33,8 @@ struct MatchingPuzzleView: View {
                         CustomBackButton()
                             .padding(.leading, 20)
                         Spacer()
+                        progressBadge
+                            .padding(.trailing, 20)
                     }
                     .padding(.top, 20)
                     Spacer()
@@ -170,6 +172,20 @@ struct MatchingPuzzleView: View {
         }
     }
     
+    private var progressBadge: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "checkmark.circle.fill")
+                .font(.system(size: 14, weight: .semibold))
+            Text("\(viewModel.completedRounds)/\(maxRounds)")
+                .font(.system(size: 16, weight: .bold, design: .rounded))
+        }
+        .foregroundColor(.white)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 8)
+        .background(Capsule().fill(Color.brown.opacity(0.85)))
+        .shadow(radius: 4)
+    }
+
     private func plateTargetArea(width: CGFloat) -> some View {
         let plateSize = min(width * 0.4, 200)
 

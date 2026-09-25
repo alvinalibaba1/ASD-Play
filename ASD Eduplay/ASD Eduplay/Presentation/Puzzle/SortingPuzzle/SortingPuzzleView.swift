@@ -35,6 +35,8 @@ struct SortingPuzzleView: View {
                         CustomBackButton()
                             .padding(.leading, 20)
                         Spacer()
+                        progressBadge
+                            .padding(.trailing, 20)
                     }
                     .padding(.top, 20)
                     Spacer()
@@ -111,6 +113,20 @@ struct SortingPuzzleView: View {
         }
     }
     
+    private var progressBadge: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "arrow.up.arrow.down.circle.fill")
+                .font(.system(size: 14, weight: .semibold))
+            Text("\(viewModel.currentRound)/5")
+                .font(.system(size: 16, weight: .bold, design: .rounded))
+        }
+        .foregroundColor(.white)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 8)
+        .background(Capsule().fill(Color.green.opacity(0.85)))
+        .shadow(radius: 4)
+    }
+
     // Mirrors SortingPuzzleViewModel.pieceSpacing's formula
     // (min(width * 0.35, height * 0.45, cap)) so the bin/piece shapes stay
     // proportionally sized relative to the spacing between them instead of

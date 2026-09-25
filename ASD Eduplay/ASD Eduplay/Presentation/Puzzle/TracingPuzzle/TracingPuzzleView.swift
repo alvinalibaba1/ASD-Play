@@ -32,6 +32,8 @@ struct TracingPuzzleView: View {
                     CustomBackButton()
                         .padding(.leading, 20)
                     Spacer()
+                    progressBadge
+                        .padding(.trailing, 20)
                 }
                 .padding(.top, 20)
                 Spacer()
@@ -90,5 +92,19 @@ struct TracingPuzzleView: View {
                 }
             }
         }
+    }
+
+    private var progressBadge: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "pencil.circle.fill")
+                .font(.system(size: 14, weight: .semibold))
+            Text("\(viewModel.currentLevel)/\(viewModel.finalRound)")
+                .font(.system(size: 16, weight: .bold, design: .rounded))
+        }
+        .foregroundColor(.white)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 8)
+        .background(Capsule().fill(Color.orange.opacity(0.85)))
+        .shadow(radius: 4)
     }
 }
