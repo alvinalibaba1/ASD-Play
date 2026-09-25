@@ -14,7 +14,11 @@ struct SensorySettingsView: View {
             }
             .edgesIgnoringSafeArea(.all)
 
-            Color.blue.opacity(0.45)
+            // Matches MenuView/CreditView/ProgressSummaryView's light tint
+            // instead of a flat, strongly-colored Color.blue.opacity(0.45) -
+            // that flattened the illustration into a solid block, same issue
+            // already fixed on every other screen except this one.
+            Color.white.opacity(0.2)
                 .edgesIgnoringSafeArea(.all)
 
             VStack {
@@ -31,34 +35,31 @@ struct SensorySettingsView: View {
 
             ScrollView {
                 VStack(spacing: 24) {
-                    HStack(spacing: 10) {
+                    // A single icon before the title instead of one flanking
+                    // each side - matches the same simplification already
+                    // made on the Progress screen's title.
+                    HStack(spacing: 12) {
                         Image(systemName: "gearshape.fill")
-                            .foregroundColor(.white)
-                            .font(.system(size: 28))
+                            .foregroundColor(.blue)
+                            .font(.system(size: 30))
 
                         Text("Sensory Settings")
-                            .font(.system(size: 36, weight: .bold, design: .rounded))
-                            .foregroundColor(.white)
+                            .font(.system(size: 34, weight: .bold, design: .rounded))
+                            .foregroundColor(.blue)
                             .multilineTextAlignment(.center)
-
-                        Image(systemName: "gearshape.fill")
-                            .foregroundColor(.white)
-                            .font(.system(size: 28))
                     }
                     .padding(.top, 20)
-                    .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 2)
 
                     Text("Adjust the sound, movement and vibration to whatever feels comfortable.")
                         .font(.system(size: 18, weight: .medium, design: .rounded))
-                        .foregroundColor(.white)
+                        .foregroundColor(.black.opacity(0.6))
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 40)
-                        .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 1)
 
                     VStack(spacing: 16) {
                         SensoryToggleRow(
                             title: "Music",
-                            subtitle: "Background music while playing",
+                            subtitle: "Music while playing",
                             icon: "music.note",
                             color: .purple,
                             isOn: $settings.musicEnabled
@@ -66,7 +67,7 @@ struct SensorySettingsView: View {
 
                         SensoryToggleRow(
                             title: "Sound Effects",
-                            subtitle: "Taps, cheers and try-again sounds",
+                            subtitle: "Taps and cheer sounds",
                             icon: "speaker.wave.2.fill",
                             color: .cyan,
                             isOn: $settings.soundEffectsEnabled
@@ -74,7 +75,7 @@ struct SensorySettingsView: View {
 
                         SensoryToggleRow(
                             title: "Vibration",
-                            subtitle: "Buzz when you place a piece",
+                            subtitle: "Buzz on each tap",
                             icon: "iphone.radiowaves.left.and.right",
                             color: .orange,
                             isOn: $settings.hapticsEnabled
@@ -83,8 +84,8 @@ struct SensorySettingsView: View {
                         SensoryToggleRow(
                             title: "Reduce Motion",
                             subtitle: settings.systemReduceMotion
-                                ? "Already on in your device's accessibility settings"
-                                : "Calmer screens with less movement",
+                                ? "Already on in device settings"
+                                : "Calmer, less movement",
                             icon: "wind",
                             color: .green,
                             // Shown as on-and-locked when the OS already forces reduced motion,
@@ -145,26 +146,27 @@ struct SensoryToggleRow: View {
     var isLocked: Bool = false
 
     var body: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: 14) {
             Image(systemName: icon)
-                .font(.system(size: 24))
+                .font(.system(size: 20))
                 .foregroundColor(.white)
-                .frame(width: 52, height: 52)
+                .frame(width: 42, height: 42)
                 .background(
                     Circle()
                         .fill(color.opacity(isLocked ? 0.4 : 1))
                         .shadow(color: color.opacity(0.4), radius: 5, x: 0, y: 3)
                 )
 
-            VStack(alignment: .leading, spacing: 3) {
+            VStack(alignment: .leading, spacing: 2) {
                 Text(title)
-                    .font(.system(size: 20, weight: .bold, design: .rounded))
+                    .font(.system(size: 18, weight: .bold, design: .rounded))
                     .foregroundColor(Color.black.opacity(0.8))
 
                 Text(subtitle)
-                    .font(.system(size: 14))
+                    .font(.system(size: 13))
                     .foregroundColor(Color.black.opacity(0.5))
-                    .fixedSize(horizontal: false, vertical: true)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
             }
 
             Spacer(minLength: 8)
@@ -173,16 +175,18 @@ struct SensoryToggleRow: View {
                 .labelsHidden()
                 .disabled(isLocked)
         }
-        .padding(.vertical, 14)
-        .padding(.horizontal, 18)
+        .padding(.vertical, 10)
+        .padding(.horizontal, 16)
         .background(
-            RoundedRectangle(cornerRadius: 20)
+            RoundedRectangle(cornerRadius: 18)
                 .fill(Color.white.opacity(0.95))
                 .shadow(color: Color.black.opacity(0.15), radius: 8, x: 0, y: 3)
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 20)
-                .stroke(color, lineWidth: 2.5)
+            // .strokeBorder rather than .stroke - see MenuButton's identical
+            // fix for why .stroke reads thin/uneven at a rounded corner.
+            RoundedRectangle(cornerRadius: 18)
+                .strokeBorder(color, lineWidth: 2.5)
         )
         .accessibilityElement(children: .combine)
         .accessibilityLabel(title)
@@ -209,11 +213,11 @@ struct SensoryActionRow: View {
                 scale = 1.0
             }
         } label: {
-            HStack(spacing: 16) {
+            HStack(spacing: 14) {
                 Image(systemName: icon)
-                    .font(.system(size: 22))
+                    .font(.system(size: 19))
                     .foregroundColor(.white)
-                    .frame(width: 48, height: 48)
+                    .frame(width: 42, height: 42)
                     .background(
                         Circle()
                             .fill(color)
@@ -222,12 +226,14 @@ struct SensoryActionRow: View {
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)
-                        .font(.system(size: 19, weight: .bold, design: .rounded))
+                        .font(.system(size: 18, weight: .bold, design: .rounded))
                         .foregroundColor(Color.black.opacity(0.8))
 
                     Text(subtitle)
                         .font(.system(size: 13))
                         .foregroundColor(Color.black.opacity(0.5))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
                 }
 
                 Spacer(minLength: 8)
@@ -236,16 +242,18 @@ struct SensoryActionRow: View {
                     .font(.system(size: 18))
                     .foregroundColor(color.opacity(0.7))
             }
-            .padding(.vertical, 14)
-            .padding(.horizontal, 18)
+            .padding(.vertical, 10)
+            .padding(.horizontal, 16)
             .background(
-                RoundedRectangle(cornerRadius: 20)
+                RoundedRectangle(cornerRadius: 18)
                     .fill(Color.white.opacity(0.95))
                     .shadow(color: Color.black.opacity(0.15), radius: 8, x: 0, y: 3)
             )
             .overlay(
-                RoundedRectangle(cornerRadius: 20)
-                    .stroke(color, lineWidth: 2.5)
+                // .strokeBorder rather than .stroke - see MenuButton's identical
+                // fix for why .stroke reads thin/uneven at a rounded corner.
+                RoundedRectangle(cornerRadius: 18)
+                    .strokeBorder(color, lineWidth: 2.5)
             )
         }
         .buttonStyle(PlainButtonStyle())
