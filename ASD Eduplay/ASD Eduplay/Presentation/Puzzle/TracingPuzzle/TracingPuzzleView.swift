@@ -98,7 +98,7 @@ struct TracingPuzzleView: View {
         HStack(spacing: 6) {
             Image(systemName: "pencil.circle.fill")
                 .font(.system(size: 14, weight: .semibold))
-            Text("\(viewModel.currentLevel)/\(viewModel.finalRound)")
+            Text("\(viewModel.roundsCompleted)/\(viewModel.finalRound)")
                 .font(.system(size: 16, weight: .bold, design: .rounded))
         }
         .foregroundColor(.white)

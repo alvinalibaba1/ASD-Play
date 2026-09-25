@@ -6,6 +6,15 @@ final class RoutineSequencingViewModel: ObservableObject {
     @Published var placedSteps: [RoutineStep] = []
     @Published var lastWrongStepId: String?
     @Published var currentSetIndex: Int = 0
+    // Separate from currentSetIndex (which is "which set you're on", already
+    // 0 before anything is done but reads as set *1* once +1'd for display)
+    // so the badge can show "how many sets you've finished" instead -
+    // matching Jigsaw/Matching/Feelings/Sound Match's badges, which all
+    // start at 0 and count completions rather than position. Without this,
+    // currentSetIndex+1 also under-counted at the very end: it never
+    // advances past the last set, so finishing set 5 of 5 would still
+    // display "4/5" instead of "5/5".
+    @Published private(set) var completedSets: Int = 0
     @Published var showSuccessOverlay: Bool = false
     @Published var shouldReturnToMenu: Bool = false
 
@@ -60,6 +69,7 @@ final class RoutineSequencingViewModel: ObservableObject {
 
     private func completeSet() {
         ProgressStore.shared.recordRoundCompleted(.routineSequencing)
+        completedSets += 1
 
         if currentSetIndex >= routineSets.count - 1 {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { [weak self] in

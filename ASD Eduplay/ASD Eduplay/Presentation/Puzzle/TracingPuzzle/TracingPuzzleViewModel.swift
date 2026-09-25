@@ -10,6 +10,11 @@ import Foundation
 @MainActor
 class TracingPuzzleViewModel: ObservableObject {
     @Published var currentLevel: Int = 1
+    // Separate from currentLevel (which is "which level you're on", 1-based)
+    // so the badge can show "how many you've finished" instead - matching
+    // Jigsaw/Matching/Feelings/Sound Match's badges, which all start at 0
+    // and count completions rather than position.
+    @Published private(set) var roundsCompleted: Int = 0
     @Published var levels: [TracingPuzzleLevel] = []
     @Published var showSuccessOverlay: Bool = false
     @Published var shouldReturnToMenu: Bool = false
@@ -34,6 +39,7 @@ class TracingPuzzleViewModel: ObservableObject {
         tracingUseCase.completeLevel(currentLevel)
         ProgressStore.shared.recordCorrect(.tracing)
         ProgressStore.shared.recordRoundCompleted(.tracing)
+        roundsCompleted += 1
 
         if currentLevel == finalRound {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in

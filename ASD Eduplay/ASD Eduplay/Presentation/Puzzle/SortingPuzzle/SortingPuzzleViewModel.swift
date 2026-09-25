@@ -14,6 +14,11 @@ class SortingPuzzleViewModel: ObservableObject {
     @Published private(set) var workspaces: [Workspace] = []
     @Published var isComplete: Bool = false
     @Published var currentRound: Int = 1
+    // Separate from currentRound (which is "which round you're on", 1-based)
+    // so the badge can show "how many you've finished" instead - matching
+    // Jigsaw/Matching/Feelings/Sound Match's badges, which all start at 0
+    // and count completions rather than position.
+    @Published private(set) var roundsCompleted: Int = 0
     @Published private(set) var currentTheme: SortingPuzzleTheme
     @Published var shouldReturnToMenu: Bool = false
 
@@ -126,6 +131,7 @@ class SortingPuzzleViewModel: ObservableObject {
 
                     if completionStatus {
                         ProgressStore.shared.recordRoundCompleted(.sorting)
+                        roundsCompleted += 1
                         if currentRound == 5 {
                             AudioPlayerManager.shared.playPuzzleCompleteSound()
                         } else {

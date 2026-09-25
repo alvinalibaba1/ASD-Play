@@ -117,7 +117,7 @@ struct SortingPuzzleView: View {
         HStack(spacing: 6) {
             Image(systemName: "arrow.up.arrow.down.circle.fill")
                 .font(.system(size: 14, weight: .semibold))
-            Text("\(viewModel.currentRound)/5")
+            Text("\(viewModel.roundsCompleted)/5")
                 .font(.system(size: 16, weight: .bold, design: .rounded))
         }
         .foregroundColor(.white)

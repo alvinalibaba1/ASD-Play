@@ -117,7 +117,7 @@ struct RoutineSequencingView: View {
         HStack(spacing: 6) {
             Image(systemName: "list.number")
                 .font(.system(size: 14, weight: .semibold))
-            Text("\(viewModel.currentSetIndex + 1)/\(viewModel.totalSets)")
+            Text("\(viewModel.completedSets)/\(viewModel.totalSets)")
                 .font(.system(size: 16, weight: .bold, design: .rounded))
         }
         .foregroundColor(.white)
